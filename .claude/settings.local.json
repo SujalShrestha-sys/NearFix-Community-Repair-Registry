@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./mvnw war:war -X)",
+      "Bash(./mvnw clean:*)"
+    ]
+  }
+}
