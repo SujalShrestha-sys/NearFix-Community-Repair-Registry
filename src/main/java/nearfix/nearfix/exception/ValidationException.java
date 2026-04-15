@@ -1,4 +1,4 @@
-package nearfix.nearfix.util.exception;
+package nearfix.nearfix.exception;
 
 public class ValidationException extends Exception{
     public ValidationException(String message){
