@@ -52,12 +52,12 @@ public class UserService implements IUserService {
         return true;
     }
 
-    /**
-     *
+
+
     public User login(String email, String password) throws ValidationException {
         return null;
     }
-     **/
+
 
     @Override
     public User getUserById(int userId) throws SQLException {
