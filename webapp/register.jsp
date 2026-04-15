@@ -27,7 +27,7 @@
     </div>
     <% } %>
 
-    <form method="post" action="register" onsubmit="return validateForm()">
+    <form method="post" action="<%= request.getContextPath() %>/register" onsubmit="return validateForm()">
 
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Full Name</label>
