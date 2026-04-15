@@ -1,4 +1,4 @@
-package nearfix.nearfix.util.exception;
+package nearfix.nearfix.exception;
 
 public class DatabaseException extends Exception {
     public DatabaseException(String message) {

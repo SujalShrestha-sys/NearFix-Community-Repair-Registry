@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import nearfix.nearfix.model.User;
-import nearfix.nearfix.service.UserService;
-import nearfix.nearfix.util.exception.ValidationException;
+import nearfix.nearfix.exception.ValidationException;
+import nearfix.nearfix.service.impl.UserService;
 
 import java.io.IOException;
 
