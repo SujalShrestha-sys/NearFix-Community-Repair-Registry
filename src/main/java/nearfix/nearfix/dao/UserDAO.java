@@ -1,8 +1,5 @@
 package nearfix.nearfix.dao;
 
-
-//import com.nearfix.model.User;
-//import com.nearfix.util.DBConnection;
 import nearfix.nearfix.model.User;
 import nearfix.nearfix.util.DBConnection;
 
@@ -10,7 +7,7 @@ import java.sql.*;
 
 public class UserDAO {
 
-    public boolean createUser(User user) {
+    public boolean createUser(User user) throws SQLException {
         String sql = "INSERT INTO users (name, email, phone, password_hash, role, is_active) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -23,13 +20,10 @@ public class UserDAO {
             pstmt.setBoolean(6, user.isActive());
 
             return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 
-    public User getUserByEmail(String email) {
+    public User getUserByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -40,13 +34,11 @@ public class UserDAO {
             if (rs.next()) {
                 return mapResultSetToUser(rs);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return null;
     }
 
-    public User getUserByPhone(String phone) {
+    public User getUserByPhone(String phone) throws SQLException {
         String sql = "SELECT * FROM users WHERE phone = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -57,13 +49,11 @@ public class UserDAO {
             if (rs.next()) {
                 return mapResultSetToUser(rs);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return null;
     }
 
-    public User getUserById(int userId) {
+    public User getUserById(int userId) throws SQLException {
         String sql = "SELECT * FROM users WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -74,13 +64,11 @@ public class UserDAO {
             if (rs.next()) {
                 return mapResultSetToUser(rs);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return null;
     }
 
-    public boolean updateUser(User user) {
+    public boolean updateUser(User user) throws SQLException {
         String sql = "UPDATE users SET name = ?, email = ?, phone = ? WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -91,13 +79,10 @@ public class UserDAO {
             pstmt.setInt(4, user.getUserId());
 
             return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 
-    public boolean updatePassword(int userId, String newPasswordHash) {
+    public boolean updatePassword(int userId, String newPasswordHash) throws SQLException {
         String sql = "UPDATE users SET password_hash = ? WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -106,9 +91,6 @@ public class UserDAO {
             pstmt.setInt(2, userId);
 
             return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 

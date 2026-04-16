@@ -25,8 +25,13 @@ public class UserLoginServlet extends HttpServlet {
         try {
             request.getRequestDispatcher("/login.jsp").forward(request, response);
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+            request.setAttribute("errorMessage", "Error displaying login page: " + e.getMessage());
+            try {
+                request.getRequestDispatcher("/error.jsp").forward(request, response);
+            } catch (Exception ex) {
+                // Ignore or log if really needed, but avoid printStackTrace
+            }
+        } 
     }
 
     /**
@@ -47,6 +52,10 @@ public class UserLoginServlet extends HttpServlet {
 
             // STEP 3: Call service to authenticate
             User user = userService.login(email, password);
+
+            if (user == null) {
+                throw new ValidationException("Authentication failed.");
+            }
 
             // STEP 4: Create session
             HttpSession session = request.getSession();
@@ -71,12 +80,15 @@ public class UserLoginServlet extends HttpServlet {
             try {
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
             } catch (Exception ex) {
-                System.out.println("Error: " + e.getMessage());
-//                ex.printStackTrace();
+                // Silently fail or send error if forwarding fails
             }
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-//            e.printStackTrace();
+            request.setAttribute("errorMessage", "An unexpected error occurred during login: " + e.getMessage());
+            try {
+                request.getRequestDispatcher("/error.jsp").forward(request, response);
+            } catch (Exception ex) {
+                System.out.println("Critical error");
+            }
         }
     }
 }

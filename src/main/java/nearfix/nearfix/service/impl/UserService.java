@@ -55,7 +55,25 @@ public class UserService implements IUserService {
 
 
     public User login(String email, String password) throws ValidationException {
-        return null;
+        try {
+            User user = userDAO.getUserByEmail(email);
+
+            if (user == null) {
+                throw new ValidationException("User not found with this email.");
+            }
+
+            if (!PasswordEncryption.verifyPassword(password, user.getPasswordHash())) {
+                throw new ValidationException("Invalid password. Please try again.");
+            }
+
+            if (!user.isActive()) {
+                throw new ValidationException("Your account is deactivated. Please contact support.");
+            }
+
+            return user;
+        } catch (SQLException e) {
+            throw new ValidationException("Database error during login. Please try again later.");
+        }
     }
 
 
