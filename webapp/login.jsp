@@ -56,7 +56,7 @@
                         Fix it locally,<br>strengthen your community.
                     </h1>
                     <p class="text-lg text-white/80 max-w-sm leading-relaxed font-light">
-                        Join thousands of people choosing repair over replacement. Connect with trusted local fixers
+                        Be part of a growing community that prefers fixing items instead of replacing them. Connect with trusted local fixers
                         today.
                     </p>
                 </div>
