@@ -23,12 +23,11 @@ public class UserRegisterServlet extends HttpServlet {
 
             request.getRequestDispatcher("/register.jsp").forward(request, response);
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "An unexpected error occurred. Please try again.");
-            request.setAttribute("errorMessage", "An error occurred");
+            request.setAttribute("errorMessage", "Error loading registration page: " + e.getMessage());
             try {
-                request.getRequestDispatcher("/register.jsp").forward(request, response);
+                request.getRequestDispatcher("/error.jsp").forward(request, response);
             } catch (Exception ex) {
-                request.setAttribute("errorMessage", "An unexpected error occurred. Please try again.");
+                // Catastrophic
             }
         }
     }
@@ -80,10 +79,9 @@ public class UserRegisterServlet extends HttpServlet {
             }
 
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "An unexpected error occurred. Please try again.");
-
+            request.setAttribute("errorMessage", "An unexpected error occurred during registration: " + e.getMessage());
             try {
-                request.getRequestDispatcher("/register.jsp").forward(request, response);
+                request.getRequestDispatcher("/error.jsp").forward(request, response);
             } catch (Exception ex) {
                 request.setAttribute("errorMessage", "An unexpected error occurred. Please try again.");
             }

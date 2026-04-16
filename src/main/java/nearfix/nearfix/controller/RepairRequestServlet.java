@@ -58,8 +58,12 @@ public class RepairRequestServlet extends HttpServlet {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/user/dashboard.jsp");
+            request.setAttribute("errorMessage", "Error loading repair requests: " + e.getMessage());
+            try {
+                request.getRequestDispatcher("/error.jsp").forward(request, response);
+            } catch (Exception ex) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Critical error");
+            }
         }
     }
 
@@ -95,8 +99,12 @@ public class RepairRequestServlet extends HttpServlet {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/user/dashboard.jsp");
+            request.setAttribute("errorMessage", "Error processing request: " + e.getMessage());
+            try {
+                request.getRequestDispatcher("/error.jsp").forward(request, response);
+            } catch (Exception ex) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Critical error");
+            }
         }
     }
 
