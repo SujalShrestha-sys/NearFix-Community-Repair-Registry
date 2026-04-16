@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="nearfix@localhost" uuid="9d3b96db-b98c-40e0-beba-fcf01e4fd888">
+    <data-source source="LOCAL" name="NearFixDB@localhost" uuid="9d3b96db-b98c-40e0-beba-fcf01e4fd888">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
