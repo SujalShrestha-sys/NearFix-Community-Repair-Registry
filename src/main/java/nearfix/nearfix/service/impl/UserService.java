@@ -1,6 +1,8 @@
 package nearfix.nearfix.service.impl;
 
+import nearfix.nearfix.dao.impl.RepairerDAO;
 import nearfix.nearfix.dao.impl.UserDAO;
+import nearfix.nearfix.model.Repairer;
 import nearfix.nearfix.exception.DatabaseException;
 import nearfix.nearfix.exception.ValidationException;
 import nearfix.nearfix.model.User;
@@ -13,6 +15,7 @@ import java.sql.SQLException;
 public class UserService implements IUserService {
 
     private UserDAO userDAO = new UserDAO();
+    private RepairerDAO repairerDAO = new RepairerDAO();
 
     @Override
     public boolean registerUser(String name, String email, String phone, String password, String role) throws ValidationException, SQLException, DatabaseException {
@@ -42,11 +45,27 @@ public class UserService implements IUserService {
 
         String passwordHash = PasswordEncryption.encryptPassword(password);
         User user = new User(name, email, phone, passwordHash, role);
-        boolean success = userDAO.createUser(user);
-        if (!success) {
+        int userId = userDAO.createUser(user);
+        if (userId <= 0) {
             throw new ValidationException(
                     "Registration failed. Please try again."
             );
+        }
+
+        // If the user is a repairer, initialize their entry in the repairers table
+        if ("REPAIRER".equalsIgnoreCase(role)) {
+            Repairer repairer = new Repairer();
+            repairer.setUserId(userId);
+            repairer.setVerificationStatus(false);
+            repairer.setRating(0.0);
+            repairer.setTotalJobsCompleted(0);
+            // Default empty values for required fields
+            repairer.setSpecialization("Not Specified");
+            repairer.setExpertise("");
+            repairer.setYearsOfExperience(0);
+            repairer.setLicenseNumber("");
+
+            repairerDAO.createRepairer(repairer);
         }
 
         return true;
@@ -72,7 +91,7 @@ public class UserService implements IUserService {
 
             return user;
         } catch (SQLException e) {
-            throw new ValidationException("Database error during login. Please try again later.");
+            throw new ValidationException("Database error during login: " + e.getMessage());
         }
     }
 

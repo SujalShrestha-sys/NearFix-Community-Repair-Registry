@@ -5,7 +5,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import nearfix.nearfix.exception.ValidationException;
+import nearfix.nearfix.model.User;
 import nearfix.nearfix.service.impl.UserService;
 import nearfix.nearfix.service.iservice.IUserService;
 
@@ -58,12 +60,18 @@ public class UserRegisterServlet extends HttpServlet {
 
 
             if (success) {
-                // Set success message
-                request.setAttribute("successMessage",
-                        "Registration successful! Please log in.");
-
-                // Forward to login page
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                if ("REPAIRER".equalsIgnoreCase(role)) {
+                    User repairer = userService.login(email, password);
+                    HttpSession session = request.getSession(true);
+                    session.setAttribute("userId", repairer.getUserId());
+                    session.setAttribute("userEmail", repairer.getEmail());
+                    session.setAttribute("userRole", repairer.getRole());
+                    session.setAttribute("userName", repairer.getName());
+                    response.sendRedirect(request.getContextPath() + "/repairer/dashboard");
+                } else {
+                    request.setAttribute("successMessage", "Registration successful! Please log in.");
+                    request.getRequestDispatcher("/login.jsp").forward(request, response);
+                }
             } else {
                 throw new ValidationException("Registration failed. Please try again.");
             }
