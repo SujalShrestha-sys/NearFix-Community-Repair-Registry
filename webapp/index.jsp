@@ -61,8 +61,8 @@
         <a href="#categories" class="hover:text-primary transition"
           >Categories</a
         >
-        <a href="#" class="hover:text-primary transition">About</a>
-        <a href="#" class="hover:text-primary transition">Contact</a>
+        <a href="about.jsp" class="hover:text-primary transition">About</a>
+        <a href="contact.jsp" class="hover:text-primary transition">Contact</a>
       </div>
 
       <div class="flex items-center space-x-4">
@@ -954,10 +954,10 @@
           <h5 class="font-bold text-sm mb-6">Company</h5>
           <ul class="text-sm text-gray-500 space-y-4">
             <li>
-              <a href="#" class="hover:text-primary transition">About Us</a>
+              <a href="about.jsp" class="hover:text-primary transition">About Us</a>
             </li>
             <li>
-              <a href="#" class="hover:text-primary transition">Contact</a>
+              <a href="contact.jsp" class="hover:text-primary transition">Contact</a>
             </li>
             <li><a href="#" class="hover:text-primary transition">Blog</a></li>
             <li>
