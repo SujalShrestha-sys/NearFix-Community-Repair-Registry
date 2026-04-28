@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CategoryService implements ICategoryService {
 
-  private CategoryDAO categoryDAO = new CategoryDAO();
+  private final CategoryDAO categoryDAO = new CategoryDAO();
 
     @Override
     public List<Category> getAllCategories() throws SQLException {

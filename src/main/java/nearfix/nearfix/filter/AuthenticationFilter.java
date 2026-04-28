@@ -28,9 +28,10 @@ public class AuthenticationFilter implements Filter {
 
         HttpSession session = httpRequest.getSession(false);
 
-        if(session == null || session.getAttribute("userid") == null) {
+        if(session == null || session.getAttribute("userId") == null) {
             System.out.println("No login - Redirecting to login.jsp");
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.jsp");
+            return;
         }
 
         System.out.println("user logged in - Access granted");

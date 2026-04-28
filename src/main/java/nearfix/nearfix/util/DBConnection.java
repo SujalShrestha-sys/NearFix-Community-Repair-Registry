@@ -9,7 +9,11 @@ public class DBConnection {
     // Database Configuration
     private static final String DB_URL = "jdbc:mysql://localhost:3306/nearfix";
     private static final String DB_USER = "root";
+<<<<<<< HEAD
     private static final String DB_PASSWORD = "";
+=======
+    private static final String DB_PASSWORD = "dipen@1234";
+>>>>>>> d71b0becf3f9a6a6cd76ca4ae07a45cec8ffbe2e
     private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
 
     static {
