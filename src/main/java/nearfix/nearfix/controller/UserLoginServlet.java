@@ -67,9 +67,9 @@ public class UserLoginServlet extends HttpServlet {
 
             // STEP 5: Redirect based on role
             String redirectURL = switch (user.getRole()) {
-                case "ADMIN" -> request.getContextPath() + "/admin/dashboard.jsp";
-                case "REPAIRER" -> request.getContextPath() + "/repairer/dashboard.jsp";
-                default -> request.getContextPath() + "/user/dashboard.jsp";
+                case "ADMIN" -> request.getContextPath() + "/admin.jsp";
+                case "REPAIRER" -> request.getContextPath() + "/repairer.jsp";
+                default -> request.getContextPath() + "/user.jsp";
             };
 
             response.sendRedirect(redirectURL);

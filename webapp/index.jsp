@@ -173,7 +173,7 @@
           class="relative bg-white p-4 rounded-[40px] shadow-2xl overflow-hidden transform hover:scale-[1.02] transition duration-500"
         >
           <img
-            src="images/hero.png"
+            src="images/landing.png"
             alt="Community Repair"
             class="rounded-[28px] w-full"
           />

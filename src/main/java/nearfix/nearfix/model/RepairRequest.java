@@ -7,6 +7,8 @@ public class RepairRequest {
     private int requestId;
     private int userId;
     private String userName;
+    //private String userEmail;
+    //private String userPhone;
     private int categoryId;
     private String categoryName;
     private Integer repairerId;
@@ -131,6 +133,16 @@ public class RepairRequest {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "RepairRequest{" +
+                "requestId=" + requestId +
+                ", itemName='" + itemName + '\'' +
+                ", status='" + status + '\'' +
+                ", urgency='" + urgency + '\'' +
+                '}';
     }
 }
 

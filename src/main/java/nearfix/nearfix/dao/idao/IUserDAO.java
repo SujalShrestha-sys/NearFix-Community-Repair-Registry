@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface IUserDAO {
-    boolean createUser(User user) throws SQLException;
+    int createUser(User user) throws SQLException;
 
     User getUserByEmail(String email) throws SQLException;
 

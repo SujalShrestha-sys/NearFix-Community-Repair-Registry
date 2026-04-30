@@ -4,20 +4,17 @@ import nearfix.nearfix.dao.idao.IUserDAO;
 import nearfix.nearfix.model.User;
 import nearfix.nearfix.util.DBConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO implements IUserDAO {
 
     @Override
-    public boolean createUser(User user) throws SQLException {
+    public int createUser(User user) throws SQLException {
         String sql = "INSERT INTO users (name, email, phone, password_hash, role, is_active) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getEmail());
@@ -26,7 +23,17 @@ public class UserDAO implements IUserDAO {
             pstmt.setString(5, user.getRole());
             pstmt.setBoolean(6, user.isActive());
 
-            return pstmt.executeUpdate() > 0;
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int id = generatedKeys.getInt(1);
+                        user.setUserId(id);
+                        return id;
+                    }
+                }
+            }
+            return 0;
         }
     }
 
