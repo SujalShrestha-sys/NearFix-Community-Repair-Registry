@@ -6,10 +6,9 @@ import jakarta.servlet.http.*;
 import nearfix.nearfix.model.Repairer;
 import nearfix.nearfix.model.RepairRequest;
 import nearfix.nearfix.service.impl.RepairService;
-import nearfix.nearfix.service.impl.UserService;
+import nearfix.nearfix.service.impl.RepairerService;
 import nearfix.nearfix.service.iservice.IRepairService;
-import nearfix.nearfix.service.iservice.IUserService;
-import nearfix.nearfix.dao.impl.RepairerDAO; // Keeping DAO for now as RepairerService doesn't exist
+import nearfix.nearfix.service.iservice.IRepairerService;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,8 +24,7 @@ public class RepairerServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(RepairerServlet.class.getName());
 
     private final IRepairService repairService = new RepairService();
-    private final IUserService userService = new UserService();
-    private final RepairerDAO repairerDAO = new RepairerDAO(); // Direct DAO usage as RepairerService is missing
+    private final IRepairerService repairerService = new RepairerService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,13 +46,13 @@ public class RepairerServlet extends HttpServlet {
 
             switch (pathInfo) {
                 case "/dashboard":
-                    Repairer repairer = repairerDAO.getRepairerById(repairerId);
+                    Repairer repairer = repairerService.getRepairerProfile(repairerId);
                     request.setAttribute("repairer", repairer);
                     request.getRequestDispatcher("/WEB-INF/views/repairer/dashboard.jsp").forward(request, response);
                     break;
 
                 case "/profile":
-                    Repairer profile = repairerDAO.getRepairerById(repairerId);
+                    Repairer profile = repairerService.getRepairerProfile(repairerId);
                     request.setAttribute("repairer", profile);
                     request.getRequestDispatcher("/WEB-INF/views/repairer/profile.jsp").forward(request, response);
                     break;
@@ -104,13 +102,13 @@ public class RepairerServlet extends HttpServlet {
                     String specialization = request.getParameter("specialization");
                     String expertise = request.getParameter("expertise");
 
-                    Repairer repairer = repairerDAO.getRepairerById(repairerId);
+                    Repairer repairer = repairerService.getRepairerProfile(repairerId);
                     if (repairer != null) {
                         repairer.setName(name);
                         repairer.setPhone(phone);
                         repairer.setSpecialization(specialization);
                         repairer.setExpertise(expertise);
-                        repairerDAO.updateRepairer(repairer);
+                        repairerService.updateProfile(repairer);
                         message = "Profile updated successfully!";
                     }
                     break;
