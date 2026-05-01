@@ -14,8 +14,7 @@ public interface ICategoryService {
 
     boolean createCategory(String name, String description) throws ValidationException, SQLException;
 
-    boolean updateCategory(int categoryId, String name, String description)
-            throws ValidationException, SQLException;
+    boolean updateCategory(int categoryId, String name, String description) throws ValidationException, SQLException;
 
     boolean deleteCategory(int categoryId) throws SQLException, ValidationException;
 

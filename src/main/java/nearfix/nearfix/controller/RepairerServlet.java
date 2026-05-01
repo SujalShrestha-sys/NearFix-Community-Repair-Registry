@@ -1,185 +1,146 @@
 package nearfix.nearfix.controller;
 
-
-
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import nearfix.nearfix.exception.ValidationException;
-import nearfix.nearfix.dao.impl.RepairRequestDAO;
-import nearfix.nearfix.dao.impl.RepairerDAO;
 import nearfix.nearfix.model.Repairer;
 import nearfix.nearfix.model.RepairRequest;
+import nearfix.nearfix.service.impl.RepairService;
+import nearfix.nearfix.service.impl.UserService;
+import nearfix.nearfix.service.iservice.IRepairService;
+import nearfix.nearfix.service.iservice.IUserService;
+import nearfix.nearfix.dao.impl.RepairerDAO; // Keeping DAO for now as RepairerService doesn't exist
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * RepairerServlet - Handles all repairer-related actions.
+ */
 @WebServlet("/repairer/*")
 public class RepairerServlet extends HttpServlet {
 
-    private RepairerDAO repairerDAO = new RepairerDAO();
-    private RepairRequestDAO repairRequestDAO = new RepairRequestDAO();
+    private static final Logger logger = Logger.getLogger(RepairerServlet.class.getName());
+
+    private final IRepairService repairService = new RepairService();
+    private final IUserService userService = new UserService();
+    private final RepairerDAO repairerDAO = new RepairerDAO(); // Direct DAO usage as RepairerService is missing
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         HttpSession session = request.getSession(false);
+        if (session == null || !"REPAIRER".equals(session.getAttribute("userRole"))) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
         String pathInfo = request.getPathInfo();
+        if (pathInfo == null || pathInfo.equals("/")) {
+            response.sendRedirect(request.getContextPath() + "/repairer/dashboard");
+            return;
+        }
 
         try {
-            if (pathInfo == null || pathInfo.equals("/")) {
-                response.sendRedirect(request.getContextPath() + "/repairer/dashboard.jsp");
-                return;
-            }
+            int repairerId = (Integer) session.getAttribute("userId");
 
             switch (pathInfo) {
                 case "/dashboard":
-                    handleDashboard(request, response, session);
+                    Repairer repairer = repairerDAO.getRepairerById(repairerId);
+                    request.setAttribute("repairer", repairer);
+                    request.getRequestDispatcher("/WEB-INF/views/repairer/dashboard.jsp").forward(request, response);
                     break;
+
                 case "/profile":
-                    handleViewProfile(request, response, session);
+                    Repairer profile = repairerDAO.getRepairerById(repairerId);
+                    request.setAttribute("repairer", profile);
+                    request.getRequestDispatcher("/WEB-INF/views/repairer/profile.jsp").forward(request, response);
                     break;
+
                 case "/available-requests":
-                    handleAvailableRequests(request, response);
+                    List<RepairRequest> pending = repairService.getPendingRequests(1, 100);
+                    request.setAttribute("requests", pending);
+                    request.getRequestDispatcher("/WEB-INF/views/repairer/available-requests.jsp").forward(request,
+                            response);
                     break;
+
                 case "/my-requests":
-                    handleMyRequests(request, response, session);
+                    List<RepairRequest> assigned = repairService.getRequestsByRepairerId(repairerId);
+                    request.setAttribute("requests", assigned);
+                    request.getRequestDispatcher("/WEB-INF/views/repairer/my-requests.jsp").forward(request, response);
                     break;
+
                 default:
-                    response.sendRedirect(request.getContextPath() + "/repairer/dashboard.jsp");
+                    response.sendRedirect(request.getContextPath() + "/repairer/dashboard");
             }
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "RepairerServlet doGet error", e);
             request.setAttribute("errorMessage", "Error: " + e.getMessage());
-            try {
-                request.getRequestDispatcher("/error.jsp").forward(request, response);
-            } catch (Exception ex) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
+            request.getRequestDispatcher("/WEB-INF/views/repairer/dashboard.jsp").forward(request, response);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         HttpSession session = request.getSession(false);
-
-        if (!isRepairerLoggedIn(session)) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+        if (session == null || !"REPAIRER".equals(session.getAttribute("userRole"))) {
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
         String action = request.getParameter("action");
+        int repairerId = (Integer) session.getAttribute("userId");
+        String message = "";
+        String error = "";
 
         try {
             switch (action) {
                 case "update-profile":
-                    updateProfile(request, response, session);
+                    String name = request.getParameter("name");
+                    String phone = request.getParameter("phone");
+                    String specialization = request.getParameter("specialization");
+                    String expertise = request.getParameter("expertise");
+
+                    Repairer repairer = repairerDAO.getRepairerById(repairerId);
+                    if (repairer != null) {
+                        repairer.setName(name);
+                        repairer.setPhone(phone);
+                        repairer.setSpecialization(specialization);
+                        repairer.setExpertise(expertise);
+                        repairerDAO.updateRepairer(repairer);
+                        message = "Profile updated successfully!";
+                    }
                     break;
+
                 case "accept-request":
-                    acceptRequest(request, response, session);
+                    int acceptId = Integer.parseInt(request.getParameter("requestId"));
+                    repairService.acceptRequest(acceptId, repairerId);
+                    message = "Request accepted!";
                     break;
+
                 case "complete-request":
-                    completeRequest(request, response, session);
+                    int completeId = Integer.parseInt(request.getParameter("requestId"));
+                    repairService.markRequestAsCompleted(completeId);
+                    message = "Request marked as completed!";
                     break;
+
                 default:
-                    response.sendRedirect(request.getContextPath() + "/repairer/dashboard.jsp");
+                    response.sendRedirect(request.getContextPath() + "/repairer/dashboard");
+                    return;
             }
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Error: " + e.getMessage());
-            try {
-                request.getRequestDispatcher("/error.jsp").forward(request, response);
-            } catch (Exception ex) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
-        }
-    }
-
-    private void handleDashboard(HttpServletRequest request, HttpServletResponse response,
-                                 HttpSession session) throws Exception {
-        if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
-            return;
+            logger.log(Level.SEVERE, "RepairerServlet doPost error", e);
+            error = e.getMessage();
         }
 
-        int repairerId = (Integer) session.getAttribute("userId");
-        Repairer repairer = repairerDAO.getRepairerById(repairerId);
+        if (!message.isEmpty())
+            session.setAttribute("successMessage", message);
+        if (!error.isEmpty())
+            session.setAttribute("errorMessage", error);
 
-        if (repairer == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
-            return;
-        }
-
-        request.setAttribute("repairer", repairer);
-        request.getRequestDispatcher("/repairer/dashboard.jsp").forward(request, response);
-    }
-
-    private void handleViewProfile(HttpServletRequest request, HttpServletResponse response,
-                                   HttpSession session) throws Exception {
-        int repairerId = (Integer) session.getAttribute("userId");
-        Repairer repairer = repairerDAO.getRepairerById(repairerId);
-
-        request.setAttribute("repairer", repairer);
-        request.getRequestDispatcher("/repairer/profile.jsp").forward(request, response);
-    }
-
-    private void handleAvailableRequests(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        RepairRequestDAO repairRequestDAO = new RepairRequestDAO();
-        java.util.List<RepairRequest> pendingRequests = repairRequestDAO.getPendingRequests(1, 100);
-        
-        request.setAttribute("requests", pendingRequests);
-        request.getRequestDispatcher("/repairer/available-requests.jsp").forward(request, response);
-    }
-
-    private void handleMyRequests(HttpServletRequest request, HttpServletResponse response,
-                                  HttpSession session) throws Exception {
-        int repairerId = (Integer) session.getAttribute("userId");
-        List<RepairRequest> assignedRequests = repairRequestDAO.getRequestsByRepairerId(repairerId);
-
-        request.setAttribute("requests", assignedRequests);
-        request.getRequestDispatcher("/repairer/my-requests.jsp").forward(request, response);
-    }
-
-    private void updateProfile(HttpServletRequest request, HttpServletResponse response,
-                               HttpSession session) throws Exception {
-        int repairerId = (Integer) session.getAttribute("userId");
-        String name = request.getParameter("name");
-        String phone = request.getParameter("phone");
-        String specialization = request.getParameter("specialization");
-        String expertise = request.getParameter("expertise");
-
-        Repairer repairer = repairerDAO.getRepairerById(repairerId);
-        if (repairer != null) {
-            repairer.setName(name);
-            repairer.setPhone(phone);
-            repairer.setSpecialization(specialization);
-            repairer.setExpertise(expertise);
-            repairerDAO.updateRepairer(repairer);
-        }
-        response.sendRedirect(request.getContextPath() + "/repairer/profile");
-    }
-
-    private void acceptRequest(HttpServletRequest request, HttpServletResponse response,
-                               HttpSession session) throws Exception {
-        int repairerId = (Integer) session.getAttribute("userId");
-        int requestId = Integer.parseInt(request.getParameter("requestId"));
-
-        repairRequestDAO.acceptRequest(requestId, repairerId);
-        response.sendRedirect(request.getContextPath() + "/repairer/my-requests");
-    }
-
-    private void completeRequest(HttpServletRequest request, HttpServletResponse response,
-                                 HttpSession session) throws Exception {
-        int requestId = Integer.parseInt(request.getParameter("requestId"));
-        double cost = Double.parseDouble(request.getParameter("cost"));
-
-        repairRequestDAO.updateStatus(requestId, "COMPLETED");
-        RepairRequest requestObj = repairRequestDAO.getRequestById(requestId);
-        if (requestObj != null && requestObj.getRepairerId() != null) {
-            repairerDAO.updateJobsCompleted(requestObj.getRepairerId(), 1);
-        }
-        response.sendRedirect(request.getContextPath() + "/repairer/my-requests");
-    }
-
-    private boolean isRepairerLoggedIn(HttpSession session) {
-        return session != null && session.getAttribute("userId") != null &&
-                "REPAIRER".equals(session.getAttribute("userRole"));
+        response.sendRedirect(request.getContextPath() + "/repairer/dashboard");
     }
 }

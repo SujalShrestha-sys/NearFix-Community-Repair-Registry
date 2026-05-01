@@ -14,7 +14,7 @@ public class UserDAO implements IUserDAO {
     public int createUser(User user) throws SQLException {
         String sql = "INSERT INTO users (name, email, phone, password_hash, role, is_active) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getEmail());
@@ -41,7 +41,7 @@ public class UserDAO implements IUserDAO {
     public User getUserByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, email);
             ResultSet rs = pstmt.executeQuery();
@@ -57,7 +57,7 @@ public class UserDAO implements IUserDAO {
     public User getUserByPhone(String phone) throws SQLException {
         String sql = "SELECT * FROM users WHERE phone = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, phone);
             ResultSet rs = pstmt.executeQuery();
@@ -73,7 +73,7 @@ public class UserDAO implements IUserDAO {
     public User getUserById(int userId) throws SQLException {
         String sql = "SELECT * FROM users WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, userId);
             ResultSet rs = pstmt.executeQuery();
@@ -92,7 +92,7 @@ public class UserDAO implements IUserDAO {
         String sql = "SELECT * FROM users LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, pageSize);
             pstmt.setInt(2, offset);
@@ -109,7 +109,7 @@ public class UserDAO implements IUserDAO {
     public boolean updateUser(User user) throws SQLException {
         String sql = "UPDATE users SET name = ?, email = ?, phone = ? WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getEmail());
@@ -124,7 +124,7 @@ public class UserDAO implements IUserDAO {
     public boolean updatePassword(int userId, String newPasswordHash) throws SQLException {
         String sql = "UPDATE users SET password_hash = ? WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, newPasswordHash);
             pstmt.setInt(2, userId);
@@ -137,7 +137,7 @@ public class UserDAO implements IUserDAO {
     public boolean deactivateUser(int userId) throws SQLException {
         String sql = "UPDATE users SET is_active = FALSE WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, userId);
             return pstmt.executeUpdate() > 0;
@@ -148,7 +148,7 @@ public class UserDAO implements IUserDAO {
     public boolean activateUser(int userId) throws SQLException {
         String sql = "UPDATE users SET is_active = TRUE WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, userId);
             return pstmt.executeUpdate() > 0;
@@ -159,7 +159,7 @@ public class UserDAO implements IUserDAO {
     public int getTotalUsers() throws SQLException {
         String sql = "SELECT COUNT(*) as count FROM users";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {

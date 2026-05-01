@@ -1,8 +1,8 @@
 package nearfix.nearfix.controller;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import nearfix.nearfix.exception.ValidationException;
 import nearfix.nearfix.model.RepairRequest;
 import nearfix.nearfix.service.impl.CategoryService;
 import nearfix.nearfix.service.impl.RepairService;
@@ -10,136 +10,123 @@ import nearfix.nearfix.service.iservice.ICategoryService;
 import nearfix.nearfix.service.iservice.IRepairService;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * RepairRequestServlet - Handles user repair request actions.
+ */
 @WebServlet("/repair-request")
 public class RepairRequestServlet extends HttpServlet {
 
-    private IRepairService repairService = new RepairService();
-    private ICategoryService categoryService = new CategoryService();
+    private static final Logger logger = Logger.getLogger(RepairRequestServlet.class.getName());
 
-
-    private boolean isUserLoggedIn(HttpSession session) {
-        return session != null && session.getAttribute("userId") != null;
-    }
+    private final IRepairService repairService = new RepairService();
+    private final ICategoryService categoryService = new CategoryService();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
 
         String action = request.getParameter("action");
+        if (action == null || action.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/user/dashboard");
+            return;
+        }
 
         try {
             switch (action) {
-
                 case "post":
                     request.setAttribute("categories", categoryService.getAllCategories());
-                    request.getRequestDispatcher("/user/post-request.jsp").forward(request, response);
+                    request.getRequestDispatcher("/WEB-INF/views/user/post-request.jsp").forward(request, response);
                     break;
 
                 case "view":
                     int requestId = Integer.parseInt(request.getParameter("id"));
                     RepairRequest repairReq = repairService.getRepairRequest(requestId);
                     request.setAttribute("repairRequest", repairReq);
-                    request.getRequestDispatcher("/user/request-detail.jsp").forward(request, response);
+                    request.getRequestDispatcher("/WEB-INF/views/user/request-detail.jsp").forward(request, response);
                     break;
 
                 case "myRequests":
                     int userId = (Integer) session.getAttribute("userId");
                     List<RepairRequest> requests = repairService.getUserRequests(userId);
                     request.setAttribute("requests", requests);
-                    request.getRequestDispatcher("/user/my-requests.jsp").forward(request, response);
+                    request.getRequestDispatcher("/WEB-INF/views/user/my-requests.jsp").forward(request, response);
                     break;
 
                 default:
-                    response.sendRedirect(request.getContextPath() + "/user/dashboard.jsp");
+                    response.sendRedirect(request.getContextPath() + "/user/dashboard");
             }
-
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Error loading repair requests: " + e.getMessage());
-            try {
-                request.getRequestDispatcher("/error.jsp").forward(request, response);
-            } catch (Exception ex) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Critical error");
-            }
+            logger.log(Level.SEVERE, "RepairRequestServlet doGet error", e);
+            request.setAttribute("errorMessage", "Error: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/user/dashboard.jsp").forward(request, response);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         HttpSession session = request.getSession(false);
-
-        if (!isUserLoggedIn(session)) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+        if (session == null || session.getAttribute("userId") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
         String action = request.getParameter("action");
+        String message = "";
+        String error = "";
 
         try {
             switch (action) {
-
                 case "create":
-                    createRequest(request, response, session);
-                    break;
+                    int userId = (Integer) session.getAttribute("userId");
+                    int categoryId = Integer.parseInt(request.getParameter("category"));
+                    String itemName = request.getParameter("itemName");
+                    String description = request.getParameter("description");
+                    String urgency = request.getParameter("urgency");
+                    int requestId = repairService.postRepairRequest(userId, categoryId, itemName, description, urgency);
+                    message = "Repair request created successfully!";
+                    response.sendRedirect(request.getContextPath() + "/repair-request?action=view&id=" + requestId);
+                    return;
 
                 case "update":
-                    updateRequest(request, response);
+                    int reqId = Integer.parseInt(request.getParameter("requestId"));
+                    RepairRequest req = new RepairRequest();
+                    req.setRequestId(reqId);
+                    req.setItemName(request.getParameter("itemName"));
+                    req.setDescription(request.getParameter("description"));
+                    req.setUrgency(request.getParameter("urgency"));
+                    repairService.updateRequest(req);
+                    message = "Repair request updated successfully!";
                     break;
 
                 case "cancel":
-                    cancelRequest(request, response);
+                    int cancelId = Integer.parseInt(request.getParameter("requestId"));
+                    repairService.cancelRequest(cancelId);
+                    message = "Repair request cancelled.";
                     break;
 
                 default:
-                    response.sendRedirect(request.getContextPath() + "/user/dashboard.jsp");
+                    response.sendRedirect(request.getContextPath() + "/user/dashboard");
+                    return;
             }
-
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Error processing request: " + e.getMessage());
-            try {
-                request.getRequestDispatcher("/error.jsp").forward(request, response);
-            } catch (Exception ex) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Critical error");
-            }
+            logger.log(Level.SEVERE, "RepairRequestServlet doPost error", e);
+            error = e.getMessage();
         }
-    }
 
-    private void createRequest(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException, SQLException, ValidationException {
-
-        int userId = (Integer) session.getAttribute("userId");
-        int categoryId = Integer.parseInt(request.getParameter("category"));
-        String itemName = request.getParameter("itemName");
-        String description = request.getParameter("description");
-        String urgency = request.getParameter("urgency");
-
-        int requestId = repairService.postRepairRequest(userId, categoryId, itemName, description, urgency);
-
-        response.sendRedirect(request.getContextPath() + "/repair-request?action=view&id=" + requestId);
-    }
-
-    private void updateRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException, ValidationException {
-
-        int requestId = Integer.parseInt(request.getParameter("requestId"));
-
-        RepairRequest req = new RepairRequest();
-        req.setRequestId(requestId);
-        req.setItemName(request.getParameter("itemName"));
-        req.setDescription(request.getParameter("description"));
-        req.setUrgency(request.getParameter("urgency"));
-
-        repairService.updateRequest(req);
-
-        response.sendRedirect(request.getContextPath() + "/repair-request?action=view&id=" + requestId);
-    }
-
-    private void cancelRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException, ValidationException {
-
-        int requestId = Integer.parseInt(request.getParameter("requestId"));
-        repairService.cancelRequest(requestId);
+        if (!message.isEmpty())
+            session.setAttribute("successMessage", message);
+        if (!error.isEmpty())
+            session.setAttribute("errorMessage", error);
 
         response.sendRedirect(request.getContextPath() + "/repair-request?action=myRequests");
     }

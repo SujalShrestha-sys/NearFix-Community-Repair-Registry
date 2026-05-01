@@ -183,7 +183,7 @@
 
                                     <footer class="mt-8 text-center text-sm text-gray-500">
                                         Don't have an account?
-                                        <a href="<%= request.getContextPath() %>/register.jsp"
+                                        <a href="<%= request.getContextPath() %>/register"
                                             class="text-[#449E80] font-bold hover:underline">Create one</a>
                                     </footer>
                 </div>

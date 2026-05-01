@@ -1,6 +1,5 @@
 package nearfix.nearfix.dao.impl;
 
-
 import nearfix.nearfix.dao.idao.IRepairerDAO;
 import nearfix.nearfix.model.Repairer;
 import nearfix.nearfix.util.DBConnection;
@@ -13,10 +12,11 @@ public class RepairerDAO implements IRepairerDAO {
 
     @Override
     public boolean createRepairer(Repairer repairer) throws SQLException {
-        String sql = "INSERT INTO repairer_profiles (user_id, specialization, expertise, years_of_experience, license_number, verification_status) " +
+        String sql = "INSERT INTO repairer_profiles (user_id, specialization, expertise, years_of_experience, license_number, verification_status) "
+                +
                 "VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, repairer.getUserId());
             pstmt.setString(2, repairer.getSpecialization());
@@ -33,7 +33,7 @@ public class RepairerDAO implements IRepairerDAO {
     public Repairer getRepairerById(int repairerId) throws SQLException {
         String sql = "SELECT r.*, u.* FROM repairer_profiles r JOIN users u ON r.user_id = u.user_id WHERE r.user_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, repairerId);
             ResultSet rs = pstmt.executeQuery();
@@ -49,7 +49,7 @@ public class RepairerDAO implements IRepairerDAO {
     public Repairer getRepairerByEmail(String email) throws SQLException {
         String sql = "SELECT r.*, u.* FROM repairer_profiles r JOIN users u ON r.user_id = u.user_id WHERE u.email = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, email);
             ResultSet rs = pstmt.executeQuery();
@@ -67,7 +67,7 @@ public class RepairerDAO implements IRepairerDAO {
         String sql = "SELECT r.*, u.* FROM repairer_profiles r JOIN users u ON r.user_id = u.user_id " +
                 "WHERE r.specialization = ? AND r.verification_status = TRUE ORDER BY r.rating DESC";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, specialization);
             ResultSet rs = pstmt.executeQuery();
@@ -86,7 +86,7 @@ public class RepairerDAO implements IRepairerDAO {
         String sql = "SELECT r.*, u.* FROM repairer_profiles r JOIN users u ON r.user_id = u.user_id " +
                 "WHERE r.verification_status = TRUE ORDER BY r.rating DESC LIMIT ? OFFSET ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, pageSize);
             pstmt.setInt(2, offset);
@@ -103,7 +103,7 @@ public class RepairerDAO implements IRepairerDAO {
     public boolean updateRepairer(Repairer repairer) throws SQLException {
         String sql = "UPDATE repairer_profiles SET specialization = ?, expertise = ?, years_of_experience = ? WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, repairer.getSpecialization());
             pstmt.setString(2, repairer.getExpertise());
@@ -118,7 +118,7 @@ public class RepairerDAO implements IRepairerDAO {
     public boolean updateRepairerRating(int repairerId, double newRating) throws SQLException {
         String sql = "UPDATE repairer_profiles SET rating = ? WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setDouble(1, newRating);
             pstmt.setInt(2, repairerId);
@@ -131,7 +131,7 @@ public class RepairerDAO implements IRepairerDAO {
     public boolean updateJobsCompleted(int repairerId, int count) throws SQLException {
         String sql = "UPDATE repairer_profiles SET total_jobs_completed = total_jobs_completed + ? WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, count);
             pstmt.setInt(2, repairerId);
@@ -144,7 +144,7 @@ public class RepairerDAO implements IRepairerDAO {
     public boolean verifyRepairer(int repairerId) throws SQLException {
         String sql = "UPDATE repairer_profiles SET verification_status = TRUE WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, repairerId);
             return pstmt.executeUpdate() > 0;
@@ -158,7 +158,7 @@ public class RepairerDAO implements IRepairerDAO {
                 "WHERE (u.name LIKE ? OR r.specialization LIKE ? OR r.expertise LIKE ?) " +
                 "AND r.verification_status = TRUE ORDER BY r.rating DESC";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             String searchTerm = "%" + keyword + "%";
             pstmt.setString(1, searchTerm);
@@ -177,7 +177,7 @@ public class RepairerDAO implements IRepairerDAO {
     public int getTotalRepairers() throws SQLException {
         String sql = "SELECT COUNT(*) as count FROM repairer_profiles";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
@@ -191,7 +191,7 @@ public class RepairerDAO implements IRepairerDAO {
     public int getTotalVerifiedRepairers() throws SQLException {
         String sql = "SELECT COUNT(*) as count FROM repairer_profiles WHERE verification_status = TRUE";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {

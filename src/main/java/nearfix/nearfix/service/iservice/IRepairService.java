@@ -8,8 +8,7 @@ import java.util.List;
 
 public interface IRepairService {
 
-    int postRepairRequest(int userId, int categoryId, String itemName,
-                          String description, String urgency)
+    int postRepairRequest(int userId, int categoryId, String itemName, String description, String urgency)
             throws ValidationException, SQLException;
 
     RepairRequest getRepairRequest(int requestId) throws SQLException;
@@ -21,4 +20,20 @@ public interface IRepairService {
     void cancelRequest(int requestId) throws ValidationException, SQLException;
 
     int getTotalCompletedRepairs() throws SQLException;
+
+    List<RepairRequest> getPendingRequests(int page, int pageSize) throws SQLException;
+
+    List<RepairRequest> getRepairRequestsByCategoryId(int categoryId, int page, int pageSize) throws SQLException;
+
+    List<RepairRequest> getRequestsByRepairerId(int repairerId) throws SQLException;
+
+    List<RepairRequest> getAllRequests(int page, int pageSize) throws SQLException;
+
+    boolean acceptRequest(int requestId, int repairerId) throws ValidationException, SQLException;
+
+    boolean deleteRequest(int requestId) throws SQLException, ValidationException;
+
+    boolean markRequestAsCompleted(int requestId) throws SQLException, ValidationException;
+
+    int getTotalRequests() throws SQLException;
 }
