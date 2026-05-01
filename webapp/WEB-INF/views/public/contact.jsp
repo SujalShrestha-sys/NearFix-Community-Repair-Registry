@@ -43,7 +43,7 @@
     <!-- Navigation -->
     <nav class="fixed top-0 w-full z-50 glass-card px-6 py-4 flex items-center justify-between shadow-sm bg-white/90">
       <div class="flex items-center space-x-2">
-        <a href="index.jsp" class="flex items-center space-x-2">
+        <a href="<%= request.getContextPath() %>/" class="flex items-center space-x-2">
             <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
               <span class="text-white font-bold text-lg">N</span>
             </div>
@@ -52,15 +52,15 @@
       </div>
 
       <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
-        <a href="index.jsp#how-it-works" class="hover:text-primary transition">How it Works</a>
-        <a href="index.jsp#categories" class="hover:text-primary transition">Categories</a>
-        <a href="about.jsp" class="hover:text-primary transition">About</a>
-        <a href="contact.jsp" class="text-primary transition">Contact</a>
+        <a href="<%= request.getContextPath() %>/#how-it-works" class="hover:text-primary transition">How it Works</a>
+        <a href="<%= request.getContextPath() %>/#categories" class="hover:text-primary transition">Categories</a>
+        <a href="<%= request.getContextPath() %>/about" class="hover:text-primary transition">About</a>
+        <a href="<%= request.getContextPath() %>/contact" class="text-primary transition">Contact</a>
       </div>
 
       <div class="flex items-center space-x-4">
-        <a href="login.jsp" class="text-sm font-semibold text-gray-700 hover:text-primary transition">Log in</a>
-        <a href="register.jsp" class="bg-primary hover-bg-primary text-white text-sm px-5 py-2.5 rounded-lg font-semibold transition shadow-md">Get Started</a>
+        <a href="<%= request.getContextPath() %>/login" class="text-sm font-semibold text-gray-700 hover:text-primary transition">Log in</a>
+        <a href="<%= request.getContextPath() %>/register" class="bg-primary hover-bg-primary text-white text-sm px-5 py-2.5 rounded-lg font-semibold transition shadow-md">Get Started</a>
       </div>
     </nav>
 

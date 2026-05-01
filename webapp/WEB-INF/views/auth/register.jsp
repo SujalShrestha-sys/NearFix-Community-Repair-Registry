@@ -163,7 +163,7 @@
             <footer class="mt-8 md:mt-6 text-center">
                 <p class="text-gray-400 text-xs md:text-sm">
                     Already have an account? 
-                    <a href="login.jsp" class="text-[#449E80] font-bold hover:underline">Sign In</a>
+                    <a href="login" class="text-[#449E80] font-bold hover:underline">Sign In</a>
                 </p>
             </footer>
         </div>

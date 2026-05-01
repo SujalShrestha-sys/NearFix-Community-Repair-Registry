@@ -10,12 +10,11 @@ import java.util.List;
 
 public class RepairRequestDAO implements IRepairRequestDAO {
 
-
     @Override
     public int createRequest(RepairRequest request) throws SQLException {
         String sql = "INSERT INTO repair_requests (user_id, category_id, item_name, description, urgency, status) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setInt(1, request.getUserId());
             pstmt.setInt(2, request.getCategoryId());
@@ -39,7 +38,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public RepairRequest getRequestById(int requestId) throws SQLException {
         String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.request_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, requestId);
             ResultSet rs = pstmt.executeQuery();
@@ -57,7 +56,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
         String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.user_id = ? ORDER BY rr.created_at DESC";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, userId);
             ResultSet rs = pstmt.executeQuery();
@@ -76,7 +75,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
         String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.status = 'PENDING' ORDER BY rr.urgency DESC, rr.created_at DESC LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, pageSize);
             pstmt.setInt(2, offset);
@@ -90,13 +89,14 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     }
 
     @Override
-    public List<RepairRequest> getPendingRequestsByCategory(int categoryId, int page, int pageSize) throws SQLException {
+    public List<RepairRequest> getPendingRequestsByCategory(int categoryId, int page, int pageSize)
+            throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
         int offset = (page - 1) * pageSize;
         String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.status = 'PENDING' AND rr.category_id = ? ORDER BY rr.urgency DESC, rr.created_at DESC LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, categoryId);
             pstmt.setInt(2, pageSize);
@@ -116,7 +116,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
         String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.repairer_id = ? ORDER BY rr.updated_at DESC";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, repairerId);
             ResultSet rs = pstmt.executeQuery();
@@ -135,7 +135,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
         String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id ORDER BY rr.created_at DESC LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, pageSize);
             pstmt.setInt(2, offset);
@@ -152,7 +152,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public boolean acceptRequest(int requestId, int repairerId) throws SQLException {
         String sql = "UPDATE repair_requests SET repairer_id = ?, status = 'ACCEPTED' WHERE request_id = ? AND status = 'PENDING'";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, repairerId);
             pstmt.setInt(2, requestId);
@@ -165,7 +165,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public boolean updateStatus(int requestId, String newStatus) throws SQLException {
         String sql = "UPDATE repair_requests SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE request_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, newStatus);
             pstmt.setInt(2, requestId);
@@ -178,7 +178,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public boolean updateRequest(RepairRequest request) throws SQLException {
         String sql = "UPDATE repair_requests SET item_name = ?, description = ?, urgency = ? WHERE request_id = ? AND status = 'PENDING'";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, request.getItemName());
             pstmt.setString(2, request.getDescription());
@@ -193,7 +193,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public boolean cancelRequest(int requestId) throws SQLException {
         String sql = "UPDATE repair_requests SET status = 'CANCELLED' WHERE request_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, requestId);
             return pstmt.executeUpdate() > 0;
@@ -204,7 +204,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public boolean deleteRequest(int requestId) throws SQLException {
         String sql = "DELETE FROM repair_requests WHERE request_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, requestId);
             return pstmt.executeUpdate() > 0;
@@ -215,7 +215,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public int getTotalCompletedRepairs() throws SQLException {
         String sql = "SELECT COUNT(*) as count FROM repair_requests WHERE status = 'COMPLETED'";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
@@ -229,7 +229,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public int getTotalRequests() throws SQLException {
         String sql = "SELECT COUNT(*) as count FROM repair_requests";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {

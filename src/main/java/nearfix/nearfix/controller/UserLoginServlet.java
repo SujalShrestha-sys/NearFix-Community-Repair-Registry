@@ -1,63 +1,57 @@
 package nearfix.nearfix.controller;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import nearfix.nearfix.model.User;
 import nearfix.nearfix.exception.ValidationException;
+import nearfix.nearfix.model.User;
 import nearfix.nearfix.service.impl.UserService;
+import nearfix.nearfix.service.iservice.IUserService;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * UserLoginServlet - Handles user login:
+ * GET /login → Show the login form
+ * POST /login → Authenticate and redirect based on role
+ *
+ * After successful login, the user is redirected to:
+ * - ADMIN → admin.jsp
+ * - REPAIRER → repairer.jsp
+ * - USER → user.jsp
+ */
 @WebServlet("/login")
 public class UserLoginServlet extends HttpServlet {
 
-    private final UserService userService = new UserService();
+    private static final Logger logger = Logger.getLogger(UserLoginServlet.class.getName());
 
-    /**
-     * GET: Display login form
-     */
+    private final IUserService userService = new UserService();
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        try {
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
-        } catch (Exception e) {
-            request.setAttribute("errorMessage", "Error displaying login page: " + e.getMessage());
-            try {
-                request.getRequestDispatcher("/error.jsp").forward(request, response);
-            } catch (Exception ex) {
-                // Ignore or log if really needed, but avoid printStackTrace
-            }
-        } 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
     }
 
-    /**
-     * POST: Handle login form submission
-     */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        try {
-            // STEP 1: Extract parameters
-            String email = request.getParameter("email");
-            String password = request.getParameter("password");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
 
-            // STEP 2: Validate inputs
-            if (email == null || password == null) {
+        try {
+            if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
                 throw new ValidationException("Email and password are required.");
             }
 
-            // STEP 3: Call service to authenticate
             User user = userService.login(email, password);
-
             if (user == null) {
                 throw new ValidationException("Authentication failed.");
             }
 
-            // STEP 4: Create session
             HttpSession session = request.getSession();
             session.setAttribute("userId", user.getUserId());
             session.setAttribute("userName", user.getName());
@@ -65,30 +59,21 @@ public class UserLoginServlet extends HttpServlet {
             session.setAttribute("userRole", user.getRole());
             session.setMaxInactiveInterval(30 * 60); // 30 minutes
 
-            // STEP 5: Redirect based on role
             String redirectURL = switch (user.getRole()) {
-                case "ADMIN" -> request.getContextPath() + "/admin.jsp";
-                case "REPAIRER" -> request.getContextPath() + "/repairer.jsp";
-                default -> request.getContextPath() + "/user.jsp";
+                case "ADMIN" -> "/admin/dashboard";
+                case "REPAIRER" -> "/repairer/dashboard";
+                default -> "/user/dashboard";
             };
 
-            response.sendRedirect(redirectURL);
+            response.sendRedirect(request.getContextPath() + redirectURL);
 
         } catch (ValidationException e) {
-            // STEP 6: Handle validation errors
             request.setAttribute("errorMessage", e.getMessage());
-            try {
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
-            } catch (Exception ex) {
-                // Silently fail or send error if forwarding fails
-            }
+            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "An unexpected error occurred during login: " + e.getMessage());
-            try {
-                request.getRequestDispatcher("/error.jsp").forward(request, response);
-            } catch (Exception ex) {
-                System.out.println("Critical error");
-            }
+            logger.log(Level.SEVERE, "Login error", e);
+            request.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
         }
     }
 }

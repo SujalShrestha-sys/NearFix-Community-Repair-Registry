@@ -7,8 +7,8 @@ public class RepairRequest {
     private int requestId;
     private int userId;
     private String userName;
-    //private String userEmail;
-    //private String userPhone;
+    // private String userEmail;
+    // private String userPhone;
     private int categoryId;
     private String categoryName;
     private Integer repairerId;
@@ -20,10 +20,11 @@ public class RepairRequest {
     private Date createdAt;
     private Date updatedAt;
 
-    public RepairRequest() {}
+    public RepairRequest() {
+    }
 
     public RepairRequest(int userId, int categoryId, String itemName, String description, String urgency) {
-        this.userId =  userId;
+        this.userId = userId;
         this.categoryId = categoryId;
         this.itemName = itemName;
         this.description = description;
@@ -145,4 +146,3 @@ public class RepairRequest {
                 '}';
     }
 }
-

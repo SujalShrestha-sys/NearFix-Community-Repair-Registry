@@ -1,10 +1,9 @@
 package nearfix.nearfix.model;
 
-
 import java.util.Date;
 
 public class Repairer extends User {
-    private String specialization;  // e.g., "Electrical", "Plumbing", "Electronics"
+    private String specialization; // e.g., "Electrical", "Plumbing", "Electronics"
     private String expertise;
     private int yearsOfExperience;
     private double rating;

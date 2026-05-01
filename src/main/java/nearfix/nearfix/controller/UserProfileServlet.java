@@ -1,0 +1,82 @@
+package nearfix.nearfix.controller;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import nearfix.nearfix.model.User;
+import nearfix.nearfix.service.impl.UserService;
+import nearfix.nearfix.service.iservice.IUserService;
+
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * UserProfileServlet - Handles user profile viewing and updates.
+ */
+@WebServlet("/user/profile")
+public class UserProfileServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(UserProfileServlet.class.getName());
+    private final IUserService userService = new UserService();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        try {
+            int userId = (Integer) session.getAttribute("userId");
+            User user = userService.getUserById(userId);
+            if (user == null) {
+                response.sendRedirect(request.getContextPath() + "/login");
+                return;
+            }
+
+            request.setAttribute("user", user);
+            request.getRequestDispatcher("/WEB-INF/views/user/profile.jsp").forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error loading user profile", e);
+            request.setAttribute("errorMessage", "Error loading profile: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/user/profile.jsp").forward(request, response);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        int userId = (Integer) session.getAttribute("userId");
+        String name = request.getParameter("name");
+        String phone = request.getParameter("phone");
+
+        try {
+            User user = userService.getUserById(userId);
+            if (user == null) {
+                response.sendRedirect(request.getContextPath() + "/login");
+                return;
+            }
+
+            userService.updateProfile(userId, name, user.getEmail(), phone);
+            session.setAttribute("successMessage", "Profile updated successfully!");
+            response.sendRedirect(request.getContextPath() + "/user/profile");
+
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Profile update failed for user " + userId, e);
+            request.setAttribute("errorMessage", "Failed to update profile: " + e.getMessage());
+            doGet(request, response);
+        }
+    }
+}
