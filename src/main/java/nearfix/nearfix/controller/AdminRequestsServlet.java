@@ -10,7 +10,6 @@ import nearfix.nearfix.model.RepairRequest;
 import nearfix.nearfix.service.impl.RepairService;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/admin/requests")
