@@ -33,15 +33,20 @@ public class AdminUsersServlet extends HttpServlet {
                 page = Integer.parseInt(pageParam);
             }
 
+            String search = request.getParameter("search");
+            String role = request.getParameter("role");
             int pageSize = 10;
-            List<User> users = userService.getAllUsers(page, pageSize);
-            int totalUsers = userService.getTotalUsers();
+            
+            List<User> users = userService.searchUsers(search, role, page, pageSize);
+            int totalUsers = userService.getTotalUsersCount(search, role);
             int totalPages = (totalUsers + pageSize - 1) / pageSize;
 
             request.setAttribute("users", users);
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("totalUsers", totalUsers);
+            request.setAttribute("search", search);
+            request.setAttribute("selectedRole", role);
 
             request.getRequestDispatcher("/WEB-INF/views/admin/users.jsp").forward(request, response);
         } catch (Exception e) {

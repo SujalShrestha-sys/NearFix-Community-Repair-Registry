@@ -35,4 +35,13 @@ public interface IRepairRequestDAO {
 
     int getTotalRequests() throws SQLException;
 
+    List<RepairRequest> searchPendingRequests(String keyword, Integer categoryId, int page, int pageSize) throws SQLException;
+
+    List<RepairRequest> searchAllRequests(String keyword, Integer categoryId, String status, int page, int pageSize) throws SQLException;
+
+    int getTotalRequestsCount(String keyword, Integer categoryId, String status) throws SQLException;
+
+    List<RepairRequest> searchRepairerRequests(int repairerId, String keyword, String status) throws SQLException;
+
+    List<RepairRequest> searchUserRequests(int userId, String keyword, String status) throws SQLException;
 }

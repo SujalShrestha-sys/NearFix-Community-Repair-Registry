@@ -58,15 +58,29 @@ public class RepairerServlet extends HttpServlet {
                     break;
 
                 case "/available-requests":
-                    List<RepairRequest> pending = repairService.getPendingRequests(1, 100);
+                    String search = request.getParameter("search");
+                    String categoryIdStr = request.getParameter("categoryId");
+                    Integer categoryId = (categoryIdStr != null && !categoryIdStr.isEmpty()) ? Integer.parseInt(categoryIdStr) : null;
+                    
+                    List<RepairRequest> pending = repairService.searchPendingRequests(search, categoryId, 1, 100);
                     request.setAttribute("requests", pending);
+                    request.setAttribute("search", search);
+                    request.setAttribute("selectedCategoryId", categoryId);
+                    request.setAttribute("categories", new nearfix.nearfix.service.impl.CategoryService().getAllCategories());
+                    
                     request.getRequestDispatcher("/WEB-INF/views/repairer/available-requests.jsp").forward(request,
                             response);
                     break;
 
                 case "/my-requests":
-                    List<RepairRequest> assigned = repairService.getRequestsByRepairerId(repairerId);
+                    String mySearch = request.getParameter("search");
+                    String myStatus = request.getParameter("status");
+                    
+                    List<RepairRequest> assigned = repairService.searchRepairerRequests(repairerId, mySearch, myStatus);
                     request.setAttribute("requests", assigned);
+                    request.setAttribute("search", mySearch);
+                    request.setAttribute("selectedStatus", myStatus);
+                    
                     request.getRequestDispatcher("/WEB-INF/views/repairer/my-requests.jsp").forward(request, response);
                     break;
 

@@ -36,6 +36,37 @@
                 </a>
             </header>
 
+            <!-- Search and Filter Bar -->
+            <div class="bg-white border border-gray-100 rounded-3xl p-6 mb-8 shadow-sm">
+                <form action="<%= request.getContextPath() %>/repair-request" method="GET" class="flex flex-col md:flex-row gap-4">
+                    <input type="hidden" name="action" value="myRequests">
+                    <div class="flex-1 relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        <input type="text" name="search" value="<%= request.getAttribute("search") != null ? request.getAttribute("search") : "" %>" 
+                               placeholder="Search your requests..." 
+                               class="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#449E80] transition-all text-sm">
+                    </div>
+                    <div class="w-full md:w-48">
+                        <select name="status" class="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#449E80] transition-all text-sm appearance-none">
+                            <option value="">All Statuses</option>
+                            <option value="PENDING" <%= "PENDING".equals(request.getAttribute("selectedStatus")) ? "selected" : "" %>>Pending</option>
+                            <option value="ACCEPTED" <%= "ACCEPTED".equals(request.getAttribute("selectedStatus")) ? "selected" : "" %>>Accepted</option>
+                            <option value="IN_PROGRESS" <%= "IN_PROGRESS".equals(request.getAttribute("selectedStatus")) ? "selected" : "" %>>In Progress</option>
+                            <option value="COMPLETED" <%= "COMPLETED".equals(request.getAttribute("selectedStatus")) ? "selected" : "" %>>Completed</option>
+                            <option value="CANCELLED" <%= "CANCELLED".equals(request.getAttribute("selectedStatus")) ? "selected" : "" %>>Cancelled</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="bg-[#449E80] hover:bg-[#3d8b70] text-white px-8 py-3 rounded-2xl font-bold transition-all shadow-lg shadow-[#449E80]/10">
+                        Apply
+                    </button>
+                    <% if (request.getAttribute("search") != null || request.getAttribute("selectedStatus") != null) { %>
+                        <a href="<%= request.getContextPath() %>/repair-request?action=myRequests" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-6 py-3 rounded-2xl font-bold transition-all text-center flex items-center justify-center">
+                            Clear
+                        </a>
+                    <% } %>
+                </form>
+            </div>
+
             <% 
                 List<RepairRequest> requests = (List<RepairRequest>) request.getAttribute("requests");
             %>

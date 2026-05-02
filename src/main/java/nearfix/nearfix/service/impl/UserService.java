@@ -209,4 +209,14 @@ public class UserService implements IUserService {
     public boolean activateUser(int userId) throws SQLException {
         return userDAO.activateUser(userId);
     }
+
+    @Override
+    public List<User> searchUsers(String keyword, String role, int page, int pageSize) throws SQLException {
+        return userDAO.searchUsers(keyword, role, page, pageSize);
+    }
+
+    @Override
+    public int getTotalUsersCount(String keyword, String role) throws SQLException {
+        return userDAO.getTotalUsersCount(keyword, role);
+    }
 }

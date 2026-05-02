@@ -169,6 +169,68 @@ public class UserDAO implements IUserDAO {
         return 0;
     }
 
+    @Override
+    public List<User> searchUsers(String keyword, String role, int page, int pageSize) throws SQLException {
+        List<User> users = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+
+        String sql = "SELECT * FROM users " +
+                     "WHERE (role = ? OR ? = '') " +
+                     "AND (name LIKE ? OR email LIKE ? OR phone LIKE ? OR ? = '') " +
+                     "LIMIT ? OFFSET ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            String r = (role != null) ? role : "";
+            String search = (keyword != null) ? "%" + keyword + "%" : "%%";
+            String rawSearch = (keyword != null) ? keyword : "";
+
+            pstmt.setString(1, r);
+            pstmt.setString(2, r);
+            pstmt.setString(3, search);
+            pstmt.setString(4, search);
+            pstmt.setString(5, search);
+            pstmt.setString(6, rawSearch);
+            pstmt.setInt(7, pageSize);
+            pstmt.setInt(8, offset);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
+            }
+        }
+        return users;
+    }
+
+    @Override
+    public int getTotalUsersCount(String keyword, String role) throws SQLException {
+        String sql = "SELECT COUNT(*) as count FROM users " +
+                     "WHERE (role = ? OR ? = '') " +
+                     "AND (name LIKE ? OR email LIKE ? OR phone LIKE ? OR ? = '')";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            String r = (role != null) ? role : "";
+            String search = (keyword != null) ? "%" + keyword + "%" : "%%";
+            String rawSearch = (keyword != null) ? keyword : "";
+
+            pstmt.setString(1, r);
+            pstmt.setString(2, r);
+            pstmt.setString(3, search);
+            pstmt.setString(4, search);
+            pstmt.setString(5, search);
+            pstmt.setString(6, rawSearch);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        }
+        return 0;
+    }
+
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserId(rs.getInt("user_id"));

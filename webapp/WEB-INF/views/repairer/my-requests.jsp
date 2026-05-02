@@ -26,6 +26,34 @@
                         <p class="text-gray-500 text-[15px]">Manage and complete your accepted repair jobs.</p>
                     </div>
                 </div>
+
+                <!-- Search and Filter Bar -->
+                <div class="bg-white border border-gray-100 rounded-[2rem] p-6 mb-8 shadow-sm">
+                    <form action="<%= request.getContextPath() %>/repairer/my-requests" method="GET" class="flex flex-col md:flex-row gap-4">
+                        <div class="flex-1 relative">
+                            <i class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
+                            <input type="text" name="search" value="<%= request.getAttribute("search") != null ? request.getAttribute("search") : "" %>" 
+                                   placeholder="Search my jobs..." 
+                                   class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#409074] transition-all text-[15px]">
+                        </div>
+                        <div class="w-full md:w-64">
+                            <select name="status" class="w-full px-4 py-3.5 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#409074] transition-all text-[15px] appearance-none">
+                                <option value="">All Statuses</option>
+                                <option value="ACCEPTED" <%= "ACCEPTED".equals(request.getAttribute("selectedStatus")) ? "selected" : "" %>>Accepted</option>
+                                <option value="IN_PROGRESS" <%= "IN_PROGRESS".equals(request.getAttribute("selectedStatus")) ? "selected" : "" %>>In Progress</option>
+                                <option value="COMPLETED" <%= "COMPLETED".equals(request.getAttribute("selectedStatus")) ? "selected" : "" %>>Completed</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="bg-[#409074] hover:bg-[#2F6C56] text-white px-8 py-3.5 rounded-2xl font-bold transition-all shadow-lg shadow-[#409074]/10">
+                            Apply
+                        </button>
+                        <% if (request.getAttribute("search") != null || request.getAttribute("selectedStatus") != null) { %>
+                            <a href="<%= request.getContextPath() %>/repairer/my-requests" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-6 py-3.5 rounded-2xl font-bold transition-all text-center">
+                                Clear
+                            </a>
+                        <% } %>
+                    </form>
+                </div>
                 <% 
                     List<RepairRequest> requests = (List<RepairRequest>) request.getAttribute("requests");
                     if (requests == null || requests.isEmpty()) { 

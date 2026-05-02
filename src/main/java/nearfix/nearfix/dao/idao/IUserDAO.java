@@ -25,4 +25,8 @@ public interface IUserDAO {
     boolean activateUser(int userId) throws SQLException;
 
     int getTotalUsers() throws SQLException;
+
+    List<User> searchUsers(String keyword, String role, int page, int pageSize) throws SQLException;
+
+    int getTotalUsersCount(String keyword, String role) throws SQLException;
 }

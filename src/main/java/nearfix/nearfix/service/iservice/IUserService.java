@@ -26,4 +26,8 @@ public interface IUserService {
         boolean deactivateUser(int userId) throws SQLException;
 
         boolean activateUser(int userId) throws SQLException;
+
+        List<User> searchUsers(String keyword, String role, int page, int pageSize) throws SQLException;
+
+        int getTotalUsersCount(String keyword, String role) throws SQLException;
 }

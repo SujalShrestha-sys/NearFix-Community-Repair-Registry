@@ -19,7 +19,7 @@ public class RepairService implements IRepairService {
 
     private static final Logger logger = Logger.getLogger(RepairService.class.getName());
 
-    private final RepairRequestDAO repairRequestDAO = new RepairRequestDAO();
+    private final IRepairRequestDAO repairRequestDAO = new RepairRequestDAO();
 
     /**
      * Creates a new repair request after validating the input.
@@ -162,5 +162,30 @@ public class RepairService implements IRepairService {
     @Override
     public int getTotalRequests() throws SQLException {
         return repairRequestDAO.getTotalRequests();
+    }
+
+    @Override
+    public List<RepairRequest> searchPendingRequests(String keyword, Integer categoryId, int page, int pageSize) throws SQLException {
+        return repairRequestDAO.searchPendingRequests(keyword, categoryId, page, pageSize);
+    }
+
+    @Override
+    public List<RepairRequest> searchAllRequests(String keyword, Integer categoryId, String status, int page, int pageSize) throws SQLException {
+        return repairRequestDAO.searchAllRequests(keyword, categoryId, status, page, pageSize);
+    }
+
+    @Override
+    public int getTotalRequestsCount(String keyword, Integer categoryId, String status) throws SQLException {
+        return repairRequestDAO.getTotalRequestsCount(keyword, categoryId, status);
+    }
+
+    @Override
+    public List<RepairRequest> searchRepairerRequests(int repairerId, String keyword, String status) throws SQLException {
+        return repairRequestDAO.searchRepairerRequests(repairerId, keyword, status);
+    }
+
+    @Override
+    public List<RepairRequest> searchUserRequests(int userId, String keyword, String status) throws SQLException {
+        return repairRequestDAO.searchUserRequests(userId, keyword, status);
     }
 }

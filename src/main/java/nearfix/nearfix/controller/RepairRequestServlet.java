@@ -56,8 +56,14 @@ public class RepairRequestServlet extends HttpServlet {
 
                 case "myRequests":
                     int userId = (Integer) session.getAttribute("userId");
-                    List<RepairRequest> requests = repairService.getUserRequests(userId);
+                    String search = request.getParameter("search");
+                    String status = request.getParameter("status");
+                    
+                    List<RepairRequest> requests = repairService.searchUserRequests(userId, search, status);
                     request.setAttribute("requests", requests);
+                    request.setAttribute("search", search);
+                    request.setAttribute("selectedStatus", status);
+                    
                     request.getRequestDispatcher("/WEB-INF/views/user/my-requests.jsp").forward(request, response);
                     break;
 

@@ -33,18 +33,29 @@ public class AdminRequestsServlet extends HttpServlet {
                 page = Integer.parseInt(pageParam);
             }
 
+            String search = request.getParameter("search");
+            String categoryIdStr = request.getParameter("categoryId");
+            Integer categoryId = (categoryIdStr != null && !categoryIdStr.isEmpty()) ? Integer.parseInt(categoryIdStr) : null;
+            String status = request.getParameter("status");
+            
             int pageSize = 10;
-            List<RepairRequest> requests = repairService.getAllRequests(page, pageSize);
-            int totalRequests = repairService.getTotalRequests();
+            // For admin, we want to search all requests, not just pending
+            // I'll need a more generic search method for all requests
+            List<RepairRequest> requests = repairService.searchAllRequests(search, categoryId, status, page, pageSize);
+            int totalRequests = repairService.getTotalRequestsCount(search, categoryId, status);
             int totalPages = (totalRequests + pageSize - 1) / pageSize;
 
             request.setAttribute("requests", requests);
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("totalRequests", totalRequests);
+            request.setAttribute("search", search);
+            request.setAttribute("selectedCategoryId", categoryId);
+            request.setAttribute("selectedStatus", status);
+            request.setAttribute("categories", new nearfix.nearfix.service.impl.CategoryService().getAllCategories());
 
             request.getRequestDispatcher("/WEB-INF/views/admin/requests.jsp").forward(request, response);
-        } catch (SQLException | NumberFormatException e) {
+        } catch (Exception e) {
             request.setAttribute("errorMessage", "Error loading requests: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/admin/requests.jsp").forward(request, response);
         }
