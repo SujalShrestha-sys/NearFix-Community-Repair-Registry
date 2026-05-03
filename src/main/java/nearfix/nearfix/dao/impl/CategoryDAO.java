@@ -10,21 +10,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
-
 /**
- * CategoryDAO - Database operations for repair categories.
- * Implements ICategoryDAO interface.
- *
- * Each method:
- * 1. Opens a database connection using DBConnection.
- * 2. Executes a SQL query using PreparedStatement (prevents SQL injection).
- * 3. Auto-closes connection via try-with-resources.
+ * Implementation of ICategoryDAO using JDBC.
+ * Handles database interactions for Category entities.
  */
 public class CategoryDAO implements ICategoryDAO {
 
-    private static final Logger logger = Logger.getLogger(CategoryDAO.class.getName());
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Category> getAllCategories() throws SQLException {
         List<Category> categories = new ArrayList<>();
@@ -38,12 +32,13 @@ public class CategoryDAO implements ICategoryDAO {
             while (rs.next()) {
                 categories.add(mapResultSetToCategory(rs));
             }
-
-            logger.info("Retrieved " + categories.size() + " categories from database");
         }
         return categories;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Category getCategoryById(int categoryId) throws SQLException {
         String sql = "SELECT * FROM categories WHERE category_id = ?";
@@ -61,6 +56,9 @@ public class CategoryDAO implements ICategoryDAO {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean createCategory(Category category) throws SQLException {
         String sql = "INSERT INTO categories (name, description) VALUES (?, ?)";
@@ -71,18 +69,13 @@ public class CategoryDAO implements ICategoryDAO {
             pstmt.setString(1, category.getName());
             pstmt.setString(2, category.getDescription());
 
-            boolean success = pstmt.executeUpdate() > 0;
-
-            if (success) {
-                logger.info("Category created: " + category.getName());
-            } else {
-                logger.warning("Failed to create category: " + category.getName());
-            }
-
-            return success;
+            return pstmt.executeUpdate() > 0;
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean updateCategory(Category category) throws SQLException {
         String sql = "UPDATE categories SET name = ?, description = ? WHERE category_id = ?";
@@ -94,18 +87,13 @@ public class CategoryDAO implements ICategoryDAO {
             pstmt.setString(2, category.getDescription());
             pstmt.setInt(3, category.getCategoryId());
 
-            boolean success = pstmt.executeUpdate() > 0;
-
-            if (success) {
-                logger.info("Category updated: ID " + category.getCategoryId());
-            } else {
-                logger.warning("Failed to update category: ID " + category.getCategoryId());
-            }
-
-            return success;
+            return pstmt.executeUpdate() > 0;
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean deleteCategory(int categoryId) throws SQLException {
         String sql = "DELETE FROM categories WHERE category_id = ?";
@@ -115,18 +103,13 @@ public class CategoryDAO implements ICategoryDAO {
 
             pstmt.setInt(1, categoryId);
 
-            boolean success = pstmt.executeUpdate() > 0;
-
-            if (success) {
-                logger.info("Category deleted: ID " + categoryId);
-            } else {
-                logger.warning("Failed to delete category: ID " + categoryId);
-            }
-
-            return success;
+            return pstmt.executeUpdate() > 0;
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getTotalCategories() throws SQLException {
         String sql = "SELECT COUNT(*) as count FROM categories";
@@ -146,6 +129,9 @@ public class CategoryDAO implements ICategoryDAO {
 
     /**
      * Maps a single row from the ResultSet to a Category object.
+     * @param rs ResultSet containing category data.
+     * @return A populated Category object.
+     * @throws SQLException if a database access error occurs.
      */
     private Category mapResultSetToCategory(ResultSet rs) throws SQLException {
         Category category = new Category();
@@ -155,3 +141,4 @@ public class CategoryDAO implements ICategoryDAO {
         return category;
     }
 }
+

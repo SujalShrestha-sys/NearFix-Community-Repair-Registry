@@ -11,17 +11,11 @@ import nearfix.nearfix.service.impl.UserService;
 import nearfix.nearfix.service.iservice.IUserService;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- * UserProfileServlet - Handles user profile viewing and updates.
- */
 @WebServlet("/user/profile")
 public class UserProfileServlet extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(UserProfileServlet.class.getName());
-    private final IUserService userService = new UserService();
+    private IUserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -43,7 +37,6 @@ public class UserProfileServlet extends HttpServlet {
             request.setAttribute("user", user);
             request.getRequestDispatcher("/WEB-INF/views/user/profile.jsp").forward(request, response);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error loading user profile", e);
             request.setAttribute("errorMessage", "Error loading profile: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/user/profile.jsp").forward(request, response);
         }
@@ -74,7 +67,6 @@ public class UserProfileServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/user/profile");
 
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Profile update failed for user " + userId, e);
             request.setAttribute("errorMessage", "Failed to update profile: " + e.getMessage());
             doGet(request, response);
         }

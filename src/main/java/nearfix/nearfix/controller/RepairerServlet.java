@@ -3,28 +3,20 @@ package nearfix.nearfix.controller;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import nearfix.nearfix.model.Repairer;
-import nearfix.nearfix.model.RepairRequest;
-import nearfix.nearfix.service.impl.RepairService;
-import nearfix.nearfix.service.impl.RepairerService;
-import nearfix.nearfix.service.iservice.IRepairService;
-import nearfix.nearfix.service.iservice.IRepairerService;
+import nearfix.nearfix.model.*;
+import nearfix.nearfix.service.impl.*;
+import nearfix.nearfix.service.iservice.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- * RepairerServlet - Handles all repairer-related actions.
- */
+
 @WebServlet("/repairer/*")
 public class RepairerServlet extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(RepairerServlet.class.getName());
-
-    private final IRepairService repairService = new RepairService();
-    private final IRepairerService repairerService = new RepairerService();
+    private IRepairService repairService = new RepairService();
+    private IRepairerService repairerService = new RepairerService();
+    private ICategoryService categoryService = new CategoryService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -58,23 +50,44 @@ public class RepairerServlet extends HttpServlet {
                     break;
 
                 case "/available-requests":
-                    List<RepairRequest> pending = repairService.getPendingRequests(1, 100);
+                    String search = request.getParameter("search");
+                    String categoryIdStr = request.getParameter("categoryId");
+                    Integer categoryId = (categoryIdStr != null && !categoryIdStr.isEmpty())
+                            ? Integer.parseInt(categoryIdStr)
+                            : null;
+
+                    List<RepairRequest> pending = repairService.searchPendingRequests(search, categoryId, 1, 100);
                     request.setAttribute("requests", pending);
+                    request.setAttribute("search", search);
+                    request.setAttribute("selectedCategoryId", categoryId);
+                    request.setAttribute("categories", categoryService.getAllCategories());
+
                     request.getRequestDispatcher("/WEB-INF/views/repairer/available-requests.jsp").forward(request,
                             response);
                     break;
 
                 case "/my-requests":
-                    List<RepairRequest> assigned = repairService.getRequestsByRepairerId(repairerId);
+                    String mySearch = request.getParameter("search");
+                    String myStatus = request.getParameter("status");
+
+                    List<RepairRequest> assigned = repairService.searchRepairerRequests(repairerId, mySearch, myStatus);
                     request.setAttribute("requests", assigned);
+                    request.setAttribute("search", mySearch);
+                    request.setAttribute("selectedStatus", myStatus);
+
                     request.getRequestDispatcher("/WEB-INF/views/repairer/my-requests.jsp").forward(request, response);
+                    break;
+
+                case "/wishlist":
+                    List<SavedJob> savedJobs = repairService.getSavedJobs(repairerId);
+                    request.setAttribute("savedJobs", savedJobs);
+                    request.getRequestDispatcher("/WEB-INF/views/repairer/wishlist.jsp").forward(request, response);
                     break;
 
                 default:
                     response.sendRedirect(request.getContextPath() + "/repairer/dashboard");
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "RepairerServlet doGet error", e);
             request.setAttribute("errorMessage", "Error: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/repairer/dashboard.jsp").forward(request, response);
         }
@@ -125,12 +138,17 @@ public class RepairerServlet extends HttpServlet {
                     message = "Request marked as completed!";
                     break;
 
+                case "toggle-save":
+                    int saveReqId = Integer.parseInt(request.getParameter("requestId"));
+                    repairService.toggleSaveJob(repairerId, saveReqId);
+                    message = "Wishlist updated!";
+                    break;
+
                 default:
                     response.sendRedirect(request.getContextPath() + "/repairer/dashboard");
                     return;
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "RepairerServlet doPost error", e);
             error = e.getMessage();
         }
 

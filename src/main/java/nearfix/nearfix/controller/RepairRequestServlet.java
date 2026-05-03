@@ -11,19 +11,12 @@ import nearfix.nearfix.service.iservice.IRepairService;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- * RepairRequestServlet - Handles user repair request actions.
- */
-@WebServlet("/repair-request")
+@WebServlet("/repair-request/*")
 public class RepairRequestServlet extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(RepairRequestServlet.class.getName());
-
-    private final IRepairService repairService = new RepairService();
-    private final ICategoryService categoryService = new CategoryService();
+    private IRepairService repairService = new RepairService();
+    private ICategoryService categoryService = new CategoryService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -56,8 +49,14 @@ public class RepairRequestServlet extends HttpServlet {
 
                 case "myRequests":
                     int userId = (Integer) session.getAttribute("userId");
-                    List<RepairRequest> requests = repairService.getUserRequests(userId);
+                    String search = request.getParameter("search");
+                    String status = request.getParameter("status");
+
+                    List<RepairRequest> requests = repairService.searchUserRequests(userId, search, status);
                     request.setAttribute("requests", requests);
+                    request.setAttribute("search", search);
+                    request.setAttribute("selectedStatus", status);
+
                     request.getRequestDispatcher("/WEB-INF/views/user/my-requests.jsp").forward(request, response);
                     break;
 
@@ -65,7 +64,6 @@ public class RepairRequestServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/user/dashboard");
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "RepairRequestServlet doGet error", e);
             request.setAttribute("errorMessage", "Error: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/user/dashboard.jsp").forward(request, response);
         }
@@ -114,12 +112,20 @@ public class RepairRequestServlet extends HttpServlet {
                     message = "Repair request cancelled.";
                     break;
 
+                case "rate":
+                    int rateReqId = Integer.parseInt(request.getParameter("requestId"));
+                    int rScore = Integer.parseInt(request.getParameter("rating"));
+                    String rComment = request.getParameter("comment");
+                    int rUserId = (Integer) session.getAttribute("userId");
+                    repairService.addRating(rateReqId, rUserId, rScore, rComment);
+                    message = "Thank you for your feedback!";
+                    break;
+
                 default:
                     response.sendRedirect(request.getContextPath() + "/user/dashboard");
                     return;
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "RepairRequestServlet doPost error", e);
             error = e.getMessage();
         }
 

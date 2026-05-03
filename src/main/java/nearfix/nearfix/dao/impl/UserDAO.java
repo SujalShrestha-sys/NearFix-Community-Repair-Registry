@@ -8,7 +8,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of IUserDAO using JDBC.
+ * Manages core user account operations in the database.
+ */
 public class UserDAO implements IUserDAO {
+
 
     @Override
     public int createUser(User user) throws SQLException {
@@ -160,6 +165,78 @@ public class UserDAO implements IUserDAO {
         String sql = "SELECT COUNT(*) as count FROM users";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public List<User> searchUsers(String keyword, String role, int page, int pageSize) throws SQLException {
+        List<User> users = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+
+        // Join with repairer_profiles to get verification status
+        String sql = "SELECT u.*, rp.verification_status FROM users u " +
+                "LEFT JOIN repairer_profiles rp ON u.user_id = rp.user_id " +
+                "WHERE (u.role = ? OR ? = '') " +
+                "AND (u.name LIKE ? OR u.email LIKE ? OR u.phone LIKE ? OR ? = '') " +
+                "LIMIT ? OFFSET ?";
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            String r = (role != null) ? role : "";
+            String search = (keyword != null) ? "%" + keyword + "%" : "%%";
+            String rawSearch = (keyword != null) ? keyword : "";
+
+            pstmt.setString(1, r);
+            pstmt.setString(2, r);
+            pstmt.setString(3, search);
+            pstmt.setString(4, search);
+            pstmt.setString(5, search);
+            pstmt.setString(6, rawSearch);
+            pstmt.setInt(7, pageSize);
+            pstmt.setInt(8, offset);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                User user = mapResultSetToUser(rs);
+                // Also set verification status if it exists in the result set
+                // rs.getObject checks for null since verification_status might not exist for
+                // non-repairers
+                Object verified = rs.getObject("verification_status");
+                if (verified != null) {
+                    user.setVerified((Boolean) verified);
+                }
+                users.add(user);
+            }
+        }
+        return users;
+    }
+
+    @Override
+    public int getTotalUsersCount(String keyword, String role) throws SQLException {
+        String sql = "SELECT COUNT(*) as count FROM users " +
+                "WHERE (role = ? OR ? = '') " +
+                "AND (name LIKE ? OR email LIKE ? OR phone LIKE ? OR ? = '')";
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            String r = (role != null) ? role : "";
+            String search = (keyword != null) ? "%" + keyword + "%" : "%%";
+            String rawSearch = (keyword != null) ? keyword : "";
+
+            pstmt.setString(1, r);
+            pstmt.setString(2, r);
+            pstmt.setString(3, search);
+            pstmt.setString(4, search);
+            pstmt.setString(5, search);
+            pstmt.setString(6, rawSearch);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
