@@ -12,25 +12,12 @@ import nearfix.nearfix.service.impl.UserService;
 import nearfix.nearfix.service.iservice.IUserService;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- * UserLoginServlet - Handles user login:
- * GET /login → Show the login form
- * POST /login → Authenticate and redirect based on role
- *
- * After successful login, the user is redirected to:
- * - ADMIN → admin.jsp
- * - REPAIRER → repairer.jsp
- * - USER → user.jsp
- */
+
 @WebServlet("/login")
 public class UserLoginServlet extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(UserLoginServlet.class.getName());
-
-    private final IUserService userService = new UserService();
+    private IUserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -71,7 +58,6 @@ public class UserLoginServlet extends HttpServlet {
             request.setAttribute("errorMessage", e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Login error", e);
             request.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
         }

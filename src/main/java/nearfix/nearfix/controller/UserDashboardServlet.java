@@ -15,21 +15,12 @@ import nearfix.nearfix.service.iservice.IUserService;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- * UserDashboardServlet - Loads data and displays the user's dashboard.
- * GET /user/dashboard → Fetch user info, repair requests, and stats → forward
- * to dashboard.jsp
- */
 @WebServlet("/user/dashboard")
 public class UserDashboardServlet extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(UserDashboardServlet.class.getName());
-
-    private final IUserService userService = new UserService();
-    private final IRepairService repairService = new RepairService();
+    private IUserService userService = new UserService();
+    private IRepairService repairService = new RepairService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -58,7 +49,6 @@ public class UserDashboardServlet extends HttpServlet {
 
             request.getRequestDispatcher("/WEB-INF/views/user/dashboard.jsp").forward(request, response);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error loading dashboard", e);
             request.setAttribute("errorMessage", "Error loading dashboard: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/user/dashboard.jsp").forward(request, response);
         }

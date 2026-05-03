@@ -136,14 +136,14 @@
 
         <div class="flex items-center space-x-8 pt-6 border-t border-gray-100">
           <div>
-            <span class="block text-2xl font-bold">2,500+</span>
+            <span class="block text-2xl font-bold"><%= request.getAttribute("itemsSaved") != null ? request.getAttribute("itemsSaved") : "2,500" %>+</span>
             <span
               class="text-xs text-gray-500 uppercase tracking-wider font-semibold"
               >Items Repaired</span
             >
           </div>
           <div>
-            <span class="block text-2xl font-bold">340+</span>
+            <span class="block text-2xl font-bold"><%= request.getAttribute("totalFixers") != null ? request.getAttribute("totalFixers") : "340" %>+</span>
             <span
               class="text-xs text-gray-500 uppercase tracking-wider font-semibold"
               >Fixers</span
@@ -200,7 +200,7 @@
                 <p class="text-xs text-gray-500 font-medium">
                   Saved from landfill
                 </p>
-                <p class="text-lg font-bold text-primary">4,547 items</p>
+                <p class="text-lg font-bold text-primary"><%= request.getAttribute("itemsSaved") != null ? request.getAttribute("itemsSaved") : "4,547" %> items</p>
               </div>
             </div>
           </div>

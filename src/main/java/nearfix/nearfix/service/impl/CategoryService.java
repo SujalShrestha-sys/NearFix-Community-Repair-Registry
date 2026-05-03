@@ -7,36 +7,18 @@ import nearfix.nearfix.service.iservice.ICategoryService;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Logger;
-
-/**
- * CategoryService - Business logic for repair categories.
- * Handles validation before calling the DAO layer.
- *
- * FLOW: Servlet → CategoryService → CategoryDAO → Database
- */
 public class CategoryService implements ICategoryService {
 
-    private static final Logger logger = Logger.getLogger(CategoryService.class.getName());
-
-    private final CategoryDAO categoryDAO = new CategoryDAO();
+    private CategoryDAO categoryDAO = new CategoryDAO();
 
     @Override
     public List<Category> getAllCategories() throws SQLException {
-        List<Category> categories = categoryDAO.getAllCategories();
-        logger.info("CategoryService: Retrieved " + categories.size() + " categories");
-        return categories;
+        return categoryDAO.getAllCategories();
     }
 
     @Override
     public Category getCategoryById(int categoryId) throws SQLException {
-        Category category = categoryDAO.getCategoryById(categoryId);
-
-        if (category == null) {
-            logger.warning("CategoryService: Category not found with ID " + categoryId);
-        }
-
-        return category;
+        return categoryDAO.getCategoryById(categoryId);
     }
 
     @Override
@@ -55,15 +37,7 @@ public class CategoryService implements ICategoryService {
 
         // Create and save
         Category category = new Category(name, description);
-        boolean success = categoryDAO.createCategory(category);
-
-        if (success) {
-            logger.info("CategoryService: Category created — " + name);
-        } else {
-            logger.warning("CategoryService: Failed to create category — " + name);
-        }
-
-        return success;
+        return categoryDAO.createCategory(category);
     }
 
     @Override
@@ -89,15 +63,7 @@ public class CategoryService implements ICategoryService {
         // Update and save
         category.setName(name);
         category.setDescription(description);
-        boolean success = categoryDAO.updateCategory(category);
-
-        if (success) {
-            logger.info("CategoryService: Category updated — ID " + categoryId);
-        } else {
-            logger.warning("CategoryService: Failed to update category — ID " + categoryId);
-        }
-
-        return success;
+        return categoryDAO.updateCategory(category);
     }
 
     @Override
@@ -109,15 +75,7 @@ public class CategoryService implements ICategoryService {
             throw new ValidationException("Category not found.");
         }
 
-        boolean success = categoryDAO.deleteCategory(categoryId);
-
-        if (success) {
-            logger.info("CategoryService: Category deleted — ID " + categoryId);
-        } else {
-            logger.warning("CategoryService: Failed to delete category — ID " + categoryId);
-        }
-
-        return success;
+        return categoryDAO.deleteCategory(categoryId);
     }
 
     @Override

@@ -12,24 +12,11 @@ import nearfix.nearfix.service.impl.UserService;
 import nearfix.nearfix.service.iservice.IUserService;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- * UserRegisterServlet - Handles user registration:
- * GET /register → Show the registration form
- * POST /register → Process the registration form
- *
- * After successful registration:
- * - USER role → Redirected to login page with success message
- * - REPAIRER role → Auto-logged in and redirected to repairer dashboard
- */
 @WebServlet("/register")
 public class UserRegisterServlet extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(UserRegisterServlet.class.getName());
-
-    private final IUserService userService = new UserService();
+    private IUserService userService = new UserService();
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -77,7 +64,6 @@ public class UserRegisterServlet extends HttpServlet {
             request.setAttribute("errorMessage", e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(request, response);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Registration error", e);
             request.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(request, response);
         }

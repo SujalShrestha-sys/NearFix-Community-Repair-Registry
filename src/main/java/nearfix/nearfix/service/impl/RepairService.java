@@ -1,36 +1,27 @@
 package nearfix.nearfix.service.impl;
 
-import nearfix.nearfix.dao.idao.IRepairRequestDAO;
-import nearfix.nearfix.dao.impl.RepairRequestDAO;
+import nearfix.nearfix.dao.impl.*;
 import nearfix.nearfix.exception.ValidationException;
-import nearfix.nearfix.model.RepairRequest;
+import nearfix.nearfix.model.*;
 import nearfix.nearfix.service.iservice.IRepairService;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * RepairService - Business logic for repair requests.
- * Validates user input before delegating to the DAO layer.
- * FLOW: Servlet → RepairService → RepairRequestDAO → Database
  */
 public class RepairService implements IRepairService {
 
-    private static final Logger logger = Logger.getLogger(RepairService.class.getName());
+    private RepairRequestDAO repairRequestDAO = new RepairRequestDAO();
+    private RepairerDAO repairerDAO = new RepairerDAO();
+    private RatingDAO ratingDAO = new RatingDAO();
+    private SavedJobDAO savedJobDAO = new SavedJobDAO();
 
-    private final IRepairRequestDAO repairRequestDAO = new RepairRequestDAO();
-
-    /**
-     * Creates a new repair request after validating the input.
-     *
-     * @return the generated request ID, or -1 if creation failed
-     */
     @Override
     public int postRepairRequest(int userId, int categoryId, String itemName, String description, String urgency)
             throws ValidationException, SQLException {
 
-        // Validate required fields
         if (itemName == null || itemName.trim().isEmpty()) {
             throw new ValidationException("Item name is required.");
         }
@@ -38,7 +29,6 @@ public class RepairService implements IRepairService {
             throw new ValidationException("Description is required.");
         }
 
-        // Build the request object
         RepairRequest request = new RepairRequest();
         request.setUserId(userId);
         request.setCategoryId(categoryId);
@@ -47,23 +37,14 @@ public class RepairService implements IRepairService {
         request.setUrgency(urgency);
         request.setStatus("PENDING");
 
-        int requestId = repairRequestDAO.createRequest(request);
-        logger.info("Repair request created: ID " + requestId + " by user " + userId);
-
-        return requestId;
+        return repairRequestDAO.createRequest(request);
     }
 
-    /**
-     * Gets a single repair request by its ID.
-     */
     @Override
     public RepairRequest getRepairRequest(int requestId) throws SQLException {
         return repairRequestDAO.getRequestById(requestId);
     }
 
-    /**
-     * Gets all repair requests submitted by a specific user.
-     */
     @Override
     public List<RepairRequest> getUserRequests(int userId) throws SQLException {
         return repairRequestDAO.getRequestsByUserId(userId);
@@ -93,53 +74,33 @@ public class RepairService implements IRepairService {
     @Override
     public boolean acceptRequest(int requestId, int repairerId) throws ValidationException, SQLException {
         RepairRequest request = repairRequestDAO.getRequestById(requestId);
-
         if (request == null) {
             throw new ValidationException("Request not found.");
         }
-
         if (!"PENDING".equals(request.getStatus())) {
             throw new ValidationException("This request is no longer available.");
         }
-
         return repairRequestDAO.acceptRequest(requestId, repairerId);
     }
 
-    /**
-     * Updates an existing repair request (only if status is PENDING).
-     */
     @Override
     public void updateRequest(RepairRequest request) throws ValidationException, SQLException {
         if (request.getItemName() == null || request.getItemName().trim().isEmpty()) {
             throw new ValidationException("Item name is required.");
         }
         repairRequestDAO.updateRequest(request);
-        logger.info("Repair request updated: ID " + request.getRequestId());
     }
 
-    /**
-     * Cancels a repair request by setting its status to CANCELLED.
-     */
     @Override
     public void cancelRequest(int requestId) throws ValidationException, SQLException {
         repairRequestDAO.cancelRequest(requestId);
-        logger.info("Repair request cancelled: ID " + requestId);
     }
 
     @Override
     public boolean deleteRequest(int requestId) throws SQLException, ValidationException {
-        RepairRequest request = repairRequestDAO.getRequestById(requestId);
-
-        if (request == null) {
-            throw new ValidationException("Request not found.");
-        }
-
         return repairRequestDAO.deleteRequest(requestId);
     }
 
-    /**
-     * Gets the total number of completed repairs across all users.
-     */
     @Override
     public int getTotalCompletedRepairs() throws SQLException {
         return repairRequestDAO.getTotalCompletedRepairs();
@@ -148,13 +109,12 @@ public class RepairService implements IRepairService {
     @Override
     public boolean markRequestAsCompleted(int requestId) throws SQLException, ValidationException {
         RepairRequest request = repairRequestDAO.getRequestById(requestId);
-        if (request == null) {
+        if (request == null)
             throw new ValidationException("Request not found.");
-        }
 
         boolean success = repairRequestDAO.updateStatus(requestId, "COMPLETED");
         if (success && request.getRepairerId() != null) {
-            new nearfix.nearfix.dao.impl.RepairerDAO().updateJobsCompleted(request.getRepairerId(), 1);
+            repairerDAO.updateJobsCompleted(request.getRepairerId(), 1);
         }
         return success;
     }
@@ -165,12 +125,14 @@ public class RepairService implements IRepairService {
     }
 
     @Override
-    public List<RepairRequest> searchPendingRequests(String keyword, Integer categoryId, int page, int pageSize) throws SQLException {
+    public List<RepairRequest> searchPendingRequests(String keyword, Integer categoryId, int page, int pageSize)
+            throws SQLException {
         return repairRequestDAO.searchPendingRequests(keyword, categoryId, page, pageSize);
     }
 
     @Override
-    public List<RepairRequest> searchAllRequests(String keyword, Integer categoryId, String status, int page, int pageSize) throws SQLException {
+    public List<RepairRequest> searchAllRequests(String keyword, Integer categoryId, String status, int page,
+            int pageSize) throws SQLException {
         return repairRequestDAO.searchAllRequests(keyword, categoryId, status, page, pageSize);
     }
 
@@ -180,12 +142,67 @@ public class RepairService implements IRepairService {
     }
 
     @Override
-    public List<RepairRequest> searchRepairerRequests(int repairerId, String keyword, String status) throws SQLException {
+    public List<RepairRequest> searchRepairerRequests(int repairerId, String keyword, String status)
+            throws SQLException {
         return repairRequestDAO.searchRepairerRequests(repairerId, keyword, status);
     }
 
     @Override
     public List<RepairRequest> searchUserRequests(int userId, String keyword, String status) throws SQLException {
         return repairRequestDAO.searchUserRequests(userId, keyword, status);
+    }
+
+    @Override
+    public boolean addRating(int requestId, int userId, int ratingScore, String comment)
+            throws SQLException, ValidationException {
+        RepairRequest request = repairRequestDAO.getRequestById(requestId);
+        if (request == null)
+            throw new ValidationException("Request not found.");
+        if (!"COMPLETED".equals(request.getStatus()))
+            throw new ValidationException("Can only rate completed repairs.");
+
+        // --- Create Rating ---
+        Rating rating = new Rating();
+        rating.setRequestId(requestId);
+        rating.setUserId(userId);
+        rating.setRepairerId(request.getRepairerId());
+        rating.setRatingScore(ratingScore);
+        rating.setComment(comment);
+
+        boolean success = ratingDAO.addRating(rating);
+        if (success) {
+            double avg = ratingDAO.getAverageRating(request.getRepairerId());
+            repairerDAO.updateRepairerRating(request.getRepairerId(), avg);
+        }
+        return success;
+    }
+
+    @Override
+    public Rating getRatingByRequest(int requestId) throws SQLException {
+        return ratingDAO.getRatingByRequest(requestId);
+    }
+
+    @Override
+    public List<Rating> getRatingsByRepairer(int repairerId) throws SQLException {
+        return ratingDAO.getRatingsByRepairer(repairerId);
+    }
+
+    @Override
+    public boolean toggleSaveJob(int repairerId, int requestId) throws SQLException {
+        if (savedJobDAO.isJobSaved(repairerId, requestId)) {
+            return savedJobDAO.unsaveJob(repairerId, requestId);
+        } else {
+            return savedJobDAO.saveJob(repairerId, requestId);
+        }
+    }
+
+    @Override
+    public List<SavedJob> getSavedJobs(int repairerId) throws SQLException {
+        return savedJobDAO.getSavedJobsByRepairer(repairerId);
+    }
+
+    @Override
+    public boolean isJobSaved(int repairerId, int requestId) throws SQLException {
+        return savedJobDAO.isJobSaved(repairerId, requestId);
     }
 }

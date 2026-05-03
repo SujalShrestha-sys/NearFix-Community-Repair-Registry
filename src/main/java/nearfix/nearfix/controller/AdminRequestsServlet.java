@@ -15,7 +15,7 @@ import java.util.List;
 @WebServlet("/admin/requests")
 public class AdminRequestsServlet extends HttpServlet {
 
-    private final RepairService repairService = new RepairService();
+    private RepairService repairService = new RepairService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

@@ -127,12 +127,24 @@
                                         <input type="hidden" name="userId" value="<%= u.getUserId() %>">
                                         <% if (u.isActive()) { %>
                                             <input type="hidden" name="action" value="deactivate">
-                                            <button type="submit" class="text-xs font-bold text-red-400 hover:text-red-600 transition-colors">Deactivate</button>
+                                            <button type="submit" class="text-xs font-bold text-red-400 hover:text-red-600 transition-colors mr-3">Deactivate</button>
                                         <% } else { %>
                                             <input type="hidden" name="action" value="activate">
-                                            <button type="submit" class="text-xs font-bold text-emerald-500 hover:text-emerald-700 transition-colors">Activate</button>
+                                            <button type="submit" class="text-xs font-bold text-emerald-500 hover:text-emerald-700 transition-colors mr-3">Activate</button>
                                         <% } %>
                                     </form>
+
+                                    <% if ("REPAIRER".equals(u.getRole())) { %>
+                                        <form action="<%= request.getContextPath() %>/admin/users" method="POST" class="inline border-l border-gray-100 pl-3">
+                                            <input type="hidden" name="userId" value="<%= u.getUserId() %>">
+                                            <% if (u.isVerified()) { %>
+                                                <span class="text-[10px] uppercase tracking-tighter text-emerald-400 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">Verified</span>
+                                            <% } else { %>
+                                                <input type="hidden" name="action" value="verify">
+                                                <button type="submit" class="text-xs font-bold text-blue-500 hover:text-blue-700 transition-colors">Verify Fixer</button>
+                                            <% } %>
+                                        </form>
+                                    <% } %>
                                 </td>
                             </tr>
                         <% } %>

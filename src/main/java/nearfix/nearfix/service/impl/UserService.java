@@ -12,21 +12,10 @@ import nearfix.nearfix.util.Validation;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-/**
- * UserService - Business logic for user operations.
- * Handles validation, password hashing, and delegates to DAOs.
- *
- * FLOW: Servlet → UserService → UserDAO / RepairerDAO → Database
- */
 public class UserService implements IUserService {
 
-    private static final Logger logger = Logger.getLogger(UserService.class.getName());
-
-    private final UserDAO userDAO = new UserDAO();
-    private final RepairerDAO repairerDAO = new RepairerDAO();
+    private UserDAO userDAO = new UserDAO();
+    private RepairerDAO repairerDAO = new RepairerDAO();
 
     /**
      * Registers a new user. Validates all input fields, checks for duplicates,
@@ -68,13 +57,11 @@ public class UserService implements IUserService {
             throw new ValidationException("Registration failed. Please try again.");
         }
 
-        logger.info("User registered successfully: " + email + " (role: " + role + ")");
-
-        // --- If REPAIRER, also create a repairer profile ---
+        // If REPAIRER, also create a repairer profile
         if ("REPAIRER".equalsIgnoreCase(role)) {
             Repairer repairer = new Repairer();
             repairer.setUserId(userId);
-            repairer.setVerificationStatus(false);
+            repairer.setVerified(false);
             repairer.setRating(0.0);
             repairer.setTotalJobsCompleted(0);
             repairer.setSpecialization("Not Specified");
@@ -83,7 +70,6 @@ public class UserService implements IUserService {
             repairer.setLicenseNumber("");
 
             repairerDAO.createRepairer(repairer);
-            logger.info("Repairer profile created for user ID: " + userId);
         }
 
         return true;
@@ -111,11 +97,9 @@ public class UserService implements IUserService {
                 throw new ValidationException("Your account is deactivated. Please contact support.");
             }
 
-            logger.info("User logged in: " + email);
             return user;
 
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Database error during login for: " + email, e);
             throw new ValidationException("Database error during login: " + e.getMessage());
         }
     }
@@ -218,5 +202,10 @@ public class UserService implements IUserService {
     @Override
     public int getTotalUsersCount(String keyword, String role) throws SQLException {
         return userDAO.getTotalUsersCount(keyword, role);
+    }
+
+    @Override
+    public boolean verifyRepairer(int userId) throws SQLException {
+        return repairerDAO.verifyRepairer(userId);
     }
 }

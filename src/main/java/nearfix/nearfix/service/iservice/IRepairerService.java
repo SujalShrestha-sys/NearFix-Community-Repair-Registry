@@ -6,5 +6,8 @@ import java.sql.SQLException;
 
 public interface IRepairerService {
     Repairer getRepairerProfile(int repairerId) throws SQLException;
+
     boolean updateProfile(Repairer repairer) throws SQLException, ValidationException;
+
+    java.util.List<Repairer> searchRepairers(String keyword) throws SQLException;
 }

@@ -8,7 +8,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of IRepairRequestDAO using JDBC.
+ * Handles database operations for repair requests, including search and filtering.
+ */
 public class RepairRequestDAO implements IRepairRequestDAO {
+
 
     @Override
     public int createRequest(RepairRequest request) throws SQLException {

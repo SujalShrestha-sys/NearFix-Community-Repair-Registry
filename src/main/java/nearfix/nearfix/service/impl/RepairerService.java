@@ -6,10 +6,14 @@ import nearfix.nearfix.model.Repairer;
 import nearfix.nearfix.service.iservice.IRepairerService;
 
 import java.sql.SQLException;
+import java.util.List;
 
+/**
+ * RepairerService - Business logic for repairer profiles.
+ */
 public class RepairerService implements IRepairerService {
 
-    private final RepairerDAO repairerDAO = new RepairerDAO();
+    private RepairerDAO repairerDAO = new RepairerDAO();
 
     @Override
     public Repairer getRepairerProfile(int repairerId) throws SQLException {
@@ -22,5 +26,10 @@ public class RepairerService implements IRepairerService {
             throw new ValidationException("Name is required.");
         }
         return repairerDAO.updateRepairer(repairer);
+    }
+
+    @Override
+    public List<Repairer> searchRepairers(String keyword) throws SQLException {
+        return repairerDAO.searchRepairers(keyword);
     }
 }

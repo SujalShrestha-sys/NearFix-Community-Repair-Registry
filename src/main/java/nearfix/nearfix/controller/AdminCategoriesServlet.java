@@ -17,7 +17,7 @@ import java.util.List;
 @WebServlet("/admin/categories")
 public class AdminCategoriesServlet extends HttpServlet {
 
-    private final CategoryService categoryService = new CategoryService();
+    private CategoryService categoryService = new CategoryService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

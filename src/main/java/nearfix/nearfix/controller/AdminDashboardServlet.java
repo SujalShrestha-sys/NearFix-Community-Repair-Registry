@@ -12,15 +12,12 @@ import nearfix.nearfix.service.impl.UserService;
 
 import java.io.IOException;
 
-/**
- * AdminServlet - Handles the admin portal.
- */
 @WebServlet("/admin/dashboard")
 public class AdminDashboardServlet extends HttpServlet {
 
-    private final UserService userService = new UserService();
-    private final RepairService repairService = new RepairService();
-    private final CategoryService categoryService = new CategoryService();
+    private UserService userService = new UserService();
+    private RepairService repairService = new RepairService();
+    private CategoryService categoryService = new CategoryService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -28,24 +25,21 @@ public class AdminDashboardServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || !"ADMIN".equals(session.getAttribute("userRole"))) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
         try {
-            // Get statistics
-            int totalUsers = userService.getAllUsers(1, 10).size();
+            int totalUsers = userService.getTotalUsers();
             int totalRequests = repairService.getTotalRequests();
             int completedRepairs = repairService.getTotalCompletedRepairs();
             int totalCategories = categoryService.getTotalCategories();
 
-            // Set attributes
             request.setAttribute("totalUsers", totalUsers);
             request.setAttribute("totalRequests", totalRequests);
             request.setAttribute("completedRepairs", completedRepairs);
             request.setAttribute("totalCategories", totalCategories);
 
-            // Forward to JSP
             request.getRequestDispatcher("/WEB-INF/views/admin/dashboard.jsp").forward(request, response);
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error loading dashboard data: " + e.getMessage());

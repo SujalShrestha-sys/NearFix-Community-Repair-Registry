@@ -15,7 +15,7 @@ import java.util.List;
 @WebServlet("/admin/users")
 public class AdminUsersServlet extends HttpServlet {
 
-    private final UserService userService = new UserService();
+    private UserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -36,7 +36,7 @@ public class AdminUsersServlet extends HttpServlet {
             String search = request.getParameter("search");
             String role = request.getParameter("role");
             int pageSize = 10;
-            
+
             List<User> users = userService.searchUsers(search, role, page, pageSize);
             int totalUsers = userService.getTotalUsersCount(search, role);
             int totalPages = (totalUsers + pageSize - 1) / pageSize;
@@ -75,6 +75,9 @@ public class AdminUsersServlet extends HttpServlet {
             } else if ("activate".equals(action)) {
                 userService.activateUser(userId);
                 message = "User activated";
+            } else if ("verify".equals(action)) {
+                userService.verifyRepairer(userId);
+                message = "Repairer verified successfully";
             }
         } catch (Exception e) {
             error = e.getMessage();

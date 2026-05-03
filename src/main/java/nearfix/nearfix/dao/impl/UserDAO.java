@@ -8,7 +8,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of IUserDAO using JDBC.
+ * Manages core user account operations in the database.
+ */
 public class UserDAO implements IUserDAO {
+
 
     @Override
     public int createUser(User user) throws SQLException {
@@ -174,13 +179,15 @@ public class UserDAO implements IUserDAO {
         List<User> users = new ArrayList<>();
         int offset = (page - 1) * pageSize;
 
-        String sql = "SELECT * FROM users " +
-                     "WHERE (role = ? OR ? = '') " +
-                     "AND (name LIKE ? OR email LIKE ? OR phone LIKE ? OR ? = '') " +
-                     "LIMIT ? OFFSET ?";
+        // Join with repairer_profiles to get verification status
+        String sql = "SELECT u.*, rp.verification_status FROM users u " +
+                "LEFT JOIN repairer_profiles rp ON u.user_id = rp.user_id " +
+                "WHERE (u.role = ? OR ? = '') " +
+                "AND (u.name LIKE ? OR u.email LIKE ? OR u.phone LIKE ? OR ? = '') " +
+                "LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             String r = (role != null) ? role : "";
             String search = (keyword != null) ? "%" + keyword + "%" : "%%";
@@ -197,7 +204,15 @@ public class UserDAO implements IUserDAO {
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                users.add(mapResultSetToUser(rs));
+                User user = mapResultSetToUser(rs);
+                // Also set verification status if it exists in the result set
+                // rs.getObject checks for null since verification_status might not exist for
+                // non-repairers
+                Object verified = rs.getObject("verification_status");
+                if (verified != null) {
+                    user.setVerified((Boolean) verified);
+                }
+                users.add(user);
             }
         }
         return users;
@@ -206,11 +221,11 @@ public class UserDAO implements IUserDAO {
     @Override
     public int getTotalUsersCount(String keyword, String role) throws SQLException {
         String sql = "SELECT COUNT(*) as count FROM users " +
-                     "WHERE (role = ? OR ? = '') " +
-                     "AND (name LIKE ? OR email LIKE ? OR phone LIKE ? OR ? = '')";
+                "WHERE (role = ? OR ? = '') " +
+                "AND (name LIKE ? OR email LIKE ? OR phone LIKE ? OR ? = '')";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             String r = (role != null) ? role : "";
             String search = (keyword != null) ? "%" + keyword + "%" : "%%";
