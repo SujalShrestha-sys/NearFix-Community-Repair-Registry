@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import nearfix.nearfix.exception.ValidationException;
 import nearfix.nearfix.model.Category;
 import nearfix.nearfix.service.impl.CategoryService;
+import nearfix.nearfix.service.iservice.ICategoryService;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,13 +18,14 @@ import java.util.List;
 @WebServlet("/admin/categories")
 public class AdminCategoriesServlet extends HttpServlet {
 
-    private CategoryService categoryService = new CategoryService();
+    private final ICategoryService categoryService = new CategoryService();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         HttpSession session = request.getSession(false);
         if (session == null || !"ADMIN".equals(session.getAttribute("userRole"))) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
@@ -41,7 +43,7 @@ public class AdminCategoriesServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
         if (session == null || !"ADMIN".equals(session.getAttribute("userRole"))) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 

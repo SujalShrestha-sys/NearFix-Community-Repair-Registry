@@ -1,8 +1,16 @@
 package nearfix.nearfix.service.impl;
 
-import nearfix.nearfix.dao.impl.*;
+import nearfix.nearfix.dao.impl.RatingDAO;
+import nearfix.nearfix.dao.impl.RepairRequestDAO;
+import nearfix.nearfix.dao.impl.RepairerDAO;
+import nearfix.nearfix.dao.impl.SavedJobDAO;
+import nearfix.nearfix.dao.idao.IRatingDAO;
+import nearfix.nearfix.dao.idao.IRepairRequestDAO;
+import nearfix.nearfix.dao.idao.IRepairerDAO;
 import nearfix.nearfix.exception.ValidationException;
-import nearfix.nearfix.model.*;
+import nearfix.nearfix.model.Rating;
+import nearfix.nearfix.model.RepairRequest;
+import nearfix.nearfix.model.SavedJob;
 import nearfix.nearfix.service.iservice.IRepairService;
 
 import java.sql.SQLException;
@@ -13,10 +21,10 @@ import java.util.List;
  */
 public class RepairService implements IRepairService {
 
-    private RepairRequestDAO repairRequestDAO = new RepairRequestDAO();
-    private RepairerDAO repairerDAO = new RepairerDAO();
-    private RatingDAO ratingDAO = new RatingDAO();
-    private SavedJobDAO savedJobDAO = new SavedJobDAO();
+    private final IRepairRequestDAO repairRequestDAO = new RepairRequestDAO();
+    private final IRepairerDAO repairerDAO = new RepairerDAO();
+    private final IRatingDAO ratingDAO = new RatingDAO();
+    private final SavedJobDAO savedJobDAO = new SavedJobDAO();
 
     @Override
     public int postRepairRequest(int userId, int categoryId, String itemName, String description, String urgency)

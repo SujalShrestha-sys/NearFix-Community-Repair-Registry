@@ -40,7 +40,7 @@ public class Validation {
      * Must contain:
      * - At least 8 characters
      * - At least 1 uppercase letter (A-Z)
-     * - At least 1 digit (0-9)
+     * - At least 1 digit (0-9)`
      * - At least 1 special character (!@#$%^&*)
      */
     public static boolean isValidPassword(String password) {

@@ -14,7 +14,6 @@ import java.sql.SQLException;
  *
  * USAGE EXAMPLE:
  * try (Connection conn = DBConnection.getConnection()) {
- * // Use connection here — it auto-closes when done
  * }
  *
  * NOTE: Update the constants below if your database name, user, or password
@@ -22,10 +21,10 @@ import java.sql.SQLException;
  */
 public class DBConnection {
 
-    // Database Configuration
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/nearfix";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "Sujal@123";
+    // Database Configuration (override with env vars: NEARFIX_DB_URL, NEARFIX_DB_USER, NEARFIX_DB_PASSWORD)
+    private static final String DB_URL = System.getenv().getOrDefault("NEARFIX_DB_URL", "jdbc:mysql://localhost:3306/nearfix");
+    private static final String DB_USER = System.getenv().getOrDefault("NEARFIX_DB_USER", "root");
+    private static final String DB_PASSWORD = System.getenv().getOrDefault("NEARFIX_DB_PASSWORD", "Sujal@123");
     private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
 
     // Load the MySQL driver once when this class is first used

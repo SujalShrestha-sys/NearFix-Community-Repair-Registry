@@ -137,6 +137,7 @@
                                                     </svg>
                                                 </div>
                                                 <input type="email" id="email" name="email"
+                                                    value="<%= request.getAttribute("prefillEmail") != null ? request.getAttribute("prefillEmail") : "" %>"
                                                     placeholder="Enter your email address" required
                                                     class="block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#449E80]/20 focus:border-[#449E80] outline-none transition-all text-gray-900 placeholder-gray-400">
                                             </div>

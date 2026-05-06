@@ -9,15 +9,18 @@ import jakarta.servlet.http.HttpSession;
 import nearfix.nearfix.service.impl.CategoryService;
 import nearfix.nearfix.service.impl.RepairService;
 import nearfix.nearfix.service.impl.UserService;
+import nearfix.nearfix.service.iservice.ICategoryService;
+import nearfix.nearfix.service.iservice.IRepairService;
+import nearfix.nearfix.service.iservice.IUserService;
 
 import java.io.IOException;
 
 @WebServlet("/admin/dashboard")
 public class AdminDashboardServlet extends HttpServlet {
 
-    private UserService userService = new UserService();
-    private RepairService repairService = new RepairService();
-    private CategoryService categoryService = new CategoryService();
+    private final IUserService userService = new UserService();
+    private final IRepairService repairService = new RepairService();
+    private final ICategoryService categoryService = new CategoryService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

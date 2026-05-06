@@ -7,7 +7,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import nearfix.nearfix.model.RepairRequest;
+import nearfix.nearfix.service.impl.CategoryService;
 import nearfix.nearfix.service.impl.RepairService;
+import nearfix.nearfix.service.iservice.ICategoryService;
+import nearfix.nearfix.service.iservice.IRepairService;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,13 +18,14 @@ import java.util.List;
 @WebServlet("/admin/requests")
 public class AdminRequestsServlet extends HttpServlet {
 
-    private RepairService repairService = new RepairService();
+    private final IRepairService repairService = new RepairService();
+    private final ICategoryService categoryService = new CategoryService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession(false);
         if (session == null || !"ADMIN".equals(session.getAttribute("userRole"))) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
@@ -51,7 +55,7 @@ public class AdminRequestsServlet extends HttpServlet {
             request.setAttribute("search", search);
             request.setAttribute("selectedCategoryId", categoryId);
             request.setAttribute("selectedStatus", status);
-            request.setAttribute("categories", new nearfix.nearfix.service.impl.CategoryService().getAllCategories());
+            request.setAttribute("categories", categoryService.getAllCategories());
 
             request.getRequestDispatcher("/WEB-INF/views/admin/requests.jsp").forward(request, response);
         } catch (Exception e) {

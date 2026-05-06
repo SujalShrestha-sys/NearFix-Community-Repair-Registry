@@ -1,24 +1,28 @@
 package nearfix.nearfix.service.iservice;
 
 import nearfix.nearfix.exception.ValidationException;
+import nearfix.nearfix.model.Rating;
 import nearfix.nearfix.model.RepairRequest;
+import nearfix.nearfix.model.SavedJob;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface IRepairService {
 
-        int postRepairRequest(int userId, int categoryId, String itemName, String description, String urgency) throws ValidationException, SQLException;
+    int postRepairRequest(int userId, int categoryId, String itemName,
+                          String description, String urgency)
+            throws ValidationException, SQLException;
 
-        RepairRequest getRepairRequest(int requestId) throws SQLException;
+    RepairRequest getRepairRequest(int requestId) throws SQLException;
 
-        List<RepairRequest> getUserRequests(int userId) throws SQLException;
+    List<RepairRequest> getUserRequests(int userId) throws SQLException;
 
-        void updateRequest(RepairRequest request) throws ValidationException, SQLException;
+    void updateRequest(RepairRequest request) throws ValidationException, SQLException;
 
-        void cancelRequest(int requestId) throws ValidationException, SQLException;
+    void cancelRequest(int requestId) throws ValidationException, SQLException;
 
-        int getTotalCompletedRepairs() throws SQLException;
+    int getTotalCompletedRepairs() throws SQLException;
 
         List<RepairRequest> getPendingRequests(int page, int pageSize) throws SQLException;
 
@@ -48,13 +52,13 @@ public interface IRepairService {
 
         boolean addRating(int requestId, int userId, int ratingScore, String comment) throws SQLException, ValidationException;
 
-        nearfix.nearfix.model.Rating getRatingByRequest(int requestId) throws SQLException;
+        Rating getRatingByRequest(int requestId) throws SQLException;
 
-        List<nearfix.nearfix.model.Rating> getRatingsByRepairer(int repairerId) throws SQLException;
+        List<Rating> getRatingsByRepairer(int repairerId) throws SQLException;
 
         boolean toggleSaveJob(int repairerId, int requestId) throws SQLException;
 
-        List<nearfix.nearfix.model.SavedJob> getSavedJobs(int repairerId) throws SQLException;
+        List<SavedJob> getSavedJobs(int repairerId) throws SQLException;
 
         boolean isJobSaved(int repairerId, int requestId) throws SQLException;
 }

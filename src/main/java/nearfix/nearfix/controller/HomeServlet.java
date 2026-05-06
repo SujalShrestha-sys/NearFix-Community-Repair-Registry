@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import nearfix.nearfix.service.impl.RepairService;
 import nearfix.nearfix.service.impl.UserService;
+import nearfix.nearfix.service.iservice.IRepairService;
+import nearfix.nearfix.service.iservice.IUserService;
 
 import java.io.IOException;
 
@@ -17,8 +19,8 @@ import java.io.IOException;
 @WebServlet(urlPatterns = { "/home", "" })
 public class HomeServlet extends HttpServlet {
 
-    private RepairService repairService = new RepairService();
-    private UserService userService = new UserService();
+    private final IRepairService repairService = new RepairService();
+    private final IUserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

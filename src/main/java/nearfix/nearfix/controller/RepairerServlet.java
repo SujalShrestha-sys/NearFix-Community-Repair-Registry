@@ -4,8 +4,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import nearfix.nearfix.model.*;
-import nearfix.nearfix.service.impl.*;
-import nearfix.nearfix.service.iservice.*;
+import nearfix.nearfix.service.impl.CategoryService;
+import nearfix.nearfix.service.impl.RepairService;
+import nearfix.nearfix.service.impl.RepairerService;
+import nearfix.nearfix.service.iservice.ICategoryService;
+import nearfix.nearfix.service.iservice.IRepairService;
+import nearfix.nearfix.service.iservice.IRepairerService;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,9 +18,9 @@ import java.util.List;
 @WebServlet("/repairer/*")
 public class RepairerServlet extends HttpServlet {
 
-    private IRepairService repairService = new RepairService();
-    private IRepairerService repairerService = new RepairerService();
-    private ICategoryService categoryService = new CategoryService();
+    private final IRepairService repairService = new RepairService();
+    private final IRepairerService repairerService = new RepairerService();
+    private final ICategoryService categoryService = new CategoryService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -76,12 +80,6 @@ public class RepairerServlet extends HttpServlet {
                     request.setAttribute("selectedStatus", myStatus);
 
                     request.getRequestDispatcher("/WEB-INF/views/repairer/my-requests.jsp").forward(request, response);
-                    break;
-
-                case "/wishlist":
-                    List<SavedJob> savedJobs = repairService.getSavedJobs(repairerId);
-                    request.setAttribute("savedJobs", savedJobs);
-                    request.getRequestDispatcher("/WEB-INF/views/repairer/wishlist.jsp").forward(request, response);
                     break;
 
                 default:

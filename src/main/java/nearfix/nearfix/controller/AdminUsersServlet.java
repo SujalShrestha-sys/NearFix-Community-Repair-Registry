@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import nearfix.nearfix.model.User;
 import nearfix.nearfix.service.impl.UserService;
+import nearfix.nearfix.service.iservice.IUserService;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,14 +16,14 @@ import java.util.List;
 @WebServlet("/admin/users")
 public class AdminUsersServlet extends HttpServlet {
 
-    private UserService userService = new UserService();
+    private final IUserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || !"ADMIN".equals(session.getAttribute("userRole"))) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
@@ -59,7 +60,7 @@ public class AdminUsersServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
         if (session == null || !"ADMIN".equals(session.getAttribute("userRole"))) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 

@@ -1,6 +1,7 @@
 package nearfix.nearfix.controller;
 
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,8 +22,12 @@ public class LogoutServlet extends HttpServlet {
             session.invalidate();
         }
 
-        HttpSession newSession = request.getSession(true);
-        newSession.setAttribute("successMessage", "You have been logged out successfully.");
+        Cookie logoutMessage = new Cookie("nf_logout_message", "You have been logged out successfully.");
+        logoutMessage.setHttpOnly(true);
+        logoutMessage.setSecure(request.isSecure());
+        logoutMessage.setMaxAge(30);
+        logoutMessage.setPath(request.getContextPath().isEmpty() ? "/" : request.getContextPath());
+        response.addCookie(logoutMessage);
 
         response.sendRedirect(request.getContextPath() + "/login");
     }
