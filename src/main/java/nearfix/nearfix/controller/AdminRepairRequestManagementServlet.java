@@ -16,13 +16,14 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/admin/requests")
-public class AdminRequestsServlet extends HttpServlet {
+public class AdminRepairRequestManagementServlet extends HttpServlet {
 
     private final IRepairService repairService = new RepairService();
     private final ICategoryService categoryService = new CategoryService();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         HttpSession session = request.getSession(false);
         if (session == null || !"ADMIN".equals(session.getAttribute("userRole"))) {
             response.sendRedirect(request.getContextPath() + "/login");
@@ -38,9 +39,10 @@ public class AdminRequestsServlet extends HttpServlet {
 
             String search = request.getParameter("search");
             String categoryIdStr = request.getParameter("categoryId");
-            Integer categoryId = (categoryIdStr != null && !categoryIdStr.isEmpty()) ? Integer.parseInt(categoryIdStr) : null;
+            Integer categoryId = (categoryIdStr != null && !categoryIdStr.isEmpty()) ? Integer.parseInt(categoryIdStr)
+                    : null;
             String status = request.getParameter("status");
-            
+
             int pageSize = 10;
             // For admin, we want to search all requests, not just pending
             // I'll need a more generic search method for all requests
@@ -57,10 +59,11 @@ public class AdminRequestsServlet extends HttpServlet {
             request.setAttribute("selectedStatus", status);
             request.setAttribute("categories", categoryService.getAllCategories());
 
-            request.getRequestDispatcher("/WEB-INF/views/admin/requests.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Manage Repair Requests",
+                    "Loaded " + requests.size() + " request(s). Page " + page + " of " + totalPages + ".");
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error loading requests: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/admin/requests.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Repair Request Error", "Error loading requests: " + e.getMessage());
         }
     }
 }

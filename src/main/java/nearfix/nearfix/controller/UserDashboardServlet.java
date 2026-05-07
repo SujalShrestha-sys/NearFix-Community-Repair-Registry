@@ -47,10 +47,10 @@ public class UserDashboardServlet extends HttpServlet {
             request.setAttribute("totalCompleted", totalCompleted);
             request.setAttribute("totalRequests", requests.size());
 
-            request.getRequestDispatcher("/WEB-INF/views/user/dashboard.jsp").forward(request, response);
+            PageResponse.showMessage(response, "User Dashboard", "You have " + requests.size() + " repair request(s).");
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error loading dashboard: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/user/dashboard.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Dashboard Error", "Error loading dashboard: " + e.getMessage());
         }
     }
 }

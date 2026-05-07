@@ -14,13 +14,13 @@ import nearfix.nearfix.service.iservice.IUserService;
 import java.io.IOException;
 
 @WebServlet("/register")
-public class UserRegisterServlet extends HttpServlet {
+public class RegisterServlet extends HttpServlet {
 
     private IUserService userService = new UserService();
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        request.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(request, response);
+        PageResponse.showMessage(response, "Register", "The registration UI will be built next.");
     }
 
     @Override
@@ -56,16 +56,15 @@ public class UserRegisterServlet extends HttpServlet {
                 session.setAttribute("userRole", repairer.getRole());
                 response.sendRedirect(request.getContextPath() + "/repairer/dashboard");
             } else {
-                request.setAttribute("successMessage", "Registration successful! Please log in.");
-                request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+                PageResponse.showMessage(response, "Registration Successful", "Please log in.");
             }
 
         } catch (ValidationException e) {
             request.setAttribute("errorMessage", e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Registration Error", e.getMessage());
         } catch (Exception e) {
             request.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Registration Error", "An unexpected error occurred: " + e.getMessage());
         }
     }
 }

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/repair-request/*")
-public class RepairRequestServlet extends HttpServlet {
+public class UserRepairRequestServlet extends HttpServlet {
 
     private IRepairService repairService = new RepairService();
     private ICategoryService categoryService = new CategoryService();
@@ -37,14 +37,14 @@ public class RepairRequestServlet extends HttpServlet {
             switch (action) {
                 case "post":
                     request.setAttribute("categories", categoryService.getAllCategories());
-                    request.getRequestDispatcher("/WEB-INF/views/user/post-request.jsp").forward(request, response);
+                    PageResponse.showMessage(response, "Post Repair Request", "The post request UI will be built next.");
                     break;
 
                 case "view":
                     int requestId = Integer.parseInt(request.getParameter("id"));
                     RepairRequest repairReq = repairService.getRepairRequest(requestId);
                     request.setAttribute("repairRequest", repairReq);
-                    request.getRequestDispatcher("/WEB-INF/views/user/request-detail.jsp").forward(request, response);
+                    PageResponse.showMessage(response, "Repair Request Detail", "Loaded request #" + requestId + ".");
                     break;
 
                 case "myRequests":
@@ -57,7 +57,7 @@ public class RepairRequestServlet extends HttpServlet {
                     request.setAttribute("search", search);
                     request.setAttribute("selectedStatus", status);
 
-                    request.getRequestDispatcher("/WEB-INF/views/user/my-requests.jsp").forward(request, response);
+                    PageResponse.showMessage(response, "My Repair Requests", "Loaded " + requests.size() + " request(s).");
                     break;
 
                 default:
@@ -65,7 +65,7 @@ public class RepairRequestServlet extends HttpServlet {
             }
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/user/dashboard.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Repair Request Error", "Error: " + e.getMessage());
         }
     }
 

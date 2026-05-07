@@ -15,7 +15,7 @@ import nearfix.nearfix.service.iservice.IUserService;
 import java.io.IOException;
 
 @WebServlet("/login")
-public class UserLoginServlet extends HttpServlet {
+public class LoginServlet extends HttpServlet {
 
     private IUserService userService = new UserService();
 
@@ -35,7 +35,7 @@ public class UserLoginServlet extends HttpServlet {
             request.setAttribute("successMessage", "You have been logged out successfully.");
         }
 
-        request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+        PageResponse.showMessage(response, "Login", "The login UI will be built next.");
     }
 
     @Override
@@ -89,10 +89,10 @@ public class UserLoginServlet extends HttpServlet {
 
         } catch (ValidationException e) {
             request.setAttribute("errorMessage", e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Login Error", e.getMessage());
         } catch (Exception e) {
             request.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Login Error", "An unexpected error occurred: " + e.getMessage());
         }
     }
 }

@@ -41,4 +41,4 @@ build/
 CLAUDE.md
 .claude
 .idea/
-src\main\java\nearfix\nearfix\util\DBConnection.java
+src/main/java/nearfix/nearfix/util/DBConnection.java

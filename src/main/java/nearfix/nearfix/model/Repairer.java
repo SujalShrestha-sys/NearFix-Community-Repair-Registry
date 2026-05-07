@@ -23,9 +23,10 @@ public class Repairer extends User {
 
     /**
      * Constructor with essential fields.
-     * @param name Name of the repairer.
-     * @param email Email of the repairer.
-     * @param phone Phone number of the repairer.
+     * 
+     * @param name         Name of the repairer.
+     * @param email        Email of the repairer.
+     * @param phone        Phone number of the repairer.
      * @param passwordHash Hashed password.
      */
     public Repairer(String name, String email, String phone, String passwordHash) {
@@ -34,6 +35,7 @@ public class Repairer extends User {
 
     /**
      * Gets the specialization of the repairer.
+     * 
      * @return The specialization.
      */
     public String getSpecialization() {
@@ -42,6 +44,7 @@ public class Repairer extends User {
 
     /**
      * Sets the specialization of the repairer.
+     * 
      * @param specialization The specialization to set.
      */
     public void setSpecialization(String specialization) {
@@ -50,6 +53,7 @@ public class Repairer extends User {
 
     /**
      * Gets the expertise details.
+     * 
      * @return The expertise details.
      */
     public String getExpertise() {
@@ -58,6 +62,7 @@ public class Repairer extends User {
 
     /**
      * Sets the expertise details.
+     * 
      * @param expertise The expertise details to set.
      */
     public void setExpertise(String expertise) {
@@ -66,6 +71,7 @@ public class Repairer extends User {
 
     /**
      * Gets the years of experience.
+     * 
      * @return Years of experience.
      */
     public int getYearsOfExperience() {
@@ -74,6 +80,7 @@ public class Repairer extends User {
 
     /**
      * Sets the years of experience.
+     * 
      * @param yearsOfExperience Years of experience to set.
      */
     public void setYearsOfExperience(int yearsOfExperience) {
@@ -82,6 +89,7 @@ public class Repairer extends User {
 
     /**
      * Gets the average rating of the repairer.
+     * 
      * @return The rating.
      */
     public double getRating() {
@@ -90,6 +98,7 @@ public class Repairer extends User {
 
     /**
      * Sets the average rating of the repairer.
+     * 
      * @param rating The rating to set.
      */
     public void setRating(double rating) {
@@ -98,6 +107,7 @@ public class Repairer extends User {
 
     /**
      * Gets the total number of jobs completed.
+     * 
      * @return Total jobs completed.
      */
     public int getTotalJobsCompleted() {
@@ -106,6 +116,7 @@ public class Repairer extends User {
 
     /**
      * Sets the total number of jobs completed.
+     * 
      * @param totalJobsCompleted Total jobs completed to set.
      */
     public void setTotalJobsCompleted(int totalJobsCompleted) {
@@ -114,6 +125,7 @@ public class Repairer extends User {
 
     /**
      * Gets the join date of the repairer.
+     * 
      * @return The join date.
      */
     public Date getJoinDate() {
@@ -122,6 +134,7 @@ public class Repairer extends User {
 
     /**
      * Sets the join date of the repairer.
+     * 
      * @param joinDate The join date to set.
      */
     public void setJoinDate(Date joinDate) {
@@ -130,6 +143,7 @@ public class Repairer extends User {
 
     /**
      * Gets the license number of the repairer.
+     * 
      * @return The license number.
      */
     public String getLicenseNumber() {
@@ -138,10 +152,10 @@ public class Repairer extends User {
 
     /**
      * Sets the license number of the repairer.
+     * 
      * @param licenseNumber The license number to set.
      */
     public void setLicenseNumber(String licenseNumber) {
         this.licenseNumber = licenseNumber;
     }
 }
-

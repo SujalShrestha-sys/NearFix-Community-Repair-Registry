@@ -7,6 +7,7 @@ import nearfix.nearfix.service.iservice.ICategoryService;
 
 import java.sql.SQLException;
 import java.util.List;
+
 public class CategoryService implements ICategoryService {
 
     private CategoryDAO categoryDAO = new CategoryDAO();

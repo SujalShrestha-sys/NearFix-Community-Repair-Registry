@@ -30,15 +30,12 @@ public class HomeServlet extends HttpServlet {
             int itemsSaved = repairService.getTotalCompletedRepairs();
             int totalFixers = userService.getTotalUsersCount("", "REPAIRER");
 
-            // Set as attributes for the JSP
             request.setAttribute("itemsSaved", itemsSaved);
             request.setAttribute("totalFixers", totalFixers);
 
-            // Forward to the secure index view
-            request.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(request, response);
+            PageResponse.showMessage(response, "NearFix", "Items saved: " + itemsSaved + ". Repairers: " + totalFixers + ".");
         } catch (Exception e) {
-            // Fallback to static view if DB fails
-            request.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(request, response);
+            PageResponse.showMessage(response, "NearFix", "The home UI will be built next.");
         }
     }
 }

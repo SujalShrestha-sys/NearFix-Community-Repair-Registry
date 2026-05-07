@@ -20,9 +20,9 @@ public class PublicPagesServlet extends HttpServlet {
         String path = request.getServletPath();
 
         if ("/about".equals(path)) {
-            request.getRequestDispatcher("/WEB-INF/views/public/about.jsp").forward(request, response);
+            PageResponse.showMessage(response, "About NearFix", "The about page UI will be built next.");
         } else if ("/contact".equals(path)) {
-            request.getRequestDispatcher("/WEB-INF/views/public/contact.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Contact NearFix", "The contact page UI will be built next.");
         } else {
             response.sendRedirect(request.getContextPath() + "/");
         }

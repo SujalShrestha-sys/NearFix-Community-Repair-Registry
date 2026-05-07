@@ -43,10 +43,13 @@ public class AdminDashboardServlet extends HttpServlet {
             request.setAttribute("completedRepairs", completedRepairs);
             request.setAttribute("totalCategories", totalCategories);
 
-            request.getRequestDispatcher("/WEB-INF/views/admin/dashboard.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Admin Dashboard",
+                    "Users: " + totalUsers + ", requests: " + totalRequests
+                            + ", completed: " + completedRepairs + ", categories: " + totalCategories + ".");
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error loading dashboard data: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/admin/dashboard.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Admin Dashboard Error",
+                    "Error loading dashboard data: " + e.getMessage());
         }
     }
 }

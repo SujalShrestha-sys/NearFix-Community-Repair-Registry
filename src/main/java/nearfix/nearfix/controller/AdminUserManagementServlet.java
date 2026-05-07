@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/admin/users")
-public class AdminUsersServlet extends HttpServlet {
+public class AdminUserManagementServlet extends HttpServlet {
 
     private final IUserService userService = new UserService();
 
@@ -49,10 +49,11 @@ public class AdminUsersServlet extends HttpServlet {
             request.setAttribute("search", search);
             request.setAttribute("selectedRole", role);
 
-            request.getRequestDispatcher("/WEB-INF/views/admin/users.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Manage Users",
+                    "Loaded " + users.size() + " user(s). Page " + page + " of " + totalPages + ".");
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error loading users: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/admin/users.jsp").forward(request, response);
+            PageResponse.showMessage(response, "User Management Error", "Error loading users: " + e.getMessage());
         }
     }
 

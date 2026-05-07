@@ -22,11 +22,12 @@ public class User {
 
     /**
      * Constructor with essential fields.
-     * @param name Name of the user.
-     * @param email Email address of the user.
-     * @param phone Phone number of the user.
+     * 
+     * @param name         Name of the user.
+     * @param email        Email address of the user.
+     * @param phone        Phone number of the user.
      * @param passwordHash Hashed password.
-     * @param role Role of the user (e.g., CUSTOMER, REPAIRER, ADMIN).
+     * @param role         Role of the user (e.g., CUSTOMER, REPAIRER, ADMIN).
      */
     public User(String name, String email, String phone, String passwordHash, String role) {
         this.name = name;
@@ -39,6 +40,7 @@ public class User {
 
     /**
      * Checks if the user (repairer) is verified.
+     * 
      * @return True if verified, false otherwise.
      */
     public boolean isVerified() {
@@ -47,6 +49,7 @@ public class User {
 
     /**
      * Sets the verification status of the user.
+     * 
      * @param verified Verification status to set.
      */
     public void setVerified(boolean verified) {
@@ -55,6 +58,7 @@ public class User {
 
     /**
      * Gets the user ID.
+     * 
      * @return The user ID.
      */
     public int getUserId() {
@@ -63,6 +67,7 @@ public class User {
 
     /**
      * Sets the user ID.
+     * 
      * @param userId The user ID to set.
      */
     public void setUserId(int userId) {
@@ -71,6 +76,7 @@ public class User {
 
     /**
      * Gets the user's name.
+     * 
      * @return The user's name.
      */
     public String getName() {
@@ -79,6 +85,7 @@ public class User {
 
     /**
      * Sets the user's name.
+     * 
      * @param name The name to set.
      */
     public void setName(String name) {
@@ -87,6 +94,7 @@ public class User {
 
     /**
      * Gets the user's email address.
+     * 
      * @return The email address.
      */
     public String getEmail() {
@@ -95,6 +103,7 @@ public class User {
 
     /**
      * Sets the user's email address.
+     * 
      * @param email The email address to set.
      */
     public void setEmail(String email) {
@@ -103,6 +112,7 @@ public class User {
 
     /**
      * Gets the user's phone number.
+     * 
      * @return The phone number.
      */
     public String getPhone() {
@@ -111,6 +121,7 @@ public class User {
 
     /**
      * Sets the user's phone number.
+     * 
      * @param phone The phone number to set.
      */
     public void setPhone(String phone) {
@@ -119,6 +130,7 @@ public class User {
 
     /**
      * Gets the hashed password.
+     * 
      * @return The password hash.
      */
     public String getPasswordHash() {
@@ -127,6 +139,7 @@ public class User {
 
     /**
      * Sets the hashed password.
+     * 
      * @param passwordHash The password hash to set.
      */
     public void setPasswordHash(String passwordHash) {
@@ -135,6 +148,7 @@ public class User {
 
     /**
      * Gets the role of the user.
+     * 
      * @return The user role.
      */
     public String getRole() {
@@ -143,6 +157,7 @@ public class User {
 
     /**
      * Sets the role of the user.
+     * 
      * @param role The role to set.
      */
     public void setRole(String role) {
@@ -151,6 +166,7 @@ public class User {
 
     /**
      * Checks if the user account is active.
+     * 
      * @return True if active, false otherwise.
      */
     public boolean isActive() {
@@ -159,10 +175,11 @@ public class User {
 
     /**
      * Sets the active status of the user account.
+     * 
      * @param active Active status to set.
      */
     public void setActive(boolean active) {
         isActive = active;
     }
 
-}
+}
