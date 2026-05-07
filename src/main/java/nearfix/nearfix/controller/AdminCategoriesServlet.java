@@ -57,12 +57,14 @@ public class AdminCategoriesServlet extends HttpServlet {
                 String description = request.getParameter("description");
                 categoryService.createCategory(name, description);
                 message = "Category created successfully";
+
             } else if ("update".equals(action)) {
                 int categoryId = Integer.parseInt(request.getParameter("categoryId"));
                 String name = request.getParameter("name");
                 String description = request.getParameter("description");
                 categoryService.updateCategory(categoryId, name, description);
                 message = "Category updated successfully";
+
             } else if ("delete".equals(action)) {
                 int categoryId = Integer.parseInt(request.getParameter("categoryId"));
                 categoryService.deleteCategory(categoryId);

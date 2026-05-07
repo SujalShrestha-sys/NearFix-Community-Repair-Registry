@@ -27,17 +27,12 @@ public class UserLoginServlet extends HttpServlet {
             for (Cookie cookie : cookies) {
                 if ("nf_last_email".equals(cookie.getName())) {
                     request.setAttribute("prefillEmail", cookie.getValue());
-                } else if ("nf_logout_message".equals(cookie.getName())) {
-                    request.setAttribute("successMessage", cookie.getValue());
-
-                    Cookie clearMessage = new Cookie("nf_logout_message", "");
-                    clearMessage.setMaxAge(0);
-                    clearMessage.setHttpOnly(true);
-                    clearMessage.setSecure(request.isSecure());
-                    clearMessage.setPath(request.getContextPath().isEmpty() ? "/" : request.getContextPath());
-                    response.addCookie(clearMessage);
                 }
             }
+        }
+
+        if ("success".equals(request.getParameter("logout"))) {
+            request.setAttribute("successMessage", "You have been logged out successfully.");
         }
 
         request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
@@ -52,10 +47,15 @@ public class UserLoginServlet extends HttpServlet {
         try {
             if (email != null && !email.trim().isEmpty()) {
                 Cookie rememberEmail = new Cookie("nf_last_email", email.trim());
+                String cookiePath = request.getContextPath();
+                if (cookiePath.isEmpty()) {
+                    cookiePath = "/";
+                }
+
                 rememberEmail.setHttpOnly(true);
                 rememberEmail.setSecure(request.isSecure());
                 rememberEmail.setMaxAge(30 * 24 * 60 * 60); // 30 days
-                rememberEmail.setPath(request.getContextPath().isEmpty() ? "/" : request.getContextPath());
+                rememberEmail.setPath(cookiePath);
                 response.addCookie(rememberEmail);
             }
 
@@ -75,11 +75,15 @@ public class UserLoginServlet extends HttpServlet {
             session.setAttribute("userRole", user.getRole());
             session.setMaxInactiveInterval(30 * 60); // 30 minutes
 
-            String redirectURL = switch (user.getRole()) {
-                case "ADMIN" -> "/admin/dashboard";
-                case "REPAIRER" -> "/repairer/dashboard";
-                default -> "/user/dashboard";
-            };
+            String redirectURL;
+
+            if ("ADMIN".equals(user.getRole())) {
+                redirectURL = "/admin/dashboard";
+            } else if ("REPAIRER".equals(user.getRole())) {
+                redirectURL = "/repairer/dashboard";
+            } else {
+                redirectURL = "/user/dashboard";
+            }
 
             response.sendRedirect(request.getContextPath() + redirectURL);
 

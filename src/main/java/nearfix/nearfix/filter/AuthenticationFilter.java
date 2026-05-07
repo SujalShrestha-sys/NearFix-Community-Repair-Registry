@@ -29,14 +29,19 @@ public class AuthenticationFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         HttpSession session = httpRequest.getSession(false);
+        boolean userIsLoggedIn = session != null && session.getAttribute("userId") != null;
+
+        httpResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        httpResponse.setHeader("Pragma", "no-cache");
+        httpResponse.setDateHeader("Expires", 0);
 
         // Check: Is the user logged in?
-        if (session == null || session.getAttribute("userId") == null) {
+        if (!userIsLoggedIn) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
             return;
         }
 
-        // User is logged in — allow request through
+        // User is logged in, allow request through
         chain.doFilter(request, response);
     }
 
