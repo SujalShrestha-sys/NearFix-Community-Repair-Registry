@@ -31,19 +31,22 @@ public class AuthorizationFilter implements Filter {
         }
 
         String userRole = (String) session.getAttribute("userRole");
+        boolean adminPage = requestURI.contains("/admin/");
+        boolean repairerPage = requestURI.contains("/repairer/");
+        boolean userPage = requestURI.contains("/user/");
 
         // Role-based Access Control
-        if (requestURI.contains("/admin/") && !"ADMIN".equals(userRole)) {
+        if (adminPage && !"ADMIN".equals(userRole)) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/error?message=Access Denied");
             return;
         }
 
-        if (requestURI.contains("/repairer/") && !"REPAIRER".equals(userRole)) {
+        if (repairerPage && !"REPAIRER".equals(userRole)) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/error?message=Access Denied");
             return;
         }
 
-        if (requestURI.contains("/user/") && !"USER".equals(userRole)) {
+        if (userPage && !"USER".equals(userRole)) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/error?message=Access Denied");
             return;
         }
