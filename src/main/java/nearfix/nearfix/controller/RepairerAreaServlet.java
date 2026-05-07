@@ -16,7 +16,7 @@ import java.util.List;
 
 
 @WebServlet("/repairer/*")
-public class RepairerServlet extends HttpServlet {
+public class RepairerAreaServlet extends HttpServlet {
 
     private final IRepairService repairService = new RepairService();
     private final IRepairerService repairerService = new RepairerService();
@@ -44,13 +44,13 @@ public class RepairerServlet extends HttpServlet {
                 case "/dashboard":
                     Repairer repairer = repairerService.getRepairerProfile(repairerId);
                     request.setAttribute("repairer", repairer);
-                    request.getRequestDispatcher("/WEB-INF/views/repairer/dashboard.jsp").forward(request, response);
+                    PageResponse.showMessage(response, "Repairer Dashboard", "Welcome to your repairer dashboard.");
                     break;
 
                 case "/profile":
                     Repairer profile = repairerService.getRepairerProfile(repairerId);
                     request.setAttribute("repairer", profile);
-                    request.getRequestDispatcher("/WEB-INF/views/repairer/profile.jsp").forward(request, response);
+                    PageResponse.showMessage(response, "Repairer Profile", "Profile for " + profile.getName() + ".");
                     break;
 
                 case "/available-requests":
@@ -66,8 +66,7 @@ public class RepairerServlet extends HttpServlet {
                     request.setAttribute("selectedCategoryId", categoryId);
                     request.setAttribute("categories", categoryService.getAllCategories());
 
-                    request.getRequestDispatcher("/WEB-INF/views/repairer/available-requests.jsp").forward(request,
-                            response);
+                    PageResponse.showMessage(response, "Available Requests", "Loaded " + pending.size() + " request(s).");
                     break;
 
                 case "/my-requests":
@@ -79,7 +78,7 @@ public class RepairerServlet extends HttpServlet {
                     request.setAttribute("search", mySearch);
                     request.setAttribute("selectedStatus", myStatus);
 
-                    request.getRequestDispatcher("/WEB-INF/views/repairer/my-requests.jsp").forward(request, response);
+                    PageResponse.showMessage(response, "My Assigned Requests", "Loaded " + assigned.size() + " request(s).");
                     break;
 
                 default:
@@ -87,7 +86,7 @@ public class RepairerServlet extends HttpServlet {
             }
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/repairer/dashboard.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Repairer Area Error", "Error: " + e.getMessage());
         }
     }
 

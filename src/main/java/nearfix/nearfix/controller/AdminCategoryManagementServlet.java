@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/admin/categories")
-public class AdminCategoriesServlet extends HttpServlet {
+public class AdminCategoryManagementServlet extends HttpServlet {
 
     private final ICategoryService categoryService = new CategoryService();
 
@@ -32,10 +32,10 @@ public class AdminCategoriesServlet extends HttpServlet {
         try {
             List<Category> categories = categoryService.getAllCategories();
             request.setAttribute("categories", categories);
-            request.getRequestDispatcher("/WEB-INF/views/admin/categories.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Manage Categories", "Loaded " + categories.size() + " category/categories.");
         } catch (SQLException e) {
             request.setAttribute("errorMessage", "Error fetching categories: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/admin/categories.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Category Error", "Error fetching categories: " + e.getMessage());
         }
     }
 

@@ -18,7 +18,7 @@ public class AdminSeeder {
 
     public static void main(String[] args) {
         String adminEmail = "admin@nearfix.com";
-        String adminPassword = "adminPassword123";
+        String adminPassword = "Admin@123";
 
         try {
             System.out.println("   NearFix Database Seeder: Admin User    ");

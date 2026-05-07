@@ -12,6 +12,7 @@ import nearfix.nearfix.util.Validation;
 
 import java.sql.SQLException;
 import java.util.List;
+
 public class UserService implements IUserService {
 
     private UserDAO userDAO = new UserDAO();

@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/user/repairer-directory")
-public class RepairerDirectoryServlet extends HttpServlet {
+public class BrowseRepairersServlet extends HttpServlet {
 
     private IRepairerService repairerService = new RepairerService();
 
@@ -33,7 +33,7 @@ public class RepairerDirectoryServlet extends HttpServlet {
             request.setAttribute("repairers", repairers);
             request.setAttribute("search", search);
 
-            request.getRequestDispatcher("/WEB-INF/views/user/repairer-directory.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Browse Repairers", "Found " + repairers.size() + " repairer(s).");
         } catch (Exception e) {
             response.sendRedirect(request.getContextPath() + "/user/dashboard");
         }

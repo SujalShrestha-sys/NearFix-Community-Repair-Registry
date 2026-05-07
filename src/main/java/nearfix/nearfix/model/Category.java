@@ -17,7 +17,8 @@ public class Category {
 
     /**
      * Constructor with name and description.
-     * @param name Name of the category.
+     * 
+     * @param name        Name of the category.
      * @param description Description of the category.
      */
     public Category(String name, String description) {
@@ -27,6 +28,7 @@ public class Category {
 
     /**
      * Gets the category ID.
+     * 
      * @return The category ID.
      */
     public int getCategoryId() {
@@ -35,6 +37,7 @@ public class Category {
 
     /**
      * Sets the category ID.
+     * 
      * @param categoryId The category ID to set.
      */
     public void setCategoryId(int categoryId) {
@@ -43,6 +46,7 @@ public class Category {
 
     /**
      * Gets the category name.
+     * 
      * @return The category name.
      */
     public String getName() {
@@ -51,6 +55,7 @@ public class Category {
 
     /**
      * Sets the category name.
+     * 
      * @param name The category name to set.
      */
     public void setName(String name) {
@@ -59,6 +64,7 @@ public class Category {
 
     /**
      * Gets the category description.
+     * 
      * @return The category description.
      */
     public String getDescription() {
@@ -67,10 +73,10 @@ public class Category {
 
     /**
      * Sets the category description.
+     * 
      * @param description The category description to set.
      */
     public void setDescription(String description) {
         this.description = description;
     }
 }
-

@@ -24,6 +24,7 @@ public class Rating {
 
     /**
      * Gets the rating ID.
+     * 
      * @return The rating ID.
      */
     public int getRatingId() {
@@ -32,6 +33,7 @@ public class Rating {
 
     /**
      * Sets the rating ID.
+     * 
      * @param ratingId The rating ID to set.
      */
     public void setRatingId(int ratingId) {
@@ -40,6 +42,7 @@ public class Rating {
 
     /**
      * Gets the repair request ID.
+     * 
      * @return The request ID.
      */
     public int getRequestId() {
@@ -48,6 +51,7 @@ public class Rating {
 
     /**
      * Sets the repair request ID.
+     * 
      * @param requestId The request ID to set.
      */
     public void setRequestId(int requestId) {
@@ -56,6 +60,7 @@ public class Rating {
 
     /**
      * Gets the user ID of the person who gave the rating.
+     * 
      * @return The user ID.
      */
     public int getUserId() {
@@ -64,6 +69,7 @@ public class Rating {
 
     /**
      * Sets the user ID of the person who gave the rating.
+     * 
      * @param userId The user ID to set.
      */
     public void setUserId(int userId) {
@@ -72,6 +78,7 @@ public class Rating {
 
     /**
      * Gets the name of the user who gave the rating.
+     * 
      * @return The user name.
      */
     public String getUserName() {
@@ -80,6 +87,7 @@ public class Rating {
 
     /**
      * Sets the name of the user who gave the rating.
+     * 
      * @param userName The user name to set.
      */
     public void setUserName(String userName) {
@@ -88,6 +96,7 @@ public class Rating {
 
     /**
      * Gets the ID of the repairer being rated.
+     * 
      * @return The repairer ID.
      */
     public int getRepairerId() {
@@ -96,6 +105,7 @@ public class Rating {
 
     /**
      * Sets the ID of the repairer being rated.
+     * 
      * @param repairerId The repairer ID to set.
      */
     public void setRepairerId(int repairerId) {
@@ -104,6 +114,7 @@ public class Rating {
 
     /**
      * Gets the name of the repairer being rated.
+     * 
      * @return The repairer name.
      */
     public String getRepairerName() {
@@ -112,6 +123,7 @@ public class Rating {
 
     /**
      * Sets the name of the repairer being rated.
+     * 
      * @param repairerName The repairer name to set.
      */
     public void setRepairerName(String repairerName) {
@@ -120,6 +132,7 @@ public class Rating {
 
     /**
      * Gets the rating score (e.g., 1 to 5).
+     * 
      * @return The rating score.
      */
     public int getRatingScore() {
@@ -128,6 +141,7 @@ public class Rating {
 
     /**
      * Sets the rating score.
+     * 
      * @param ratingScore The rating score to set.
      */
     public void setRatingScore(int ratingScore) {
@@ -136,6 +150,7 @@ public class Rating {
 
     /**
      * Gets the comment associated with the rating.
+     * 
      * @return The comment text.
      */
     public String getComment() {
@@ -144,6 +159,7 @@ public class Rating {
 
     /**
      * Sets the comment associated with the rating.
+     * 
      * @param comment The comment text to set.
      */
     public void setComment(String comment) {
@@ -152,6 +168,7 @@ public class Rating {
 
     /**
      * Gets the timestamp when the rating was created.
+     * 
      * @return The creation timestamp.
      */
     public Timestamp getCreatedAt() {
@@ -160,10 +177,10 @@ public class Rating {
 
     /**
      * Sets the timestamp when the rating was created.
+     * 
      * @param createdAt The creation timestamp to set.
      */
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 }
-

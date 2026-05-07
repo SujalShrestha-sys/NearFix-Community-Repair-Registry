@@ -35,10 +35,10 @@ public class UserProfileServlet extends HttpServlet {
             }
 
             request.setAttribute("user", user);
-            request.getRequestDispatcher("/WEB-INF/views/user/profile.jsp").forward(request, response);
+            PageResponse.showMessage(response, "User Profile", "Profile for " + user.getName() + ".");
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error loading profile: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/user/profile.jsp").forward(request, response);
+            PageResponse.showMessage(response, "Profile Error", "Error loading profile: " + e.getMessage());
         }
     }
 
