@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("successMessage", "You have been logged out successfully.");
         }
 
-        PageResponse.showMessage(response, "Login", "The login UI will be built next.");
+        request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
     }
 
     @Override
@@ -89,10 +89,10 @@ public class LoginServlet extends HttpServlet {
 
         } catch (ValidationException e) {
             request.setAttribute("errorMessage", e.getMessage());
-            PageResponse.showMessage(response, "Login Error", e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
         } catch (Exception e) {
             request.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
-            PageResponse.showMessage(response, "Login Error", "An unexpected error occurred: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
         }
     }
 }
