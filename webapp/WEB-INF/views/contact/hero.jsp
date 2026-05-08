@@ -96,132 +96,98 @@ contentType="text/html;charset=UTF-8" language="java" %>
         </div>
       </div>
 
-      <%-- ---- Right: Contact Cards ---- --%>
-      <div class="lg:w-6/12 w-full grid grid-cols-1 gap-4">
-        <%-- Email Card --%>
-        <div
-          class="group bg-gray-800/50 border border-gray-700 p-6 rounded-2xl flex items-center gap-6 hover:bg-gray-800 transition-all duration-300 hover:border-green-500/50"
-        >
-          <div
-            class="w-10 h-10 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-500 group-hover:scale-110 transition-transform duration-300"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-6 h-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
-              ></path>
-              <polyline points="22,6 12,13 2,6"></polyline>
-            </svg>
-          </div>
-          <div>
-            <p
-              class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1"
-            >
-              Email
-            </p>
-            <p class="text-lg font-bold text-white">hello@nearfix.com</p>
-          </div>
+      <%-- ---- Right: Creative Hub (Award Winning Visuals) ---- --%>
+      <div class="lg:w-5/12 w-full relative min-h-[500px] flex items-center justify-center">
+        
+        <%-- Artistic Background Glows --%>
+        <div class="absolute inset-0 z-0">
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-green-500/20 rounded-full blur-[120px] animate-pulse"></div>
+          <div class="absolute top-1/4 right-0 w-40 h-40 bg-blue-500/10 rounded-full blur-[80px]"></div>
         </div>
 
-        <%-- Phone Card --%>
-        <div
-          class="group bg-gray-800/50 border border-gray-700 p-6 rounded-2xl flex items-center gap-6 hover:bg-gray-800 transition-all duration-300 hover:border-blue-500/50"
-        >
-          <div
-            class="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform duration-300"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-6 h-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
-              ></path>
-            </svg>
+        <%-- Central Hub (Floating Glass Card) --%>
+        <div class="relative z-10 w-full max-w-sm aspect-square bg-gray-800/30 backdrop-blur-xl border border-white/10 rounded-[4rem] shadow-2xl flex items-center justify-center animate-float">
+          
+          <%-- Center Icon --%>
+          <div class="relative">
+            <div class="absolute inset-0 bg-green-500 rounded-full blur-2xl opacity-20"></div>
+            <div class="w-32 h-32 bg-gradient-to-br from-green-500 to-green-700 rounded-[2.5rem] shadow-2xl flex items-center justify-center text-white relative z-10">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+              </svg>
+            </div>
           </div>
-          <div>
-            <p
-              class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1"
-            >
-              Phone / WhatsApp
-            </p>
-            <p class="text-lg font-bold text-white">+977 98 XXXX XXXX</p>
+
+          <%-- Orbiting Items (Floating Contact Pills) --%>
+          
+          <%-- Pill 1: Email (Top Left) --%>
+          <div class="absolute -top-6 -left-12 bg-white/5 backdrop-blur-md border border-white/10 px-5 py-3 rounded-2xl shadow-xl animate-float" style="animation-delay: -1s;">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Email</p>
+                <p class="text-xs font-bold text-white">hello@nearfix.com</p>
+              </div>
+            </div>
           </div>
+
+          <%-- Pill 2: Phone (Bottom Right) --%>
+          <div class="absolute -bottom-6 -right-12 bg-white/5 backdrop-blur-md border border-white/10 px-5 py-3 rounded-2xl shadow-xl animate-float" style="animation-delay: -2.5s;">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">WhatsApp</p>
+                <p class="text-xs font-bold text-white">+977 98 XXXX XXXX</p>
+              </div>
+            </div>
+          </div>
+
+          <%-- Pill 3: Location (Bottom Left) --%>
+          <div class="absolute bottom-1/4 -left-20 bg-white/5 backdrop-blur-md border border-white/10 px-5 py-3 rounded-2xl shadow-xl animate-float" style="animation-delay: -4s;">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center text-red-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Office</p>
+                <p class="text-xs font-bold text-white">Biratnagar, Nepal</p>
+              </div>
+            </div>
+          </div>
+
+          <%-- Pill 4: Hours (Top Right) --%>
+          <div class="absolute top-1/4 -right-20 bg-white/5 backdrop-blur-md border border-white/10 px-5 py-3 rounded-2xl shadow-xl animate-float" style="animation-delay: -5.5s;">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-yellow-500/20 flex items-center justify-center text-yellow-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Support</p>
+                <p class="text-xs font-bold text-white">24/7 Monitoring</p>
+              </div>
+            </div>
+          </div>
+
+          <%-- Floating Particles --%>
+          <div class="absolute top-10 right-10 w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
+          <div class="absolute bottom-20 left-5 w-1 h-1 bg-blue-400 rounded-full animate-pulse"></div>
         </div>
 
-        <%-- Institution Card --%>
-        <div
-          class="group bg-gray-800/50 border border-gray-700 p-6 rounded-2xl flex items-center gap-6 hover:bg-gray-800 transition-all duration-300 hover:border-yellow-500/50"
-        >
-          <div
-            class="w-10 h-10 rounded-2xl bg-yellow-500/10 flex items-center justify-center text-yellow-500 group-hover:scale-110 transition-transform duration-300"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-6 h-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-              <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
-          </div>
-          <div>
-            <p
-              class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1"
-            >
-              Institution
-            </p>
-            <p class="text-lg font-bold text-white">
-              Your College Name, Biratnagar
-            </p>
-          </div>
-        </div>
-
-        <%-- Response Hours Card --%>
-        <div
-          class="group bg-gray-800/50 border border-gray-700 p-6 rounded-2xl flex items-center gap-6 hover:bg-gray-800 transition-all duration-300 hover:border-purple-500/50"
-        >
-          <div
-            class="w-10 h-10 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform duration-300"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-6 h-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-          </div>
-          <div>
-            <p
-              class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1"
-            >
-              Response Hours
-            </p>
-            <p class="text-lg font-bold text-white">
-              Sun &ndash; Fri, 9am &ndash; 5pm NST
-            </p>
-          </div>
-        </div>
+        <%-- Artistic Background Shapes --%>
+        <div class="absolute -z-10 w-[120%] h-[120%] border border-white/5 rounded-full rotate-45 scale-110"></div>
+        <div class="absolute -z-10 w-[140%] h-[140%] border border-white/5 rounded-full -rotate-12 scale-125"></div>
       </div>
     </div>
   </div>
