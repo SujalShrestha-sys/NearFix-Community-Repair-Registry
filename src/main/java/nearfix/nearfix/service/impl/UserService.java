@@ -77,6 +77,61 @@ public class UserService implements IUserService {
     }
 
     /**
+     * Specialized registration for Repairers with additional profile data.
+     */
+    @Override
+    public boolean registerRepairer(String name, String email, String phone, String password, String specialization,
+            int experience, String expertise)
+            throws ValidationException, SQLException, DatabaseException {
+
+        // --- Input Validation ---
+        if (!Validation.isValidName(name)) {
+            throw new ValidationException("Invalid name. Only letters and spaces allowed.");
+        }
+        if (!Validation.isValidEmail(email)) {
+            throw new ValidationException("Invalid email format.");
+        }
+        if (!Validation.isValidPhone(phone)) {
+            throw new ValidationException("Invalid phone number. Must be 10 digits.");
+        }
+        if (!Validation.isValidPassword(password)) {
+            throw new ValidationException("Password must have 8+ characters, 1 uppercase, 1 digit, 1 special char.");
+        }
+
+        // --- Duplicate Checks ---
+        if (userDAO.getUserByEmail(email) != null) {
+            throw new ValidationException("Email already registered.");
+        }
+        if (userDAO.getUserByPhone(phone) != null) {
+            throw new ValidationException("Phone number already registered.");
+        }
+
+        // --- Create User ---
+        String passwordHash = PasswordEncryption.encryptPassword(password);
+        User user = new User(name, email, phone, passwordHash, "REPAIRER");
+        int userId = userDAO.createUser(user);
+
+        if (userId <= 0) {
+            throw new ValidationException("Registration failed. Please try again.");
+        }
+
+        // Create detailed repairer profile
+        Repairer repairer = new Repairer();
+        repairer.setUserId(userId);
+        repairer.setVerified(false);
+        repairer.setRating(0.0);
+        repairer.setTotalJobsCompleted(0);
+        repairer.setSpecialization(specialization);
+        repairer.setExpertise(expertise);
+        repairer.setYearsOfExperience(experience);
+        repairer.setLicenseNumber(""); // Optional field for now
+
+        repairerDAO.createRepairer(repairer);
+
+        return true;
+    }
+
+    /**
      * Authenticates a user by email and password.
      * Returns the User object if login is successful.
      * Throws ValidationException if credentials are wrong or account is inactive.
