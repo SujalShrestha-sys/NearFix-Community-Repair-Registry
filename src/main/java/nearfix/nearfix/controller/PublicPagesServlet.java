@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * PublicPagesServlet - Handles public informational pages.
  */
-@WebServlet(urlPatterns = { "/about", "/contact" })
+@WebServlet(urlPatterns = { "/about" })
 public class PublicPagesServlet extends HttpServlet {
 
     @Override

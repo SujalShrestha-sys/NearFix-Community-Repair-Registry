@@ -6,7 +6,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
 
             <%-- ---- Logo ---- --%>
@@ -27,17 +27,21 @@
 
             <%-- ---- Desktop Navigation Links ---- --%>
             <div class="hidden md:flex items-center gap-8">
-                <a href="#how-it-works"
+                <a href="${pageContext.request.contextPath}/home#how-it-works"
                    class="nf-nav-link text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200">
                     How it works
                 </a>
-                <a href="#portals"
+                <a href="${pageContext.request.contextPath}/home#portals"
                    class="nf-nav-link text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200">
                     For Repairers
                 </a>
-                <a href="#stats"
+                <a href="${pageContext.request.contextPath}/home#stats"
                    class="nf-nav-link text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200">
                     Impact
+                </a>
+                <a href="${pageContext.request.contextPath}/contact"
+                   class="nf-nav-link text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200">
+                    Contact
                 </a>
             </div>
 
@@ -93,17 +97,21 @@
     <%-- ---- Mobile Menu (hidden by default) ---- --%>
     <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white">
         <div class="px-4 pt-3 pb-4 flex flex-col gap-3">
-            <a href="#how-it-works"
+            <a href="${pageContext.request.contextPath}/home#how-it-works"
                class="text-sm font-medium text-gray-700 hover:text-green-600 transition-colors py-1">
                 How it works
             </a>
-            <a href="#portals"
+            <a href="${pageContext.request.contextPath}/home#portals"
                class="text-sm font-medium text-gray-700 hover:text-green-600 transition-colors py-1">
                 For Repairers
             </a>
-            <a href="#stats"
+            <a href="${pageContext.request.contextPath}/home#stats"
                class="text-sm font-medium text-gray-700 hover:text-green-600 transition-colors py-1">
                 Impact
+            </a>
+            <a href="${pageContext.request.contextPath}/contact"
+               class="text-sm font-medium text-gray-700 hover:text-green-600 transition-colors py-1">
+                Contact
             </a>
             <hr class="border-gray-100">
             <% if (isLoggedIn) { %>
