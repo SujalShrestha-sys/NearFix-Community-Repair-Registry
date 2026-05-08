@@ -12,6 +12,9 @@ public interface IUserService {
         boolean registerUser(String name, String email, String phone, String password, String role)
                         throws ValidationException, SQLException, DatabaseException;
 
+        boolean registerRepairer(String name, String email, String phone, String password, String specialization, int experience, String expertise)
+                        throws ValidationException, SQLException, DatabaseException;
+
         User login(String email, String password) throws ValidationException;
 
         User getUserById(int userId) throws SQLException;
