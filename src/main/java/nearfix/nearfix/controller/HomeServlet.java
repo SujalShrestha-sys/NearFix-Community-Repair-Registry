@@ -13,11 +13,33 @@ import nearfix.nearfix.service.iservice.IUserService;
 import java.io.IOException;
 
 /**
- * HomeServlet - Handles the landing page (/).
- * Fetches dynamic statistics for the impact counter.
+ * HomeServlet - Handles the landing page (/ and /home).
+ *
+ * <p>
+ * Fetches dynamic statistics from the service layer and passes
+ * them as request attributes to the landing page JSP.
+ * </p>
+ *
+ * <p>
+ * Attributes set for the view:
+ * <ul>
+ * <li>{@code itemsSaved} - total number of completed repairs</li>
+ * <li>{@code totalFixers} - total number of registered repairers</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * Route: GET / or GET /home
+ * </p>
+ * <p>
+ * View: /WEB-INF/views/landing/index.jsp
+ * </p>
  */
 @WebServlet(urlPatterns = { "/home", "" })
 public class HomeServlet extends HttpServlet {
+
+    // Path to the landing page JSP (assembled from component includes)
+    private static final String LANDING_PAGE = "/WEB-INF/views/landing/index.jsp";
 
     private final IRepairService repairService = new RepairService();
     private final IUserService userService = new UserService();
@@ -25,17 +47,23 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         try {
-            // Fetch real statistics
+            // Fetch live statistics from the database
             int itemsSaved = repairService.getTotalCompletedRepairs();
             int totalFixers = userService.getTotalUsersCount("", "REPAIRER");
 
+            // Pass stats to the JSP view via request attributes
             request.setAttribute("itemsSaved", itemsSaved);
             request.setAttribute("totalFixers", totalFixers);
 
-            PageResponse.showMessage(response, "NearFix", "Items saved: " + itemsSaved + ". Repairers: " + totalFixers + ".");
         } catch (Exception e) {
-            PageResponse.showMessage(response, "NearFix", "The home UI will be built next.");
+            // If the DB is unavailable, show 0 so the page still loads cleanly
+            request.setAttribute("itemsSaved", 0);
+            request.setAttribute("totalFixers", 0);
         }
+
+        // Forward to the landing page view
+        request.getRequestDispatcher(LANDING_PAGE).forward(request, response);
     }
 }
