@@ -39,6 +39,10 @@
                    class="nf-nav-link text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200">
                     Impact
                 </a>
+                <a href="${pageContext.request.contextPath}/about"
+                   class="nf-nav-link text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200">
+                    About Us
+                </a>
                 <a href="${pageContext.request.contextPath}/contact"
                    class="nf-nav-link text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200">
                     Contact
@@ -108,6 +112,10 @@
             <a href="${pageContext.request.contextPath}/home#stats"
                class="text-sm font-medium text-gray-700 hover:text-green-600 transition-colors py-1">
                 Impact
+            </a>
+            <a href="${pageContext.request.contextPath}/about"
+               class="text-sm font-medium text-gray-700 hover:text-green-600 transition-colors py-1">
+                About Us
             </a>
             <a href="${pageContext.request.contextPath}/contact"
                class="text-sm font-medium text-gray-700 hover:text-green-600 transition-colors py-1">
