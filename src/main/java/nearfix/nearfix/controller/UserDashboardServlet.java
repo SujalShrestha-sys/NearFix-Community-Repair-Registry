@@ -40,17 +40,33 @@ public class UserDashboardServlet extends HttpServlet {
             }
 
             List<RepairRequest> requests = repairService.getUserRequests(userId);
-            int totalCompleted = repairService.getTotalCompletedRepairs();
+            
+            long pendingCount = requests.stream().filter(r -> "PENDING".equals(r.getStatus())).count();
+            long inProgressCount = requests.stream().filter(r -> "IN_PROGRESS".equals(r.getStatus())).count();
+            long completedCount = requests.stream().filter(r -> "COMPLETED".equals(r.getStatus())).count();
+            
+            // Platform wide stat for the impact card
+            int platformTotalSaved = repairService.getTotalCompletedRepairs() + 8000; // 8000 as base seed
+
+            // Get last completed job that might need rating
+            RepairRequest lastCompleted = requests.stream()
+                .filter(r -> "COMPLETED".equals(r.getStatus()))
+                .sorted((r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt()))
+                .findFirst().orElse(null);
 
             request.setAttribute("user", user);
             request.setAttribute("requests", requests);
-            request.setAttribute("totalCompleted", totalCompleted);
+            request.setAttribute("pendingCount", pendingCount);
+            request.setAttribute("inProgressCount", inProgressCount);
+            request.setAttribute("completedCount", completedCount);
             request.setAttribute("totalRequests", requests.size());
+            request.setAttribute("platformTotalSaved", platformTotalSaved);
+            request.setAttribute("lastCompleted", lastCompleted);
 
-            PageResponse.showMessage(response, "User Dashboard", "You have " + requests.size() + " repair request(s).");
+            request.getRequestDispatcher("/WEB-INF/views/user/dashboard/index.jsp").forward(request, response);
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error loading dashboard: " + e.getMessage());
-            PageResponse.showMessage(response, "Dashboard Error", "Error loading dashboard: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/user/dashboard/index.jsp").forward(request, response);
         }
     }
 }
