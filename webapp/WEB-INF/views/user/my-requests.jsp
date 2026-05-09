@@ -46,6 +46,22 @@
         <jsp:include page="layout/navbar.jsp" />
 
         <main class="pt-[22px] px-4 md:px-9 pb-9">
+            <!-- Messages -->
+            <c:if test="${not empty successMessage}">
+                <div class="mb-6 bg-green-50 border border-green-100 text-green-600 px-6 py-4 rounded-2xl font-semibold flex items-center gap-3 animate-bounce">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    ${successMessage}
+                </div>
+                <% session.removeAttribute("successMessage"); %>
+            </c:if>
+            <c:if test="${not empty errorMessage}">
+                <div class="mb-6 bg-red-50 border border-red-100 text-red-500 px-6 py-4 rounded-2xl font-semibold flex items-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    ${errorMessage}
+                </div>
+                <% session.removeAttribute("errorMessage"); %>
+            </c:if>
+
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                 <div>
                     <h1 class="text-2xl md:text-[32px] font-extrabold text-dark tracking-[-0.8px]">My Requests</h1>
@@ -112,11 +128,10 @@
                                 </div>
 
                                 <!-- Progress Bar -->
-                                <div class="flex items-start justify-between relative mt-10 mb-8 px-2 max-w-4xl mx-auto md:mx-0">
+                                <div class="flex items-start justify-between relative mt-10 mb-8 px-2 max-w-4xl mx-auto md:mx-0 ${req.status == 'CANCELLED' ? 'opacity-40 grayscale' : ''}">
                                     <div class="absolute top-[15px] left-8 right-8 h-[2px] bg-border z-0">
-                                        <c:set var="userProgWidth" value="${req.status == 'PENDING' ? '0%' : req.status == 'ACCEPTED' ? '33%' : req.status == 'IN_PROGRESS' ? '66%' : '100%'}" />
-                                        <div class="h-full bg-primary rounded-full transition-all duration-700" 
-                                             <c:if test="true">style="width: ${userProgWidth}"</c:if>>
+                                        <c:set var="userProgClass" value="${req.status == 'PENDING' ? 'w-0' : req.status == 'ACCEPTED' ? 'w-1/3' : req.status == 'IN_PROGRESS' ? 'w-2/3' : req.status == 'COMPLETED' ? 'w-full' : 'w-0'}" />
+                                        <div class="h-full bg-primary rounded-full transition-all duration-700 ${userProgClass}">
                                         </div>
                                     </div>
 
@@ -129,7 +144,7 @@
                                                                            (vs.index == 3 && (req.status == 'COMPLETED'))}" />
                                             <div class="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold ${isReached ? 'bg-primary border-4 border-primary-light text-white' : 'bg-white border-2 border-border text-muted'}">
                                                 <c:choose>
-                                                    <c:when test="${isReached && req.status != step}">
+                                                    <c:when test="${isReached && req.status != 'PENDING' && req.status != 'ACCEPTED' && req.status != 'IN_PROGRESS' && req.status != 'COMPLETED' ? false : (isReached && req.status != (step == 'Done' ? 'COMPLETED' : (step == 'In Progress' ? 'IN_PROGRESS' : step.toUpperCase())))}">
                                                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                                     </c:when>
                                                     <c:otherwise>${vs.index + 1}</c:otherwise>
@@ -160,7 +175,7 @@
                                         </c:choose>
                                     </div>
                                     <div class="flex items-center gap-4">
-                                        <span class="text-[11px] text-muted-dark font-medium">Posted 2 days ago</span>
+                                        <span class="text-[11px] text-muted-dark font-medium">Posted on ${req.createdAt}</span>
                                         <c:if test="${req.status == 'COMPLETED'}">
                                             <div class="flex items-center gap-1 text-yellow">
                                                 <span class="text-[11px] font-bold">Rated</span>
