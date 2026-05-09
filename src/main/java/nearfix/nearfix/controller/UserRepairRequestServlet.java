@@ -12,7 +12,7 @@ import nearfix.nearfix.service.iservice.IRepairService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet({"/repair-request/*", "/user/my-requests", "/user/post-request"})
+@WebServlet({ "/repair-request/*", "/user/my-requests", "/user/post-request" })
 public class UserRepairRequestServlet extends HttpServlet {
 
     private IRepairService repairService = new RepairService();
@@ -29,11 +29,14 @@ public class UserRepairRequestServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         String uri = request.getRequestURI();
-        
+
         if (action == null) {
-            if (uri.endsWith("/my-requests")) action = "myRequests";
-            else if (uri.endsWith("/post-request")) action = "post";
-            else if (uri.endsWith("/view")) action = "view";
+            if (uri.endsWith("/my-requests"))
+                action = "myRequests";
+            else if (uri.endsWith("/post-request"))
+                action = "post";
+            else if (uri.endsWith("/view"))
+                action = "view";
         }
 
         if (action == null || action.isEmpty()) {
@@ -45,7 +48,7 @@ public class UserRepairRequestServlet extends HttpServlet {
             switch (action) {
                 case "post":
                     request.setAttribute("categories", categoryService.getAllCategories());
-                    PageResponse.showMessage(response, "Post Repair Request", "The post request UI will be built next.");
+                    request.getRequestDispatcher("/WEB-INF/views/user/post-request.jsp").forward(request, response);
                     break;
 
                 case "view":
@@ -93,15 +96,26 @@ public class UserRepairRequestServlet extends HttpServlet {
         try {
             switch (action) {
                 case "create":
-                    int userId = (Integer) session.getAttribute("userId");
-                    int categoryId = Integer.parseInt(request.getParameter("category"));
-                    String itemName = request.getParameter("itemName");
-                    String description = request.getParameter("description");
-                    String urgency = request.getParameter("urgency");
-                    int requestId = repairService.postRepairRequest(userId, categoryId, itemName, description, urgency);
-                    message = "Repair request created successfully!";
-                    response.sendRedirect(request.getContextPath() + "/repair-request?action=view&id=" + requestId);
-                    return;
+                    try {
+                        int userId = (Integer) session.getAttribute("userId");
+                        int categoryId = Integer.parseInt(request.getParameter("category"));
+                        String itemName = request.getParameter("itemName");
+                        String description = request.getParameter("description");
+                        String urgency = request.getParameter("urgency");
+                        if (urgency != null)
+                            urgency = urgency.trim().toUpperCase();
+                        String locationStr = request.getParameter("location");
+
+                        repairService.postRepairRequest(userId, categoryId, itemName, description, urgency,
+                                locationStr);
+                        session.setAttribute("successMessage", "Repair request created successfully!");
+                        response.sendRedirect(request.getContextPath() + "/user/my-requests");
+                        return;
+                    } catch (Exception e) {
+                        session.setAttribute("errorMessage", "Post failed: " + e.getMessage());
+                        response.sendRedirect(request.getContextPath() + "/user/post-request");
+                        return;
+                    }
 
                 case "update":
                     int reqId = Integer.parseInt(request.getParameter("requestId"));
@@ -109,7 +123,9 @@ public class UserRepairRequestServlet extends HttpServlet {
                     req.setRequestId(reqId);
                     req.setItemName(request.getParameter("itemName"));
                     req.setDescription(request.getParameter("description"));
-                    req.setUrgency(request.getParameter("urgency"));
+                    String updateUrgency = request.getParameter("urgency");
+                    if (updateUrgency != null)
+                        req.setUrgency(updateUrgency.trim().toUpperCase());
                     repairService.updateRequest(req);
                     message = "Repair request updated successfully!";
                     break;

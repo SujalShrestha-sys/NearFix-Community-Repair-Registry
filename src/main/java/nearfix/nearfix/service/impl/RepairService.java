@@ -23,11 +23,11 @@ public class RepairService implements IRepairService {
 
     private final IRepairRequestDAO repairRequestDAO = new RepairRequestDAO();
     private final IRepairerDAO repairerDAO = new RepairerDAO();
-    private final IRatingDAO ratingDAO = new RatingDAO();
+    private final IRatingDAO ratingRepository = new RatingDAO();
     private final SavedJobDAO savedJobDAO = new SavedJobDAO();
 
     @Override
-    public int postRepairRequest(int userId, int categoryId, String itemName, String description, String urgency)
+    public int postRepairRequest(int userId, int categoryId, String itemName, String description, String urgency, String location)
             throws ValidationException, SQLException {
 
         if (itemName == null || itemName.trim().isEmpty()) {
@@ -43,9 +43,14 @@ public class RepairService implements IRepairService {
         request.setItemName(itemName);
         request.setDescription(description);
         request.setUrgency(urgency);
+        request.setLocation(location);
         request.setStatus("PENDING");
 
-        return repairRequestDAO.createRequest(request);
+        int requestId = repairRequestDAO.createRequest(request);
+        if (requestId == -1) {
+            throw new SQLException("Failed to create repair request in database.");
+        }
+        return requestId;
     }
 
     @Override
@@ -175,9 +180,9 @@ public class RepairService implements IRepairService {
         rating.setRatingScore(ratingScore);
         rating.setComment(comment);
 
-        boolean success = ratingDAO.addRating(rating);
+        boolean success = ratingRepository.addRating(rating);
         if (success) {
-            double avg = ratingDAO.getAverageRating(request.getRepairerId());
+            double avg = ratingRepository.getAverageRating(request.getRepairerId());
             repairerDAO.updateRepairerRating(request.getRepairerId(), avg);
         }
         return success;
@@ -185,12 +190,12 @@ public class RepairService implements IRepairService {
 
     @Override
     public Rating getRatingByRequest(int requestId) throws SQLException {
-        return ratingDAO.getRatingByRequest(requestId);
+        return ratingRepository.getRatingByRequest(requestId);
     }
 
     @Override
     public List<Rating> getRatingsByRepairer(int repairerId) throws SQLException {
-        return ratingDAO.getRatingsByRepairer(repairerId);
+        return ratingRepository.getRatingsByRepairer(repairerId);
     }
 
     @Override

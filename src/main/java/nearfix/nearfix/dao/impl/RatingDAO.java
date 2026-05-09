@@ -10,7 +10,6 @@ import java.util.List;
 
 /**
  * Implementation of IRatingDAO using JDBC.
- * Manages database operations for user ratings and reviews.
  */
 public class RatingDAO implements IRatingDAO {
 
@@ -91,12 +90,6 @@ public class RatingDAO implements IRatingDAO {
         return 0;
     }
 
-    /**
-     * Maps a single row from the ResultSet to a Rating object.
-     * @param rs ResultSet containing rating data.
-     * @return A populated Rating object.
-     * @throws SQLException if a database access error occurs.
-     */
     private Rating mapResultSetToRating(ResultSet rs) throws SQLException {
         Rating rating = new Rating();
         rating.setRatingId(rs.getInt("rating_id"));
@@ -110,4 +103,3 @@ public class RatingDAO implements IRatingDAO {
         return rating;
     }
 }
-

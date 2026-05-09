@@ -8,16 +8,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Implementation of IRepairRequestDAO using JDBC.
- * Handles database operations for repair requests, including search and filtering.
- */
 public class RepairRequestDAO implements IRepairRequestDAO {
-
 
     @Override
     public int createRequest(RepairRequest request) throws SQLException {
-        String sql = "INSERT INTO repair_requests (user_id, category_id, item_name, description, urgency, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO repair_requests (user_id, category_id, item_name, description, urgency, location, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -26,7 +21,8 @@ public class RepairRequestDAO implements IRepairRequestDAO {
             pstmt.setString(3, request.getItemName());
             pstmt.setString(4, request.getDescription());
             pstmt.setString(5, request.getUrgency());
-            pstmt.setString(6, request.getStatus());
+            pstmt.setString(6, request.getLocation());
+            pstmt.setString(7, request.getStatus());
 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
@@ -440,6 +436,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
         request.setItemName(rs.getString("item_name"));
         request.setDescription(rs.getString("description"));
         request.setUrgency(rs.getString("urgency"));
+        request.setLocation(rs.getString("location"));
         request.setStatus(rs.getString("status"));
         request.setCreatedAt(rs.getTimestamp("created_at"));
         request.setUpdatedAt(rs.getTimestamp("updated_at"));
