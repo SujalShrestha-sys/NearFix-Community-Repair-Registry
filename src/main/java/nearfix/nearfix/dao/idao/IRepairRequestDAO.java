@@ -179,5 +179,21 @@ public interface IRepairRequestDAO {
      * @throws SQLException if a database access error occurs.
      */
     List<RepairRequest> searchUserRequests(int userId, String keyword, String status) throws SQLException;
+
+    /**
+     * Gets the total count of completed repairs for a specific user.
+     * @param userId The user ID.
+     * @return Total count of completed repairs.
+     * @throws SQLException if a database access error occurs.
+     */
+    int getUserCompletedRequestsCount(int userId) throws SQLException;
+
+    /**
+     * Gets the total count of all repair requests for a specific user.
+     * @param userId The user ID.
+     * @return Total count of requests.
+     * @throws SQLException if a database access error occurs.
+     */
+    int getUserTotalRequestsCount(int userId) throws SQLException;
 }
 

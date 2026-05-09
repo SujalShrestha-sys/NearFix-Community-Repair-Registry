@@ -9,7 +9,8 @@ import nearfix.nearfix.model.User;
 import nearfix.nearfix.service.iservice.IUserService;
 import nearfix.nearfix.util.PasswordEncryption;
 import nearfix.nearfix.util.Validation;
-
+import nearfix.nearfix.dao.idao.IRepairRequestDAO;
+import nearfix.nearfix.dao.impl.RepairRequestDAO;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class UserService implements IUserService {
 
     private UserDAO userDAO = new UserDAO();
     private RepairerDAO repairerDAO = new RepairerDAO();
+    private IRepairRequestDAO repairRequestDAO = new RepairRequestDAO();
 
     /**
      * Registers a new user. Validates all input fields, checks for duplicates,
@@ -169,11 +171,11 @@ public class UserService implements IUserService {
     }
 
     /**
-     * Updates the user's profile (name, email, phone).
+     * Updates the user's profile (name, email, phone, address).
      * Validates inputs and checks for duplicate email/phone.
      */
     @Override
-    public boolean updateProfile(int userId, String name, String email, String phone)
+    public boolean updateProfile(int userId, String name, String email, String phone, String address)
             throws ValidationException, SQLException {
 
         User user = userDAO.getUserById(userId);
@@ -202,8 +204,24 @@ public class UserService implements IUserService {
         user.setName(name);
         user.setEmail(email);
         user.setPhone(phone);
+        user.setAddress(address);
 
         return userDAO.updateUser(user);
+    }
+
+    @Override
+    public java.util.Map<String, Object> getUserStats(int userId) throws SQLException {
+        java.util.Map<String, Object> stats = new java.util.HashMap<>();
+        
+        // Simple counts from the DAO
+        int completed = repairRequestDAO.getUserCompletedRequestsCount(userId);
+        int total = repairRequestDAO.getUserTotalRequestsCount(userId);
+        
+        stats.put("completedRepairs", completed);
+        stats.put("totalRequests", total);
+        stats.put("impactScore", completed * 15); // Simple calculation
+        
+        return stats;
     }
 
     /**

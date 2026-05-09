@@ -177,14 +177,16 @@ public class RepairRequestDAO implements IRepairRequestDAO {
 
     @Override
     public boolean updateRequest(RepairRequest request) throws SQLException {
-        String sql = "UPDATE repair_requests SET item_name = ?, description = ?, urgency = ? WHERE request_id = ? AND status = 'PENDING'";
+        String sql = "UPDATE repair_requests SET item_name = ?, description = ?, urgency = ?, category_id = ?, location = ? WHERE request_id = ? AND status = 'PENDING'";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, request.getItemName());
             pstmt.setString(2, request.getDescription());
             pstmt.setString(3, request.getUrgency());
-            pstmt.setInt(4, request.getRequestId());
+            pstmt.setInt(4, request.getCategoryId());
+            pstmt.setString(5, request.getLocation());
+            pstmt.setInt(6, request.getRequestId());
 
             return pstmt.executeUpdate() > 0;
         }
@@ -421,6 +423,34 @@ public class RepairRequestDAO implements IRepairRequestDAO {
             }
         }
         return requests;
+    }
+
+    @Override
+    public int getUserCompletedRequestsCount(int userId) throws SQLException {
+        String sql = "SELECT COUNT(*) as count FROM repair_requests WHERE user_id = ? AND status = 'COMPLETED'";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public int getUserTotalRequestsCount(int userId) throws SQLException {
+        String sql = "SELECT COUNT(*) as count FROM repair_requests WHERE user_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        }
+        return 0;
     }
 
     private RepairRequest mapResultSetToRequest(ResultSet rs) throws SQLException {

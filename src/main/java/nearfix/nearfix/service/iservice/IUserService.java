@@ -19,8 +19,10 @@ public interface IUserService {
 
         User getUserById(int userId) throws SQLException;
 
-        boolean updateProfile(int userId, String name, String email, String phone)
+        boolean updateProfile(int userId, String name, String email, String phone, String address)
                         throws ValidationException, SQLException;
+
+        java.util.Map<String, Object> getUserStats(int userId) throws SQLException;
 
         boolean changePassword(int userId, String oldPassword, String newPassword)
                         throws ValidationException, SQLException;
