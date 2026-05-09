@@ -12,7 +12,7 @@ import nearfix.nearfix.service.iservice.IRepairService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/repair-request/*")
+@WebServlet({"/repair-request/*", "/user/my-requests", "/user/post-request"})
 public class UserRepairRequestServlet extends HttpServlet {
 
     private IRepairService repairService = new RepairService();
@@ -28,6 +28,14 @@ public class UserRepairRequestServlet extends HttpServlet {
         }
 
         String action = request.getParameter("action");
+        String uri = request.getRequestURI();
+        
+        if (action == null) {
+            if (uri.endsWith("/my-requests")) action = "myRequests";
+            else if (uri.endsWith("/post-request")) action = "post";
+            else if (uri.endsWith("/view")) action = "view";
+        }
+
         if (action == null || action.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/user/dashboard");
             return;
@@ -57,7 +65,7 @@ public class UserRepairRequestServlet extends HttpServlet {
                     request.setAttribute("search", search);
                     request.setAttribute("selectedStatus", status);
 
-                    PageResponse.showMessage(response, "My Repair Requests", "Loaded " + requests.size() + " request(s).");
+                    request.getRequestDispatcher("/WEB-INF/views/user/my-requests.jsp").forward(request, response);
                     break;
 
                 default:
