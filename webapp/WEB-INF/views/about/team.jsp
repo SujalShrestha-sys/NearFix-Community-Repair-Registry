@@ -37,7 +37,7 @@
             <%-- Member 1 (M1) --%>
             <div class="group relative bg-gray-900 rounded-[3rem] overflow-hidden transition-all duration-700 hover:shadow-[0_20px_50px_rgba(34,197,94,0.3)] hover:-translate-y-4">
                 <div class="aspect-[3/4] overflow-hidden relative">
-                    <img src="${pageContext.request.contextPath}/assets/images/team/sujal.png" 
+                    <img src="${pageContext.request.contextPath}/assets/images/team/sujal.png"
                          alt="Sujal Shrestha" 
                          class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-50 group-hover:opacity-30 transition-opacity duration-500"></div>
@@ -57,7 +57,9 @@
             <%-- Member 2 (M2) --%>
             <div class="group relative bg-gray-900 rounded-[3rem] overflow-hidden transition-all duration-700 hover:shadow-[0_20px_50px_rgba(59,130,246,0.3)] hover:-translate-y-4">
                 <div class="aspect-[3/4] overflow-hidden relative">
-                    <div class="w-full h-full bg-blue-900/20 flex items-center justify-center text-blue-500/30 font-black text-8xl">M2</div>
+                    <img src="${pageContext.request.contextPath}/assets/images/team/Dipen.jpg"
+                         alt="Dipen Limbu" 
+                         class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-50 group-hover:opacity-30 transition-opacity duration-500"></div>
                     <div class="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center text-white font-black text-sm">M2</div>
                 </div>
@@ -75,7 +77,9 @@
             <%-- Member 3 (M3) --%>
             <div class="group relative bg-gray-900 rounded-[3rem] overflow-hidden transition-all duration-700 hover:shadow-[0_20px_50px_rgba(249,115,22,0.3)] hover:-translate-y-4">
                 <div class="aspect-[3/4] overflow-hidden relative">
-                    <div class="w-full h-full bg-orange-900/20 flex items-center justify-center text-orange-500/30 font-black text-8xl">M3</div>
+                    <img src="${pageContext.request.contextPath}/assets/images/team/ayush.jpg"
+                         alt="Ayush Dangal" 
+                         class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-50 group-hover:opacity-30 transition-opacity duration-500"></div>
                     <div class="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center text-white font-black text-sm">M3</div>
                 </div>
@@ -113,7 +117,9 @@
             <%-- Member 5 (M5) --%>
             <div class="group relative bg-gray-900 rounded-[3rem] overflow-hidden transition-all duration-700 hover:shadow-[0_20px_50px_rgba(202,138,4,0.3)] hover:-translate-y-4">
                 <div class="aspect-[3/4] overflow-hidden relative">
-                    <div class="w-full h-full bg-yellow-900/20 flex items-center justify-center text-yellow-500/30 font-black text-8xl">M5</div>
+                    <img src="${pageContext.request.contextPath}/assets/images/team/ganga.jpg"
+                         alt="Ganga Bajgain" 
+                         class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-50 group-hover:opacity-30 transition-opacity duration-500"></div>
                     <div class="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center text-white font-black text-sm">M5</div>
                 </div>
@@ -131,7 +137,9 @@
             <%-- Member 6 (M6) --%>
             <div class="group relative bg-gray-900 rounded-[3rem] overflow-hidden transition-all duration-700 hover:shadow-[0_20px_50px_rgba(236,72,153,0.3)] hover:-translate-y-4">
                 <div class="aspect-[3/4] overflow-hidden relative">
-                    <div class="w-full h-full bg-pink-900/20 flex items-center justify-center text-pink-500/30 font-black text-8xl">M6</div>
+                    <img src="${pageContext.request.contextPath}/assets/images/team/pranisha.jpg"
+                         alt="Pranisha Gautam" 
+                         class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-50 group-hover:opacity-30 transition-opacity duration-500"></div>
                     <div class="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center text-white font-black text-sm">M6</div>
                 </div>
