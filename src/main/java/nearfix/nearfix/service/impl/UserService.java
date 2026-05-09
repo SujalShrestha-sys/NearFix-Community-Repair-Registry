@@ -64,11 +64,11 @@ public class UserService implements IUserService {
             repairer.setUserId(userId);
             repairer.setVerified(false);
             repairer.setRating(0.0);
-            repairer.setTotalJobsCompleted(0);
             repairer.setSpecialization("Not Specified");
             repairer.setExpertise("");
+            repairer.setServiceArea("Not Specified");
             repairer.setYearsOfExperience(0);
-            repairer.setLicenseNumber("");
+            repairer.setApprovalStatus("PENDING");
 
             repairerDAO.createRepairer(repairer);
         }
@@ -120,11 +120,11 @@ public class UserService implements IUserService {
         repairer.setUserId(userId);
         repairer.setVerified(false);
         repairer.setRating(0.0);
-        repairer.setTotalJobsCompleted(0);
         repairer.setSpecialization(specialization);
         repairer.setExpertise(expertise);
         repairer.setYearsOfExperience(experience);
-        repairer.setLicenseNumber(""); // Optional field for now
+        repairer.setServiceArea("Not Specified");
+        repairer.setApprovalStatus("PENDING");
 
         repairerDAO.createRepairer(repairer);
 

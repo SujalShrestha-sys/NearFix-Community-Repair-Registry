@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * Implementation of ICategoryDAO using JDBC.
  * Handles database interactions for Category entities.
@@ -54,6 +55,34 @@ public class CategoryDAO implements ICategoryDAO {
             }
         }
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Category getCategoryByName(String name) throws SQLException {
+        String sql = "SELECT * FROM categories WHERE name = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, name);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToCategory(rs);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Gets category ID by name.
+     */
+    public int getCategoryIdByName(String name) throws SQLException {
+        Category cat = getCategoryByName(name);
+        return (cat != null) ? cat.getCategoryId() : 0;
     }
 
     /**
@@ -129,6 +158,7 @@ public class CategoryDAO implements ICategoryDAO {
 
     /**
      * Maps a single row from the ResultSet to a Category object.
+     * 
      * @param rs ResultSet containing category data.
      * @return A populated Category object.
      * @throws SQLException if a database access error occurs.
@@ -141,4 +171,3 @@ public class CategoryDAO implements ICategoryDAO {
         return category;
     }
 }
-

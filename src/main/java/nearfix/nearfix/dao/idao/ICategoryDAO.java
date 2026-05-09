@@ -25,6 +25,11 @@ public interface ICategoryDAO {
      * @throws SQLException if a database access error occurs.
      */
     Category getCategoryById(int categoryId) throws SQLException;
+    
+    /**
+     * Retrieves a category by its name.
+     */
+    Category getCategoryByName(String name) throws SQLException;
 
     /**
      * Creates a new category in the database.

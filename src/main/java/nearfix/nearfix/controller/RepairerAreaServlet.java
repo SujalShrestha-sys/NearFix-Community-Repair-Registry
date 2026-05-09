@@ -14,7 +14,6 @@ import nearfix.nearfix.service.iservice.IRepairerService;
 import java.io.IOException;
 import java.util.List;
 
-
 @WebServlet("/repairer/*")
 public class RepairerAreaServlet extends HttpServlet {
 
@@ -39,21 +38,28 @@ public class RepairerAreaServlet extends HttpServlet {
 
         try {
             int repairerId = (Integer) session.getAttribute("userId");
+            Repairer repairer = repairerService.getRepairerProfile(repairerId);
+            request.setAttribute("repairer", repairer);
 
             switch (pathInfo) {
                 case "/dashboard":
-                    Repairer repairer = repairerService.getRepairerProfile(repairerId);
-                    request.setAttribute("repairer", repairer);
-                    PageResponse.showMessage(response, "Repairer Dashboard", "Welcome to your repairer dashboard.");
+                    request.setAttribute("pageTitle", "Dashboard");
+                    // Add stats and active jobs to request
+                    List<RepairRequest> myActive = repairService.searchRepairerRequests(repairerId, null,
+                            "IN_PROGRESS");
+                    request.setAttribute("activeJobs", myActive);
+                    // For now, let's just forward to the main dashboard
+                    request.getRequestDispatcher("/WEB-INF/views/repairer/dashboard/index.jsp").forward(request,
+                            response);
                     break;
 
                 case "/profile":
-                    Repairer profile = repairerService.getRepairerProfile(repairerId);
-                    request.setAttribute("repairer", profile);
-                    PageResponse.showMessage(response, "Repairer Profile", "Profile for " + profile.getName() + ".");
+                    request.setAttribute("pageTitle", "My Profile");
+                    request.getRequestDispatcher("/WEB-INF/views/repairer/profile.jsp").forward(request, response);
                     break;
 
                 case "/available-requests":
+                    request.setAttribute("pageTitle", "Browse Jobs");
                     String search = request.getParameter("search");
                     String categoryIdStr = request.getParameter("categoryId");
                     Integer categoryId = (categoryIdStr != null && !categoryIdStr.isEmpty())
@@ -66,10 +72,12 @@ public class RepairerAreaServlet extends HttpServlet {
                     request.setAttribute("selectedCategoryId", categoryId);
                     request.setAttribute("categories", categoryService.getAllCategories());
 
-                    PageResponse.showMessage(response, "Available Requests", "Loaded " + pending.size() + " request(s).");
+                    request.getRequestDispatcher("/WEB-INF/views/repairer/available-requests.jsp").forward(request,
+                            response);
                     break;
 
                 case "/my-requests":
+                    request.setAttribute("pageTitle", "My Jobs");
                     String mySearch = request.getParameter("search");
                     String myStatus = request.getParameter("status");
 
@@ -78,7 +86,7 @@ public class RepairerAreaServlet extends HttpServlet {
                     request.setAttribute("search", mySearch);
                     request.setAttribute("selectedStatus", myStatus);
 
-                    PageResponse.showMessage(response, "My Assigned Requests", "Loaded " + assigned.size() + " request(s).");
+                    request.getRequestDispatcher("/WEB-INF/views/repairer/my-requests.jsp").forward(request, response);
                     break;
 
                 default:
@@ -86,7 +94,7 @@ public class RepairerAreaServlet extends HttpServlet {
             }
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error: " + e.getMessage());
-            PageResponse.showMessage(response, "Repairer Area Error", "Error: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/repairer/dashboard/index.jsp").forward(request, response);
         }
     }
 
@@ -107,17 +115,25 @@ public class RepairerAreaServlet extends HttpServlet {
         try {
             switch (action) {
                 case "update-profile":
-                    String name = request.getParameter("name");
-                    String phone = request.getParameter("phone");
-                    String specialization = request.getParameter("specialization");
-                    String expertise = request.getParameter("expertise");
+                    String name = request.getParameter("fullName");
+                    String phone = request.getParameter("repairerPhone");
+                    String category = request.getParameter("category");
+                    String bio = request.getParameter("bio");
+                    String serviceArea = request.getParameter("serviceArea");
+                    String experienceStr = request.getParameter("experience");
+                    int experience = 0;
+                    if (experienceStr != null && !experienceStr.isEmpty()) {
+                        experience = Integer.parseInt(experienceStr);
+                    }
 
                     Repairer repairer = repairerService.getRepairerProfile(repairerId);
                     if (repairer != null) {
                         repairer.setName(name);
                         repairer.setPhone(phone);
-                        repairer.setSpecialization(specialization);
-                        repairer.setExpertise(expertise);
+                        repairer.setSpecialization(category);
+                        repairer.setExpertise(bio);
+                        repairer.setServiceArea(serviceArea);
+                        repairer.setYearsOfExperience(experience);
                         repairerService.updateProfile(repairer);
                         message = "Profile updated successfully!";
                     }
@@ -154,6 +170,15 @@ public class RepairerAreaServlet extends HttpServlet {
         if (!error.isEmpty())
             session.setAttribute("errorMessage", error);
 
-        response.sendRedirect(request.getContextPath() + "/repairer/dashboard");
+        String redirectPath = "/repairer/dashboard";
+        if ("update-profile".equals(action)) {
+            redirectPath = "/repairer/profile";
+        } else if ("accept-request".equals(action)) {
+            redirectPath = "/repairer/my-requests";
+        } else if ("complete-request".equals(action)) {
+            redirectPath = "/repairer/my-requests";
+        }
+
+        response.sendRedirect(request.getContextPath() + redirectPath);
     }
 }

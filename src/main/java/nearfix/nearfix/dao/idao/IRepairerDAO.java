@@ -68,13 +68,7 @@ public interface IRepairerDAO {
      */
     boolean updateRepairerRating(int repairerId, double newRating) throws SQLException;
 
-    /**
-     * Updates the count of jobs completed by a repairer.
-     * @param repairerId The ID of the repairer.
-     * @param count The number to add to the total completed jobs.
-     * @return True if successful, false otherwise.
-     * @throws SQLException if a database access error occurs.
-     */
+
     boolean updateJobsCompleted(int repairerId, int count) throws SQLException;
 
     /**
@@ -106,4 +100,4 @@ public interface IRepairerDAO {
      * @throws SQLException if a database access error occurs.
      */
     int getTotalVerifiedRepairers() throws SQLException;
-}
+}
