@@ -33,8 +33,10 @@
                         <div class="flex items-start justify-between relative mt-6 px-2">
                             <!-- Line -->
                             <div class="absolute top-[15px] left-8 right-8 h-[2px] bg-border z-0">
+                                <c:set var="userProgressWidth" value="${req.status == 'PENDING' ? '0%' : req.status == 'ACCEPTED' ? '33%' : req.status == 'IN_PROGRESS' ? '66%' : '100%'}" />
                                 <div class="h-full bg-primary rounded-full transition-all duration-700" 
-                                     style="width: ${req.status == 'PENDING' ? '0%' : req.status == 'ACCEPTED' ? '33%' : req.status == 'IN_PROGRESS' ? '66%' : '100%'}"></div>
+                                     <c:if test="true">style="width: ${userProgressWidth}"</c:if>>
+                                </div>
                             </div>
 
                             <!-- Step 1 -->
