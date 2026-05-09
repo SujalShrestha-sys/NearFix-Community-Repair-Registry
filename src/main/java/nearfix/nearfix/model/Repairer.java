@@ -6,13 +6,13 @@ import java.util.Date;
  * Model class representing a repairer, which is a type of User.
  */
 public class Repairer extends User {
-    private String specialization; // e.g., "Electrical", "Plumbing", "Electronics"
-    private String expertise;
-    private int yearsOfExperience;
-    private double rating;
-    private int totalJobsCompleted;
+    private String specialization; // Category name from skill_category join
+    private String expertise; // bio in DB
+    private int yearsOfExperience; // experience_years in DB
+    private double rating; // average_rating in DB
+    private String serviceArea;
+    private String approvalStatus; // 'PENDING', 'APPROVED', 'REJECTED'
     private Date joinDate;
-    private String licenseNumber;
 
     /**
      * Default constructor.
@@ -106,24 +106,6 @@ public class Repairer extends User {
     }
 
     /**
-     * Gets the total number of jobs completed.
-     * 
-     * @return Total jobs completed.
-     */
-    public int getTotalJobsCompleted() {
-        return totalJobsCompleted;
-    }
-
-    /**
-     * Sets the total number of jobs completed.
-     * 
-     * @param totalJobsCompleted Total jobs completed to set.
-     */
-    public void setTotalJobsCompleted(int totalJobsCompleted) {
-        this.totalJobsCompleted = totalJobsCompleted;
-    }
-
-    /**
      * Gets the join date of the repairer.
      * 
      * @return The join date.
@@ -142,20 +124,35 @@ public class Repairer extends User {
     }
 
     /**
-     * Gets the license number of the repairer.
-     * 
-     * @return The license number.
+     * Gets the service area.
      */
-    public String getLicenseNumber() {
-        return licenseNumber;
+    public String getServiceArea() {
+        return serviceArea;
     }
 
     /**
-     * Sets the license number of the repairer.
-     * 
-     * @param licenseNumber The license number to set.
+     * Sets the service area.
      */
-    public void setLicenseNumber(String licenseNumber) {
-        this.licenseNumber = licenseNumber;
+    public void setServiceArea(String serviceArea) {
+        this.serviceArea = serviceArea;
+    }
+
+    /**
+     * Gets the approval status.
+     */
+    public String getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    /**
+     * Sets the approval status.
+     */
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    @Override
+    public boolean isVerified() {
+        return "APPROVED".equals(this.approvalStatus);
     }
 }

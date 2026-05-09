@@ -121,9 +121,7 @@ public class RepairService implements IRepairService {
             throw new ValidationException("Request not found.");
 
         boolean success = repairRequestDAO.updateStatus(requestId, "COMPLETED");
-        if (success && request.getRepairerId() != null) {
-            repairerDAO.updateJobsCompleted(request.getRepairerId(), 1);
-        }
+
         return success;
     }
 

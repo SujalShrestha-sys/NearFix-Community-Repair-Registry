@@ -19,7 +19,7 @@ public class RatingDAO implements IRatingDAO {
      */
     @Override
     public boolean addRating(Rating rating) throws SQLException {
-        String sql = "INSERT INTO ratings (request_id, user_id, repairer_id, rating_score, comment) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ratings (request_id, user_id, repairer_id, stars, comment) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -77,7 +77,7 @@ public class RatingDAO implements IRatingDAO {
      */
     @Override
     public double getAverageRating(int repairerId) throws SQLException {
-        String sql = "SELECT AVG(rating_score) as avg_rating FROM ratings WHERE repairer_id = ?";
+        String sql = "SELECT AVG(stars) as avg_rating FROM ratings WHERE repairer_id = ?";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -104,7 +104,7 @@ public class RatingDAO implements IRatingDAO {
         rating.setUserId(rs.getInt("user_id"));
         rating.setUserName(rs.getString("user_name"));
         rating.setRepairerId(rs.getInt("repairer_id"));
-        rating.setRatingScore(rs.getInt("rating_score"));
+        rating.setRatingScore(rs.getInt("stars"));
         rating.setComment(rs.getString("comment"));
         rating.setCreatedAt(rs.getTimestamp("created_at"));
         return rating;
