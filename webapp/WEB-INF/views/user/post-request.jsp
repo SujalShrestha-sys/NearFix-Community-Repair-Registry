@@ -73,7 +73,7 @@
                     <div class="bg-white rounded-[32px] border border-border p-8 md:p-10 shadow-sm relative overflow-hidden">
                         <jsp:include page="post-request/step-indicators.jsp" />
 
-                        <form id="post-request-form" action="${pageContext.request.contextPath}/repair-request" method="POST">
+                        <form id="post-request-form" action="${pageContext.request.contextPath}/user/repair-request" method="POST">
                             <input type="hidden" name="action" value="create">
                             
                             <jsp:include page="post-request/step-category.jsp" />

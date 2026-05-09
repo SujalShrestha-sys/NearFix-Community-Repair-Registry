@@ -41,12 +41,13 @@ public class AuthorizationFilter implements Filter {
             return;
         }
 
-        if (repairerPage && !"REPAIRER".equals(userRole)) {
+        // Allow both USER and REPAIRER to access profile and common user pages
+        if (userPage && !("USER".equals(userRole) || "REPAIRER".equals(userRole))) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/error?message=Access Denied");
             return;
         }
 
-        if (userPage && !"USER".equals(userRole)) {
+        if (repairerPage && !"REPAIRER".equals(userRole)) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/error?message=Access Denied");
             return;
         }

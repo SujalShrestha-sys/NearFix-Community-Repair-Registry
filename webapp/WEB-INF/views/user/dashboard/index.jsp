@@ -57,7 +57,7 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
       }
     </style>
   </head>
-  <body class="font-inter bg-background flex min-h-screen text-dark">
+  <body class="bg-background flex min-h-screen text-dark">
     <jsp:include page="../layout/sidebar.jsp" />
 
     <div

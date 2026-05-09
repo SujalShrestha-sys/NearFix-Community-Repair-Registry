@@ -14,10 +14,9 @@ import java.util.List;
  */
 public class UserDAO implements IUserDAO {
 
-
     @Override
     public int createUser(User user) throws SQLException {
-        String sql = "INSERT INTO users (name, email, phone, password_hash, role, is_active) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (name, email, phone, password_hash, role, is_active, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -27,6 +26,7 @@ public class UserDAO implements IUserDAO {
             pstmt.setString(4, user.getPasswordHash());
             pstmt.setString(5, user.getRole());
             pstmt.setBoolean(6, user.isActive());
+            pstmt.setString(7, user.getAddress());
 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
@@ -112,14 +112,15 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public boolean updateUser(User user) throws SQLException {
-        String sql = "UPDATE users SET name = ?, email = ?, phone = ? WHERE user_id = ?";
+        String sql = "UPDATE users SET name = ?, email = ?, phone = ?, address = ? WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getEmail());
             pstmt.setString(3, user.getPhone());
-            pstmt.setInt(4, user.getUserId());
+            pstmt.setString(4, user.getAddress());
+            pstmt.setInt(5, user.getUserId());
 
             return pstmt.executeUpdate() > 0;
         }
@@ -255,6 +256,7 @@ public class UserDAO implements IUserDAO {
         user.setPasswordHash(rs.getString("password_hash"));
         user.setRole(rs.getString("role"));
         user.setActive(rs.getBoolean("is_active"));
+        user.setAddress(rs.getString("address"));
         return user;
     }
 }

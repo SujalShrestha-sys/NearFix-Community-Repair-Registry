@@ -4,19 +4,23 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import nearfix.nearfix.model.RepairRequest;
+import nearfix.nearfix.model.User;
 import nearfix.nearfix.service.impl.CategoryService;
 import nearfix.nearfix.service.impl.RepairService;
+import nearfix.nearfix.service.impl.UserService;
 import nearfix.nearfix.service.iservice.ICategoryService;
 import nearfix.nearfix.service.iservice.IRepairService;
+import nearfix.nearfix.service.iservice.IUserService;
 
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet({ "/repair-request/*", "/user/my-requests", "/user/post-request" })
+@WebServlet({ "/user/repair-request", "/user/repair-request/*", "/user/my-requests", "/user/post-request" })
 public class UserRepairRequestServlet extends HttpServlet {
 
     private IRepairService repairService = new RepairService();
     private ICategoryService categoryService = new CategoryService();
+    private IUserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -27,15 +31,24 @@ public class UserRepairRequestServlet extends HttpServlet {
             return;
         }
 
-        String action = request.getParameter("action");
-        String uri = request.getRequestURI();
+        try {
+            int currentUserId = (Integer) session.getAttribute("userId");
+            User user = userService.getUserById(currentUserId);
+            request.setAttribute("user", user);
+        } catch (Exception e) {
+        }
 
-        if (action == null) {
-            if (uri.endsWith("/my-requests"))
+        String action = request.getParameter("action");
+        String pathInfo = request.getServletPath() + (request.getPathInfo() != null ? request.getPathInfo() : "");
+
+        if (action == null || action.isEmpty()) {
+            if (pathInfo.equals("/user/my-requests"))
                 action = "myRequests";
-            else if (uri.endsWith("/post-request"))
+            else if (pathInfo.equals("/user/post-request"))
                 action = "post";
-            else if (uri.endsWith("/view"))
+            else if (pathInfo.contains("/edit"))
+                action = "edit";
+            else if (pathInfo.contains("/view"))
                 action = "view";
         }
 
@@ -55,7 +68,15 @@ public class UserRepairRequestServlet extends HttpServlet {
                     int requestId = Integer.parseInt(request.getParameter("id"));
                     RepairRequest repairReq = repairService.getRepairRequest(requestId);
                     request.setAttribute("repairRequest", repairReq);
-                    PageResponse.showMessage(response, "Repair Request Detail", "Loaded request #" + requestId + ".");
+                    request.getRequestDispatcher("/WEB-INF/views/user/request-detail.jsp").forward(request, response);
+                    break;
+                
+                case "edit":
+                    int editId = Integer.parseInt(request.getParameter("id"));
+                    RepairRequest editReq = repairService.getRepairRequest(editId);
+                    request.setAttribute("req", editReq);
+                    request.setAttribute("categories", categoryService.getAllCategories());
+                    request.getRequestDispatcher("/WEB-INF/views/user/edit-request.jsp").forward(request, response);
                     break;
 
                 case "myRequests":
@@ -88,6 +109,13 @@ public class UserRepairRequestServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+
+        // --- Fetch User for Sidebar ---
+        try {
+            int currentUserId = (Integer) session.getAttribute("userId");
+            User user = userService.getUserById(currentUserId);
+            request.setAttribute("user", user);
+        } catch (Exception e) {}
 
         String action = request.getParameter("action");
         String message = "";
@@ -122,7 +150,9 @@ public class UserRepairRequestServlet extends HttpServlet {
                     RepairRequest req = new RepairRequest();
                     req.setRequestId(reqId);
                     req.setItemName(request.getParameter("itemName"));
+                    req.setCategoryId(Integer.parseInt(request.getParameter("category")));
                     req.setDescription(request.getParameter("description"));
+                    req.setLocation(request.getParameter("location"));
                     String updateUrgency = request.getParameter("urgency");
                     if (updateUrgency != null)
                         req.setUrgency(updateUrgency.trim().toUpperCase());
@@ -158,6 +188,6 @@ public class UserRepairRequestServlet extends HttpServlet {
         if (!error.isEmpty())
             session.setAttribute("errorMessage", error);
 
-        response.sendRedirect(request.getContextPath() + "/repair-request?action=myRequests");
+        response.sendRedirect(request.getContextPath() + "/user/my-requests");
     }
 }

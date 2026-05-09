@@ -13,6 +13,7 @@ public class User {
     private String role;
     private boolean isActive;
     private boolean isVerified; // For repairers
+    private String address;
 
     /**
      * Default constructor.
@@ -36,6 +37,24 @@ public class User {
         this.passwordHash = passwordHash;
         this.role = role;
         this.isActive = true;
+    }
+
+    /**
+     * Gets the user's address.
+     * 
+     * @return The address.
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * Sets the user's address.
+     * 
+     * @param address The address to set.
+     */
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     /**

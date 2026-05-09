@@ -75,16 +75,16 @@
 
             <!-- Filters -->
             <div class="flex items-center gap-2 mb-8 overflow-x-auto pb-2 no-scrollbar">
-                <a href="${pageContext.request.contextPath}/repair-request?action=myRequests" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${empty selectedStatus ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
+                <a href="${pageContext.request.contextPath}/user/my-requests" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${empty selectedStatus ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
                     All (${requests.size()})
                 </a>
-                <a href="${pageContext.request.contextPath}/repair-request?action=myRequests&status=PENDING" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedStatus == 'PENDING' ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
+                <a href="${pageContext.request.contextPath}/user/my-requests?status=PENDING" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedStatus == 'PENDING' ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
                     Pending
                 </a>
-                <a href="${pageContext.request.contextPath}/repair-request?action=myRequests&status=IN_PROGRESS" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedStatus == 'IN_PROGRESS' ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
+                <a href="${pageContext.request.contextPath}/user/my-requests?status=IN_PROGRESS" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedStatus == 'IN_PROGRESS' ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
                     In Progress
                 </a>
-                <a href="${pageContext.request.contextPath}/repair-request?action=myRequests&status=COMPLETED" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedStatus == 'COMPLETED' ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
+                <a href="${pageContext.request.contextPath}/user/my-requests?status=COMPLETED" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedStatus == 'COMPLETED' ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
                     Completed
                 </a>
             </div>
@@ -110,18 +110,20 @@
                                         <p class="text-sm text-muted-dark line-clamp-2 max-w-3xl">${req.description}</p>
                                     </div>
                                     
-                                    <div class="flex items-center gap-2">
+                                    <div class="flex items-center gap-3">
                                         <c:choose>
                                             <c:when test="${req.status == 'PENDING'}">
-                                                <a href="#" class="px-5 py-2 rounded-xl text-sm font-bold border border-border text-dark hover:bg-muted-light transition-all no-underline">Edit</a>
-                                                <form action="${pageContext.request.contextPath}/repair-request" method="POST" onsubmit="return confirm('Cancel this request?')">
+                                                <a href="${pageContext.request.contextPath}/user/repair-request?action=edit&id=${req.requestId}" class="px-6 py-3 rounded-[16px] text-[11px] font-black uppercase tracking-widest border border-border text-dark hover:bg-dark hover:text-white transition-all no-underline">Edit</a>
+                                                <form action="${pageContext.request.contextPath}/user/repair-request" method="POST" onsubmit="return confirm('Archive this request?')">
                                                     <input type="hidden" name="action" value="cancel">
                                                     <input type="hidden" name="requestId" value="${req.requestId}">
-                                                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-bold border border-red-100 text-red-500 hover:bg-red-50 transition-all">Delete</button>
+                                                    <button type="submit" class="w-12 h-12 rounded-[16px] flex items-center justify-center border border-border text-muted hover:text-red-500 hover:border-red-100 hover:bg-red-50 transition-all">
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                    </button>
                                                 </form>
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="${pageContext.request.contextPath}/repair-request?action=view&id=${req.requestId}" class="px-6 py-2 rounded-xl text-sm font-bold border border-border text-dark hover:bg-muted-light transition-all no-underline">Track</a>
+                                                <a href="${pageContext.request.contextPath}/user/repair-request?action=view&id=${req.requestId}" class="px-8 py-3 rounded-[16px] text-[11px] font-black uppercase tracking-widest bg-dark text-white hover:bg-primary transition-all no-underline">Overview</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
@@ -132,8 +134,8 @@
                                     <div class="absolute top-[15px] left-8 right-8 h-[2px] bg-border z-0">
                                         <c:set var="userProgClass" value="${req.status == 'PENDING' ? 'w-0' : req.status == 'ACCEPTED' ? 'w-1/3' : req.status == 'IN_PROGRESS' ? 'w-2/3' : req.status == 'COMPLETED' ? 'w-full' : 'w-0'}" />
                                         <div class="h-full bg-primary rounded-full transition-all duration-700 ${userProgClass}">
-                                        </div>
                                     </div>
+                                </div>
 
                                     <!-- Steps -->
                                     <c:forEach var="step" items="Pending,Accepted,In Progress,Done" varStatus="vs">
@@ -149,11 +151,11 @@
                                                     </c:when>
                                                     <c:otherwise>${vs.index + 1}</c:otherwise>
                                                 </c:choose>
-                                            </div>
+                                        </div>
                                             <span class="text-[10.5px] ${isReached ? 'font-bold text-dark' : 'font-medium text-muted-dark'}">${step}</span>
                                         </div>
                                     </c:forEach>
-                                </div>
+                                    </div>
 
                                 <!-- Footer -->
                                 <div class="flex items-center justify-between pt-6 border-t border-border mt-2">
