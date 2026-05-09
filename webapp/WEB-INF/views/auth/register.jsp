@@ -5,6 +5,7 @@
      and Screen-fit layout.
      ============================================================ --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -237,10 +238,15 @@
                                 <div class="space-y-1.5">
                                     <label class="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 ml-1">Category</label>
                                     <select name="category" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all">
-                                        <option value="ELECTRONICS">Electronics</option>
-                                        <option value="FURNITURE">Furniture</option>
-                                        <option value="PLUMBING">Plumbing</option>
-                                        <option value="CARPENTER">Carpenter</option>
+                                        <c:forEach var="cat" items="${categories}">
+                                            <option value="${cat.name}">${cat.name}</option>
+                                        </c:forEach>
+                                        <c:if test="${empty categories}">
+                                            <option value="ELECTRONICS">Electronics</option>
+                                            <option value="FURNITURE">Furniture</option>
+                                            <option value="PLUMBING">Plumbing</option>
+                                            <option value="CARPENTER">Carpenter</option>
+                                        </c:if>
                                     </select>
                                 </div>
                                 <div class="space-y-1.5">

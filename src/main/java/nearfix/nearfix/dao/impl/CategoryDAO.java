@@ -62,7 +62,7 @@ public class CategoryDAO implements ICategoryDAO {
      */
     @Override
     public Category getCategoryByName(String name) throws SQLException {
-        String sql = "SELECT * FROM categories WHERE name = ?";
+        String sql = "SELECT * FROM categories WHERE LOWER(name) = LOWER(?)";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {

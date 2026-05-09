@@ -19,6 +19,11 @@ public class RepairerDAO implements IRepairerDAO {
         CategoryDAO categoryDAO = new CategoryDAO();
         int categoryId = categoryDAO.getCategoryIdByName(repairer.getSpecialization());
 
+        if (categoryId <= 0) {
+            throw new SQLException("Invalid or missing skill category: " + repairer.getSpecialization() + 
+                ". Please ensure categories are properly seeded in the database.");
+        }
+
         String sql = "INSERT INTO repairer_profiles (user_id, skill_category, experience_years, bio, service_area, approval_status) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {

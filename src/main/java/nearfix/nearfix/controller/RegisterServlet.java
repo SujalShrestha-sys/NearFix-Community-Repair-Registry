@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import nearfix.nearfix.dao.idao.ICategoryDAO;
+import nearfix.nearfix.dao.impl.CategoryDAO;
 import nearfix.nearfix.exception.ValidationException;
 import nearfix.nearfix.service.impl.UserService;
 import nearfix.nearfix.service.iservice.IUserService;
@@ -15,11 +17,17 @@ import java.io.IOException;
 public class RegisterServlet extends HttpServlet {
 
     private IUserService userService = new UserService();
+    private ICategoryDAO categoryDAO = new CategoryDAO();
 
     private static final String SIGNUP_VIEW = "/WEB-INF/views/auth/register.jsp";
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        try {
+            request.setAttribute("categories", categoryDAO.getAllCategories());
+        } catch (Exception e) {
+            // Log error but proceed to show the form
+        }
         request.getRequestDispatcher(SIGNUP_VIEW).forward(request, response);
     }
 
