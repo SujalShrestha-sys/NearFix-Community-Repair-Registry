@@ -17,6 +17,7 @@ public class RepairRequest {
     private String itemName;
     private String description;
     private String urgency;
+    private String location;
     private String status;
     private Date createdAt;
     private Date updatedAt;
@@ -35,13 +36,15 @@ public class RepairRequest {
      * @param itemName    Name of the item to be repaired.
      * @param description Description of the issue.
      * @param urgency     Urgency level of the request.
+     * @param location    Location of the user.
      */
-    public RepairRequest(int userId, int categoryId, String itemName, String description, String urgency) {
+    public RepairRequest(int userId, int categoryId, String itemName, String description, String urgency, String location) {
         this.userId = userId;
         this.categoryId = categoryId;
         this.itemName = itemName;
         this.description = description;
         this.urgency = urgency;
+        this.location = location;
         this.status = "PENDING";
     }
 
@@ -223,6 +226,24 @@ public class RepairRequest {
      */
     public void setUrgency(String urgency) {
         this.urgency = urgency;
+    }
+
+    /**
+     * Gets the location.
+     * 
+     * @return The location.
+     */
+    public String getLocation() {
+        return location;
+    }
+
+    /**
+     * Sets the location.
+     * 
+     * @param location The location to set.
+     */
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     /**
