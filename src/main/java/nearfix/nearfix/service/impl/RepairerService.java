@@ -29,7 +29,7 @@ public class RepairerService implements IRepairerService {
     }
 
     @Override
-    public List<Repairer> searchRepairers(String keyword) throws SQLException {
-        return repairerDAO.searchRepairers(keyword);
+    public List<Repairer> searchRepairers(String keyword, Integer categoryId, String area) throws SQLException {
+        return repairerDAO.searchRepairers(keyword, categoryId, area);
     }
 }

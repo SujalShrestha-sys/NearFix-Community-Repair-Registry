@@ -20,8 +20,8 @@ public class RepairerDAO implements IRepairerDAO {
         int categoryId = categoryDAO.getCategoryIdByName(repairer.getSpecialization());
 
         if (categoryId <= 0) {
-            throw new SQLException("Invalid or missing skill category: " + repairer.getSpecialization() + 
-                ". Please ensure categories are properly seeded in the database.");
+            throw new SQLException("Invalid or missing skill category: " + repairer.getSpecialization() +
+                    ". Please ensure categories are properly seeded in the database.");
         }
 
         String sql = "INSERT INTO repairer_profiles (user_id, skill_category, experience_years, bio, service_area, approval_status) VALUES (?, ?, ?, ?, ?, ?)";
@@ -176,23 +176,37 @@ public class RepairerDAO implements IRepairerDAO {
     }
 
     @Override
-    public List<Repairer> searchRepairers(String keyword) throws SQLException {
+    public List<Repairer> searchRepairers(String keyword, Integer categoryId, String area) throws SQLException {
         List<Repairer> repairers = new ArrayList<>();
+
+        // Flexible SQL that shows both APPROVED and PENDING experts for testing
         String sql = "SELECT r.*, u.*, c.name as category_name FROM repairer_profiles r " +
-                "JOIN users u ON r.user_id = u.user_id " +
-                "JOIN categories c ON r.skill_category = c.category_id " +
-                "WHERE (u.name LIKE ? OR c.name LIKE ? OR r.bio LIKE ? OR r.service_area LIKE ?) " +
-                "AND r.approval_status = 'APPROVED' ORDER BY r.average_rating DESC";
+                     "JOIN users u ON r.user_id = u.user_id " +
+                     "LEFT JOIN categories c ON r.skill_category = c.category_id " +
+                     "WHERE u.role = 'REPAIRER' AND r.approval_status IN ('APPROVED', 'PENDING') " +
+                     "AND (? IS NULL OR (u.name LIKE ? OR r.bio LIKE ?)) " +
+                     "AND (? IS NULL OR r.skill_category = ?) " +
+                     "AND (? IS NULL OR r.service_area LIKE ?) " +
+                     "ORDER BY r.average_rating DESC";
+
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            String search = "%" + keyword + "%";
-            pstmt.setString(1, search);
-            pstmt.setString(2, search);
-            pstmt.setString(3, search);
-            pstmt.setString(4, search);
-            ResultSet rs = pstmt.executeQuery();
+            String searchPattern = (keyword != null && !keyword.isEmpty()) ? "%" + keyword + "%" : null;
+            String areaPattern = (area != null && !area.isEmpty()) ? "%" + area + "%" : null;
 
+            // Set all parameters clearly one by one
+            pstmt.setString(1, searchPattern); // For ? IS NULL
+            pstmt.setString(2, searchPattern); // For u.name LIKE ?
+            pstmt.setString(3, searchPattern); // For r.bio LIKE ?
+            
+            pstmt.setObject(4, categoryId);    // For ? IS NULL
+            pstmt.setObject(5, categoryId);    // For r.skill_category = ?
+            
+            pstmt.setString(6, areaPattern);   // For ? IS NULL
+            pstmt.setString(7, areaPattern);   // For r.service_area LIKE ?
+
+            ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 repairers.add(mapResultSetToRepairer(rs));
             }
@@ -229,13 +243,16 @@ public class RepairerDAO implements IRepairerDAO {
     }
 
     private Repairer mapResultSetToRepairer(ResultSet rs) throws SQLException {
+        String name = rs.getString("name");
+        String role = rs.getString("role");
+        
         Repairer r = new Repairer();
         r.setUserId(rs.getInt("user_id"));
-        r.setName(rs.getString("name"));
+        r.setName(name);
         r.setEmail(rs.getString("email"));
         r.setPhone(rs.getString("phone"));
         r.setPasswordHash(rs.getString("password_hash"));
-        r.setRole(rs.getString("role"));
+        r.setRole(role);
         r.setActive(rs.getBoolean("is_active"));
         r.setSpecialization(rs.getString("category_name"));
         r.setExpertise(rs.getString("bio"));
@@ -244,6 +261,7 @@ public class RepairerDAO implements IRepairerDAO {
         r.setServiceArea(rs.getString("service_area"));
         r.setJoinDate(rs.getTimestamp("created_at"));
         r.setApprovalStatus(rs.getString("approval_status"));
+        r.setVerified("APPROVED".equals(rs.getString("approval_status")));
         return r;
     }
 }

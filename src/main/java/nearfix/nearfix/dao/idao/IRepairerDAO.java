@@ -85,7 +85,7 @@ public interface IRepairerDAO {
      * @return List of matching Repairer objects.
      * @throws SQLException if a database access error occurs.
      */
-    List<Repairer> searchRepairers(String keyword) throws SQLException;
+    List<Repairer> searchRepairers(String keyword, Integer categoryId, String area) throws SQLException;
 
     /**
      * Gets the total count of all repairers.

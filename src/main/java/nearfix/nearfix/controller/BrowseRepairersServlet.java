@@ -26,12 +26,24 @@ public class BrowseRepairersServlet extends HttpServlet {
 
         try {
             String search = request.getParameter("search");
-            if (search == null)
-                search = "";
+            String categoryIdParam = request.getParameter("category");
+            String area = request.getParameter("area");
 
-            List<Repairer> repairers = repairerService.searchRepairers(search);
+            Integer categoryId = null;
+            if (categoryIdParam != null && !categoryIdParam.trim().isEmpty()) {
+                try {
+                    categoryId = Integer.parseInt(categoryIdParam);
+                } catch (NumberFormatException e) {
+                    // Handle invalid number format
+                    categoryId = null;
+                }
+            }
+
+            List<Repairer> repairers = repairerService.searchRepairers(search, categoryId, area);
             request.setAttribute("repairers", repairers);
             request.setAttribute("search", search);
+            request.setAttribute("selectedCategory", categoryId != null ? categoryId : "");
+            request.setAttribute("selectedArea", area != null ? area : "");
 
             PageResponse.showMessage(response, "Browse Repairers", "Found " + repairers.size() + " repairer(s).");
         } catch (Exception e) {

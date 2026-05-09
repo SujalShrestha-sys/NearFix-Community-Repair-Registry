@@ -10,5 +10,5 @@ public interface IRepairerService {
 
     boolean updateProfile(Repairer repairer) throws SQLException, ValidationException;
 
-    List<Repairer> searchRepairers(String keyword) throws SQLException;
+    List<Repairer> searchRepairers(String keyword, Integer categoryId, String area) throws SQLException;
 }
