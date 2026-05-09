@@ -32,6 +32,9 @@
         }
       }
     </script>
+    <style>
+      .sidebar-open { transform: translateX(0) !important; }
+    </style>
 </head>
 <body class="font-inter bg-background flex min-h-screen text-dark">
 

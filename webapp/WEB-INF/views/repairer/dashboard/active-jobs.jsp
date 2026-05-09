@@ -24,7 +24,10 @@
                     <!-- Progress Tracker -->
                     <div class="flex items-start justify-between mb-5 relative px-1">
                         <div class="absolute top-4 left-[26px] right-[26px] h-[2.5px] bg-border z-0">
-                            <div class="h-full bg-primary rounded-[2px]" style="width: ${job.status == 'PENDING' ? '0%' : job.status == 'ACCEPTED' ? '33%' : job.status == 'IN_PROGRESS' ? '66%' : '100%'}"></div>
+                            <c:set var="progressWidth" value="${job.status == 'PENDING' ? '0%' : job.status == 'ACCEPTED' ? '33%' : job.status == 'IN_PROGRESS' ? '66%' : '100%'}" />
+                            <div class="h-full bg-primary rounded-[2px]" 
+                                 <c:if test="true">style="width: ${progressWidth}"</c:if>>
+                            </div>
                         </div>
 
                         <!-- Step 1: Pending -->
