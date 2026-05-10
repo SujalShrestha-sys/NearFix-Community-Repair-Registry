@@ -31,10 +31,10 @@
                     <c:otherwise>var(--ink3)</c:otherwise>
                   </c:choose>
                 </c:set>
-                <div class="chart-bar-row">
+                <div class="chart-bar-row" style="--w: ${barWidth}%; --c: ${barColor};">
                   <div class="chart-bar-label">${entry.key}</div>
                   <div class="chart-bar-track">
-                    <div class="chart-bar-fill" style="width: ${barWidth}%; background: ${barColor};"></div>
+                    <div class="chart-bar-fill" style="width: var(--w); background: var(--c);"></div>
                   </div>
                   <div class="chart-bar-val">${entry.value}</div>
                 </div>
