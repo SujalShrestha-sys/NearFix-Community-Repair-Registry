@@ -5,7 +5,7 @@
 <div class="page active" id="admin-repairers">
         <div class="page-head"><div><h2>Approve Repairers</h2><p>Review and approve repairer registrations</p></div></div>
         <div class="approval-card">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+          <div class="flex-row-resp">
             <div style="display:flex;gap:14px;flex:1">
               <div class="av av-g" style="width:48px;height:48px;font-size:16px;flex-shrink:0">NK</div>
               <div>
@@ -29,7 +29,7 @@
           </div>
         </div>
         <div class="approval-card">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+          <div class="flex-row-resp">
             <div style="display:flex;gap:14px;flex:1">
               <div class="av av-b" style="width:48px;height:48px;font-size:16px;flex-shrink:0">SP</div>
               <div>
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="approval-card">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+          <div class="flex-row-resp">
             <div style="display:flex;gap:14px;flex:1">
               <div class="av av-o" style="width:48px;height:48px;font-size:16px;flex-shrink:0">HT</div>
               <div>

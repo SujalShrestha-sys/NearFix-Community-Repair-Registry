@@ -203,6 +203,14 @@ function filterTab(el){
   el.classList.add('active');
 }
 
+// ── MOBILE MENU ──
+function toggleMobileMenu(){
+  var sb = document.getElementById('adminSidebar');
+  var ov = document.getElementById('sidebarOverlay');
+  if(sb) sb.classList.toggle('mobile-open');
+  if(ov) ov.classList.toggle('active');
+}
+
 // ── TOAST ──
 function showToast(msg){
   var container = document.getElementById('toastContainer');
