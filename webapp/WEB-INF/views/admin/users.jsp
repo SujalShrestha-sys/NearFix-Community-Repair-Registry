@@ -153,6 +153,7 @@
     .scrollable-tabs { display: flex; overflow-x: auto; gap: 5px; padding-bottom: 5px; scrollbar-width: none; }
     .scrollable-tabs .tab { white-space: nowrap; text-decoration: none; padding: 10px 20px; flex-shrink: 0; }
     .responsive-table-wrap { background: var(--surface1); border: 1px solid var(--surface3); border-radius: 16px; overflow: hidden; }
+    #admin-users { padding: 0 2rem 2rem 2rem; max-width: 100%; overflow-x: hidden; }
     .responsive-table { width: 100%; border-collapse: collapse; }
     .responsive-table th { padding: 16px; text-align: left; font-size: 12px; font-weight: 700; color: var(--ink3); background: var(--surface2); text-transform: uppercase; }
     .responsive-table td { padding: 16px; border-bottom: 1px solid var(--surface3); }
