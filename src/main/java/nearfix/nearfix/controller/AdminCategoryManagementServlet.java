@@ -32,10 +32,14 @@ public class AdminCategoryManagementServlet extends HttpServlet {
         try {
             List<Category> categories = categoryService.getAllCategories();
             request.setAttribute("categories", categories);
-            PageResponse.showMessage(response, "Manage Categories", "Loaded " + categories.size() + " category/categories.");
+            request.setAttribute("activeTab", "categories");
+            request.setAttribute("pageTitle", "Skill Categories");
+            request.getRequestDispatcher("/WEB-INF/views/admin/categories.jsp").forward(request, response);
         } catch (SQLException e) {
             request.setAttribute("errorMessage", "Error fetching categories: " + e.getMessage());
-            PageResponse.showMessage(response, "Category Error", "Error fetching categories: " + e.getMessage());
+            request.setAttribute("activeTab", "categories");
+            request.setAttribute("pageTitle", "Skill Categories");
+            request.getRequestDispatcher("/WEB-INF/views/admin/categories.jsp").forward(request, response);
         }
     }
 
