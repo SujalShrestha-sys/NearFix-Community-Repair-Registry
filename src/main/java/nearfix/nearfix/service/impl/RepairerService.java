@@ -42,4 +42,19 @@ public class RepairerService implements IRepairerService {
     public List<Repairer> getTopRepairers(int limit) throws SQLException {
         return repairerDAO.getTopRepairers(limit);
     }
+
+    @Override
+    public List<Repairer> getPendingRepairers() throws SQLException {
+        return repairerDAO.getPendingRepairers();
+    }
+
+    @Override
+    public boolean approveRepairer(int repairerId) throws SQLException {
+        return repairerDAO.verifyRepairer(repairerId);
+    }
+
+    @Override
+    public boolean rejectRepairer(int repairerId) throws SQLException {
+        return repairerDAO.rejectRepairer(repairerId);
+    }
 }

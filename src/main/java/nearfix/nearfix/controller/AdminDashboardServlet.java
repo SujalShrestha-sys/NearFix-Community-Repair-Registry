@@ -47,6 +47,7 @@ public class AdminDashboardServlet extends HttpServlet {
             request.setAttribute("completedRepairs", completedRepairs);
             request.setAttribute("totalCategories", totalCategories);
             request.setAttribute("pendingRepairers", pendingRepairers);
+            request.setAttribute("pendingCount", pendingRepairers);
             request.setAttribute("jobsByCategory", repairService.getJobsByCategoryCount());
             request.setAttribute("topRepairers", repairerService.getTopRepairers(5));
 

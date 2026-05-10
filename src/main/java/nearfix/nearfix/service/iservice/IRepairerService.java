@@ -15,4 +15,10 @@ public interface IRepairerService {
     int getPendingRepairersCount() throws SQLException;
 
     List<Repairer> getTopRepairers(int limit) throws SQLException;
+
+    List<Repairer> getPendingRepairers() throws SQLException;
+
+    boolean approveRepairer(int repairerId) throws SQLException;
+
+    boolean rejectRepairer(int repairerId) throws SQLException;
 }

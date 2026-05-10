@@ -127,4 +127,22 @@ public interface IRepairerDAO {
      * @throws SQLException if a database access error occurs.
      */
     List<Repairer> getTopRepairers(int limit) throws SQLException;
+
+    /**
+     * Retrieves all repairers awaiting approval.
+     * 
+     * @return List of pending Repairer objects.
+     * @throws SQLException if a database access error occurs.
+     */
+    List<Repairer> getPendingRepairers() throws SQLException;
+
+    /**
+     * Rejects a repairer profile (sets status to REJECTED or deletes).
+     * For simplicity, we'll set the status to 'REJECTED'.
+     * 
+     * @param repairerId The ID of the repairer to reject.
+     * @return True if successful, false otherwise.
+     * @throws SQLException if a database access error occurs.
+     */
+    boolean rejectRepairer(int repairerId) throws SQLException;
 }
