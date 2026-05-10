@@ -59,11 +59,14 @@ public class AdminRepairRequestManagementServlet extends HttpServlet {
             request.setAttribute("selectedStatus", status);
             request.setAttribute("categories", categoryService.getAllCategories());
 
-            PageResponse.showMessage(response, "Manage Repair Requests",
-                    "Loaded " + requests.size() + " request(s). Page " + page + " of " + totalPages + ".");
+            request.setAttribute("activeTab", "requests");
+            request.setAttribute("pageTitle", "All Repair Requests");
+            request.getRequestDispatcher("/WEB-INF/views/admin/requests.jsp").forward(request, response);
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error loading requests: " + e.getMessage());
-            PageResponse.showMessage(response, "Repair Request Error", "Error loading requests: " + e.getMessage());
+            request.setAttribute("activeTab", "requests");
+            request.setAttribute("pageTitle", "All Repair Requests");
+            request.getRequestDispatcher("/WEB-INF/views/admin/requests.jsp").forward(request, response);
         }
     }
 }
