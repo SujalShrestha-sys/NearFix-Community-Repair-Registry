@@ -49,11 +49,14 @@ public class AdminUserManagementServlet extends HttpServlet {
             request.setAttribute("search", search);
             request.setAttribute("selectedRole", role);
 
-            PageResponse.showMessage(response, "Manage Users",
-                    "Loaded " + users.size() + " user(s). Page " + page + " of " + totalPages + ".");
+            request.setAttribute("activeTab", "users");
+            request.setAttribute("pageTitle", "Manage Users");
+            request.getRequestDispatcher("/WEB-INF/views/admin/users.jsp").forward(request, response);
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error loading users: " + e.getMessage());
-            PageResponse.showMessage(response, "User Management Error", "Error loading users: " + e.getMessage());
+            request.setAttribute("activeTab", "users");
+            request.setAttribute("pageTitle", "Manage Users");
+            request.getRequestDispatcher("/WEB-INF/views/admin/users.jsp").forward(request, response);
         }
     }
 
