@@ -32,4 +32,29 @@ public class RepairerService implements IRepairerService {
     public List<Repairer> searchRepairers(String keyword, Integer categoryId, String area) throws SQLException {
         return repairerDAO.searchRepairers(keyword, categoryId, area);
     }
+
+    @Override
+    public int getPendingRepairersCount() throws SQLException {
+        return repairerDAO.getPendingRepairersCount();
+    }
+
+    @Override
+    public List<Repairer> getTopRepairers(int limit) throws SQLException {
+        return repairerDAO.getTopRepairers(limit);
+    }
+
+    @Override
+    public List<Repairer> getPendingRepairers() throws SQLException {
+        return repairerDAO.getPendingRepairers();
+    }
+
+    @Override
+    public boolean approveRepairer(int repairerId) throws SQLException {
+        return repairerDAO.verifyRepairer(repairerId);
+    }
+
+    @Override
+    public boolean rejectRepairer(int repairerId) throws SQLException {
+        return repairerDAO.rejectRepairer(repairerId);
+    }
 }

@@ -42,8 +42,8 @@ public class RepairerDAO implements IRepairerDAO {
     @Override
     public Repairer getRepairerById(int repairerId) throws SQLException {
         String sql = "SELECT r.*, u.*, c.name as category_name FROM repairer_profiles r " +
-                "JOIN users u ON r.user_id = u.user_id " +
-                "JOIN categories c ON r.skill_category = c.category_id " +
+                "LEFT JOIN users u ON r.user_id = u.user_id " +
+                "LEFT JOIN categories c ON r.skill_category = c.category_id " +
                 "WHERE r.user_id = ?";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -166,7 +166,8 @@ public class RepairerDAO implements IRepairerDAO {
 
     @Override
     public boolean verifyRepairer(int repairerId) throws SQLException {
-        String sql = "UPDATE repairer_profiles SET approval_status = 'APPROVED' WHERE user_id = ?";
+        // Using numeric 1 for VERIFIED/APPROVED to satisfy integer column constraint
+        String sql = "UPDATE repairer_profiles SET approval_status = 'APPROVED', verification_status = 1 WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -181,13 +182,13 @@ public class RepairerDAO implements IRepairerDAO {
 
         // Flexible SQL that shows both APPROVED and PENDING experts for testing
         String sql = "SELECT r.*, u.*, c.name as category_name FROM repairer_profiles r " +
-                     "JOIN users u ON r.user_id = u.user_id " +
-                     "LEFT JOIN categories c ON r.skill_category = c.category_id " +
-                     "WHERE u.role = 'REPAIRER' AND r.approval_status IN ('APPROVED', 'PENDING') " +
-                     "AND (? IS NULL OR (u.name LIKE ? OR r.bio LIKE ?)) " +
-                     "AND (? IS NULL OR r.skill_category = ?) " +
-                     "AND (? IS NULL OR r.service_area LIKE ?) " +
-                     "ORDER BY r.average_rating DESC";
+                "JOIN users u ON r.user_id = u.user_id " +
+                "LEFT JOIN categories c ON r.skill_category = c.category_id " +
+                "WHERE u.role = 'REPAIRER' AND r.approval_status IN ('APPROVED', 'PENDING') " +
+                "AND (? IS NULL OR (u.name LIKE ? OR r.bio LIKE ?)) " +
+                "AND (? IS NULL OR r.skill_category = ?) " +
+                "AND (? IS NULL OR r.service_area LIKE ?) " +
+                "ORDER BY r.average_rating DESC";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -199,12 +200,12 @@ public class RepairerDAO implements IRepairerDAO {
             pstmt.setString(1, searchPattern); // For ? IS NULL
             pstmt.setString(2, searchPattern); // For u.name LIKE ?
             pstmt.setString(3, searchPattern); // For r.bio LIKE ?
-            
-            pstmt.setObject(4, categoryId);    // For ? IS NULL
-            pstmt.setObject(5, categoryId);    // For r.skill_category = ?
-            
-            pstmt.setString(6, areaPattern);   // For ? IS NULL
-            pstmt.setString(7, areaPattern);   // For r.service_area LIKE ?
+
+            pstmt.setObject(4, categoryId); // For ? IS NULL
+            pstmt.setObject(5, categoryId); // For r.skill_category = ?
+
+            pstmt.setString(6, areaPattern); // For ? IS NULL
+            pstmt.setString(7, areaPattern); // For r.service_area LIKE ?
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -245,7 +246,7 @@ public class RepairerDAO implements IRepairerDAO {
     private Repairer mapResultSetToRepairer(ResultSet rs) throws SQLException {
         String name = rs.getString("name");
         String role = rs.getString("role");
-        
+
         Repairer r = new Repairer();
         r.setUserId(rs.getInt("user_id"));
         r.setName(name);
@@ -263,5 +264,66 @@ public class RepairerDAO implements IRepairerDAO {
         r.setApprovalStatus(rs.getString("approval_status"));
         r.setVerified("APPROVED".equals(rs.getString("approval_status")));
         return r;
+    }
+
+    @Override
+    public int getPendingRepairersCount() throws SQLException {
+        String sql = "SELECT COUNT(*) as count FROM repairer_profiles WHERE approval_status = 'PENDING'";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public List<Repairer> getTopRepairers(int limit) throws SQLException {
+        List<Repairer> repairers = new ArrayList<>();
+        String sql = "SELECT r.*, u.*, c.name as category_name FROM repairer_profiles r " +
+                "LEFT JOIN users u ON r.user_id = u.user_id " +
+                "LEFT JOIN categories c ON r.skill_category = c.category_id " +
+                "WHERE r.approval_status = 'APPROVED' " +
+                "ORDER BY r.average_rating DESC LIMIT ?";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, limit);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                repairers.add(mapResultSetToRepairer(rs));
+            }
+        }
+        return repairers;
+    }
+
+    @Override
+    public List<Repairer> getPendingRepairers() throws SQLException {
+        List<Repairer> repairers = new ArrayList<>();
+        String sql = "SELECT r.*, u.*, c.name as category_name FROM repairer_profiles r " +
+                "LEFT JOIN users u ON r.user_id = u.user_id " +
+                "LEFT JOIN categories c ON r.skill_category = c.category_id " +
+                "WHERE UPPER(r.approval_status) = 'PENDING' " +
+                "ORDER BY r.repairer_id DESC";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                repairers.add(mapResultSetToRepairer(rs));
+            }
+        }
+        return repairers;
+    }
+
+    @Override
+    public boolean rejectRepairer(int repairerId) throws SQLException {
+        // Using numeric 0 or -1 for REJECTED to satisfy integer column constraint
+        String sql = "UPDATE repairer_profiles SET approval_status = 'REJECTED', verification_status = 0 WHERE user_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, repairerId);
+            return pstmt.executeUpdate() > 0;
+        }
     }
 }

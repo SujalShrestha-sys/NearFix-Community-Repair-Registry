@@ -156,6 +156,45 @@ function showPage(role, page, navEl){
 }
 
 // ── ACTIONS ──
+function handleRepairerAction(repairerId, action, btn){
+  var formData = new URLSearchParams();
+  formData.append('action', action);
+  formData.append('repairerId', repairerId);
+
+  fetch('${pageContext.request.contextPath}/admin/repairers', {
+    method: 'POST',
+    body: formData,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  })
+  .then(response => {
+    if(response.ok) {
+      var card = document.getElementById('repairer-' + repairerId);
+      if(action === 'approve') {
+        showToast('<i data-lucide=\'check\' style=\'width:18px;height:18px\'></i> Repairer approved!');
+        btn.innerHTML = '<i data-lucide="check" style="width:14px;height:14px"></i> Approved';
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+        var rejBtn = btn.parentElement.querySelector('.btn-danger');
+        if(rejBtn) rejBtn.style.display = 'none';
+        var badge = card.querySelector('.badge-amber');
+        if(badge) { badge.className = 'badge badge-green'; badge.textContent = 'Approved'; }
+      } else {
+        showToast('<i data-lucide=\'x\' style=\'width:18px;height:18px\'></i> Application rejected');
+        card.style.opacity = '0.5';
+        card.style.pointerEvents = 'none';
+        setTimeout(() => card.remove(), 1000);
+      }
+      if(window.lucide) lucide.createIcons();
+    } else {
+      showToast('<i data-lucide=\'alert-circle\' style=\'width:18px;height:18px\'></i> Action failed');
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    showToast('Network error occurred');
+  });
+}
+
 function setRating(val){
   currentRating = val;
   var stars = document.querySelectorAll('#starRow .star-interactive');
@@ -173,24 +212,6 @@ function postRequest(){
   showToast('<i data-lucide=\'check\' style=\'width:18px;height:18px\'></i> Request posted! Repairers will see it shortly.');
   setTimeout(function(){showPage('user','requests',null)},800);
 }
-function approveRepairer(btn){
-  var card = btn.closest('.approval-card');
-  showToast('<i data-lucide=\'check\' style=\'width:18px;height:18px\'></i> Repairer approved and notified via email!');
-  btn.innerHTML='<i data-lucide="check" style="width:14px;height:14px;margin-right:4px"></i> Approved';btn.disabled=true;btn.style.opacity='.5';
-  var rej=btn.parentElement.querySelector('.btn-danger');
-  if(rej){rej.style.display='none';}
-  var badge=card.querySelector('.badge-amber');
-  if(badge){badge.className='badge badge-green';badge.textContent='Approved';}
-  if(window.lucide) lucide.createIcons({root: card});
-}
-function rejectRepairer(btn){
-  var card = btn.closest('.approval-card');
-  showToast('<i data-lucide=\'x\' style=\'width:18px;height:18px\'></i> Repairer rejected and notified.');
-  btn.innerHTML='<i data-lucide="x" style="width:14px;height:14px;margin-right:4px"></i> Rejected';btn.disabled=true;btn.style.opacity='.5';
-  var apr=btn.parentElement.querySelector('.btn-primary');
-  if(apr){apr.style.display='none';}
-  if(window.lucide) lucide.createIcons({root: card});
-}
 function toggleWishlist(el){
   el.classList.toggle('saved');
   el.innerHTML = el.classList.contains('saved') ? '<i data-lucide="heart" fill="currentColor" style="width:20px;height:20px"></i>' : '<i data-lucide="heart" style="width:20px;height:20px"></i>';
@@ -201,6 +222,14 @@ function filterTab(el){
   var tabs=el.parentNode.querySelectorAll('.tab');
   tabs.forEach(function(t){t.classList.remove('active')});
   el.classList.add('active');
+}
+
+// ── MOBILE MENU ──
+function toggleMobileMenu(){
+  var sb = document.getElementById('adminSidebar');
+  var ov = document.getElementById('sidebarOverlay');
+  if(sb) sb.classList.toggle('mobile-open');
+  if(ov) ov.classList.toggle('active');
 }
 
 // ── TOAST ──

@@ -39,6 +39,22 @@ public class RepairerAreaServlet extends HttpServlet {
         try {
             int repairerId = (Integer) session.getAttribute("userId");
             Repairer repairer = repairerService.getRepairerProfile(repairerId);
+
+            // SECURITY CHECK: If not approved, only allow profile viewing or show waiting
+            // message
+            if (repairer == null || !"APPROVED".equals(repairer.getApprovalStatus())) {
+                if (pathInfo.equals("/profile")) {
+                    // Allow them to edit their profile even while pending
+                    request.setAttribute("repairer", repairer);
+                } else {
+                    request.setAttribute("repairer", repairer);
+                    request.setAttribute("pageTitle", "Awaiting Approval");
+                    request.getRequestDispatcher("/WEB-INF/views/repairer/waiting-approval.jsp").forward(request,
+                            response);
+                    return;
+                }
+            }
+
             request.setAttribute("repairer", repairer);
 
             switch (pathInfo) {

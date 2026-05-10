@@ -3,10 +3,11 @@ package nearfix.nearfix.dao.impl;
 import nearfix.nearfix.dao.idao.IRepairRequestDAO;
 import nearfix.nearfix.model.RepairRequest;
 import nearfix.nearfix.util.DBConnection;
-
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RepairRequestDAO implements IRepairRequestDAO {
 
@@ -471,5 +472,23 @@ public class RepairRequestDAO implements IRepairRequestDAO {
         request.setCreatedAt(rs.getTimestamp("created_at"));
         request.setUpdatedAt(rs.getTimestamp("updated_at"));
         return request;
+    }
+
+    @Override
+    public Map<String, Integer> getJobsByCategoryCount() throws SQLException {
+        Map<String, Integer> counts = new LinkedHashMap<>();
+        String sql = "SELECT c.name, COUNT(rr.request_id) as count " +
+                "FROM categories c " +
+                "LEFT JOIN repair_requests rr ON c.category_id = rr.category_id " +
+                "GROUP BY c.name " +
+                "ORDER BY count DESC";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                counts.put(rs.getString("name"), rs.getInt("count"));
+            }
+        }
+        return counts;
     }
 }

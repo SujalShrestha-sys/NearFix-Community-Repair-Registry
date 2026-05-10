@@ -263,8 +263,9 @@ textarea.f-input{resize:vertical;min-height:80px}
 .av-name{font-size:13px;font-weight:600;color:var(--ink)}
 .av-role{font-size:11px;color:var(--ink3)}
 
-.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:#fff;border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;gap:16px}
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;transition:all 0.3s ease}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;gap:16px}
+.menu-toggle{display:none;width:36px;height:36px;border-radius:9px;background:var(--g3);border:none;align-items:center;justify-content:center;color:var(--g);cursor:pointer}
 .topbar-title{font-family:'Outfit',sans-serif;font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.02em}
 .topbar-right{display:flex;align-items:center;gap:10px}
 .search-box{display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:10px;padding:8px 14px;border:1px solid var(--border);max-width:220px}
@@ -310,7 +311,7 @@ textarea.f-input{resize:vertical;min-height:80px}
 .pill-danger{background:#FEE2E2;color:#B91C1C}
 
 /* TABLES */
-.table-wrap{border-radius:var(--r);border:1px solid var(--border);overflow:hidden}
+.table-wrap{border-radius:var(--r);border:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse}
 thead th{background:var(--surface2);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);padding:10px 16px;text-align:left;border-bottom:1px solid var(--border)}
 tbody td{padding:13px 16px;font-size:13.5px;color:var(--ink);border-bottom:1px solid var(--border)}
@@ -350,7 +351,8 @@ tbody tr:hover td{background:var(--surface2)}
 .star-interactive.inactive{color:var(--surface3)}
 
 /* TABS */
-.tab-bar{display:flex;gap:4px;margin-bottom:20px;background:var(--surface2);padding:4px;border-radius:11px;width:fit-content}
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;background:var(--surface2);padding:4px;border-radius:11px;width:fit-content;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab-bar::-webkit-scrollbar{display:none}
 .tab{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink3);transition:all .2s;white-space:nowrap}
 .tab.active{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
 .tab:hover:not(.active){color:var(--ink2)}
@@ -396,7 +398,13 @@ textarea.form-input{resize:vertical;min-height:90px}
 .rep-meta-item svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
 
 /* ADMIN */
-.approval-card{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:20px;margin-bottom:12px}
+.approval-card{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:24px;margin-bottom:12px}
+.flex-row-resp{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+@media(max-width:640px){
+  .flex-row-resp{flex-direction:column;align-items:stretch;gap:16px}
+  .flex-row-resp > div:last-child{display:flex;flex-direction:row !important;gap:10px}
+  .flex-row-resp > div:last-child .btn{flex:1}
+}
 
 /* TOAST */
 .toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
@@ -440,19 +448,47 @@ textarea.form-input{resize:vertical;min-height:90px}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:100px}
 ::-webkit-scrollbar-thumb:hover{background:var(--ink3)}
 
-/* RESPONSIVE basic */
+/* ──────────────────── RESPONSIVE ──────────────────── */
+@media(max-width:1024px){
+  :root{ --sidebar-w: 240px; }
+}
+
+@media(max-width:880px){
+  .g2, .g3 { grid-template-columns: 1fr; }
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .impact-banner { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .impact-right { width: 100%; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; }
+  .impact-right p { max-width: 100%; }
+}
+
 @media(max-width:768px){
-  .auth-split{grid-template-columns:1fr}.auth-left{display:none}
-  .hero{grid-template-columns:1fr;gap:40px;padding:48px 24px}.hero-visual{display:none}
-  .stats-inner{grid-template-columns:1fr 1fr}.role-cards{grid-template-columns:1fr}
-  .steps-grid{grid-template-columns:1fr}
-  .sidebar{transform:translateX(-100%)}.main{margin-left:0}
+  .sidebar { transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+  .sidebar.mobile-open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .menu-toggle { display: flex; }
+  .topbar { padding: 12px 16px; }
+  .page-content { padding: 20px 16px; }
+  .page-head { flex-direction: column; gap: 12px; }
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  
+  /* Sidebar Overlay when open */
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(13, 27, 21, 0.4); backdrop-filter: blur(4px); z-index: 90; }
+  .sidebar-overlay.active { display: block; }
+}
+
+@media(max-width:480px){
+  .metrics { grid-template-columns: 1fr; }
+  .metric-val { font-size: 26px; }
+  .form-row { grid-template-columns: 1fr; }
+  .topbar-title { font-size: 17px; }
+  .search-box { display: none; } /* Hide search on very small mobile to save space */
 }
 </style>
 </head>
 <body>
 <div class="shell-view active" id="adminShell">
-  <aside class="sidebar">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileMenu()"></div>
+  <aside class="sidebar" id="adminSidebar">
     <div class="sb-logo"><div class="logo" style="font-size:17px"><div class="logo-mark" style="width:30px;height:30px;background:linear-gradient(135deg,var(--acc),var(--acc2))"><svg viewBox="0 0 24 24" width="15" height="15"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>NearFix Admin</div></div>
     <nav class="sb-nav">
       <div class="nav-section">
@@ -461,7 +497,10 @@ textarea.form-input{resize:vertical;min-height:90px}
           <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Overview
         </a>
         <a class="nav-item ${activeTab == 'repairers' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/repairers">
-          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Approve Repairers<span class="nav-badge" style="background:var(--acc)">3</span>
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Approve Repairers
+          <c:if test="${pendingCount > 0}">
+            <span class="nav-badge" style="background:var(--acc)">${pendingCount}</span>
+          </c:if>
         </a>
         <a class="nav-item ${activeTab == 'users' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/users">
           <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Manage Users
@@ -486,7 +525,12 @@ textarea.form-input{resize:vertical;min-height:90px}
   </aside>
   <div class="main">
     <div class="topbar">
-      <div class="topbar-title" id="adminPageTitle">${pageTitle}</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="menu-toggle" onclick="toggleMobileMenu()">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="topbar-title" id="adminPageTitle">${pageTitle}</div>
+      </div>
       <div class="topbar-right"><button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button></div>
     </div>
     <div class="page-content">

@@ -11,4 +11,14 @@ public interface IRepairerService {
     boolean updateProfile(Repairer repairer) throws SQLException, ValidationException;
 
     List<Repairer> searchRepairers(String keyword, Integer categoryId, String area) throws SQLException;
+
+    int getPendingRepairersCount() throws SQLException;
+
+    List<Repairer> getTopRepairers(int limit) throws SQLException;
+
+    List<Repairer> getPendingRepairers() throws SQLException;
+
+    boolean approveRepairer(int repairerId) throws SQLException;
+
+    boolean rejectRepairer(int repairerId) throws SQLException;
 }
