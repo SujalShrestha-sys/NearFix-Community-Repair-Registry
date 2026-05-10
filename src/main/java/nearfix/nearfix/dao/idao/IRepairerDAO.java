@@ -12,6 +12,7 @@ import java.util.List;
 public interface IRepairerDAO {
     /**
      * Creates a new repairer profile.
+     * 
      * @param repairer The Repairer object to create.
      * @return True if creation was successful, false otherwise.
      * @throws SQLException if a database access error occurs.
@@ -20,6 +21,7 @@ public interface IRepairerDAO {
 
     /**
      * Retrieves a repairer profile by ID.
+     * 
      * @param repairerId The ID of the repairer.
      * @return The Repairer object, or null if not found.
      * @throws SQLException if a database access error occurs.
@@ -28,6 +30,7 @@ public interface IRepairerDAO {
 
     /**
      * Retrieves a repairer profile by email.
+     * 
      * @param email The email address of the repairer.
      * @return The Repairer object, or null if not found.
      * @throws SQLException if a database access error occurs.
@@ -36,6 +39,7 @@ public interface IRepairerDAO {
 
     /**
      * Retrieves all repairers with a specific specialization.
+     * 
      * @param specialization The specialization to filter by.
      * @return List of matching Repairer objects.
      * @throws SQLException if a database access error occurs.
@@ -44,7 +48,8 @@ public interface IRepairerDAO {
 
     /**
      * Retrieves a paginated list of verified repairers.
-     * @param page Page number.
+     * 
+     * @param page     Page number.
      * @param pageSize Records per page.
      * @return List of verified repairers.
      * @throws SQLException if a database access error occurs.
@@ -53,6 +58,7 @@ public interface IRepairerDAO {
 
     /**
      * Updates an existing repairer profile.
+     * 
      * @param repairer The Repairer object with updated info.
      * @return True if successful, false otherwise.
      * @throws SQLException if a database access error occurs.
@@ -61,18 +67,19 @@ public interface IRepairerDAO {
 
     /**
      * Updates the average rating of a repairer.
+     * 
      * @param repairerId The ID of the repairer.
-     * @param newRating The new average rating.
+     * @param newRating  The new average rating.
      * @return True if successful, false otherwise.
      * @throws SQLException if a database access error occurs.
      */
     boolean updateRepairerRating(int repairerId, double newRating) throws SQLException;
 
-
     boolean updateJobsCompleted(int repairerId, int count) throws SQLException;
 
     /**
      * Marks a repairer as verified.
+     * 
      * @param repairerId The ID of the repairer to verify.
      * @return True if successful, false otherwise.
      * @throws SQLException if a database access error occurs.
@@ -81,6 +88,7 @@ public interface IRepairerDAO {
 
     /**
      * Searches for repairers based on a keyword.
+     * 
      * @param keyword Search keyword.
      * @return List of matching Repairer objects.
      * @throws SQLException if a database access error occurs.
@@ -89,6 +97,7 @@ public interface IRepairerDAO {
 
     /**
      * Gets the total count of all repairers.
+     * 
      * @return Total count of repairers.
      * @throws SQLException if a database access error occurs.
      */
@@ -96,8 +105,26 @@ public interface IRepairerDAO {
 
     /**
      * Gets the total count of verified repairers.
+     * 
      * @return Total count of verified repairers.
      * @throws SQLException if a database access error occurs.
      */
     int getTotalVerifiedRepairers() throws SQLException;
+
+    /**
+     * Gets the count of repairers awaiting approval.
+     * 
+     * @return Count of pending repairers.
+     * @throws SQLException if a database access error occurs.
+     */
+    int getPendingRepairersCount() throws SQLException;
+
+    /**
+     * Retrieves the top-rated repairers.
+     * 
+     * @param limit Maximum number of repairers to return.
+     * @return List of top Repairer objects.
+     * @throws SQLException if a database access error occurs.
+     */
+    List<Repairer> getTopRepairers(int limit) throws SQLException;
 }

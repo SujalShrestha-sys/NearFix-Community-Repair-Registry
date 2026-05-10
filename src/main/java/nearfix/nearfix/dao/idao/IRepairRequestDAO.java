@@ -4,6 +4,7 @@ import nearfix.nearfix.model.RepairRequest;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for Repair Request Data Access Object.
@@ -195,5 +196,6 @@ public interface IRepairRequestDAO {
      * @throws SQLException if a database access error occurs.
      */
     int getUserTotalRequestsCount(int userId) throws SQLException;
+    Map<String, Integer> getJobsByCategoryCount() throws SQLException;
 }
 

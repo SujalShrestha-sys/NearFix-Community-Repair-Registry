@@ -12,9 +12,9 @@ import nearfix.nearfix.model.Rating;
 import nearfix.nearfix.model.RepairRequest;
 import nearfix.nearfix.model.SavedJob;
 import nearfix.nearfix.service.iservice.IRepairService;
-
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * RepairService - Business logic for repair requests.
@@ -27,7 +27,8 @@ public class RepairService implements IRepairService {
     private final SavedJobDAO savedJobDAO = new SavedJobDAO();
 
     @Override
-    public int postRepairRequest(int userId, int categoryId, String itemName, String description, String urgency, String location)
+    public int postRepairRequest(int userId, int categoryId, String itemName, String description, String urgency,
+            String location)
             throws ValidationException, SQLException {
 
         if (itemName == null || itemName.trim().isEmpty()) {
@@ -215,5 +216,10 @@ public class RepairService implements IRepairService {
     @Override
     public boolean isJobSaved(int repairerId, int requestId) throws SQLException {
         return savedJobDAO.isJobSaved(repairerId, requestId);
+    }
+
+    @Override
+    public Map<String, Integer> getJobsByCategoryCount() throws SQLException {
+        return repairRequestDAO.getJobsByCategoryCount();
     }
 }
