@@ -183,23 +183,23 @@ public class UserDAO implements IUserDAO {
         // Join with repairer_profiles to get verification status
         String sql = "SELECT u.*, rp.verification_status FROM users u " +
                 "LEFT JOIN repairer_profiles rp ON u.user_id = rp.user_id " +
-                "WHERE (u.role = ? OR ? = '') " +
-                "AND (u.name LIKE ? OR u.email LIKE ? OR u.phone LIKE ? OR ? = '') " +
-                "LIMIT ? OFFSET ?";
+                "WHERE (? = '' OR u.role = ?) " +
+                "AND (? = '' OR (u.name LIKE ? OR u.email LIKE ? OR u.phone LIKE ?)) " +
+                "ORDER BY u.user_id DESC LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             String r = (role != null) ? role : "";
-            String search = (keyword != null) ? "%" + keyword + "%" : "%%";
             String rawSearch = (keyword != null) ? keyword : "";
+            String searchPattern = (keyword != null && !keyword.isEmpty()) ? "%" + keyword + "%" : "";
 
             pstmt.setString(1, r);
             pstmt.setString(2, r);
-            pstmt.setString(3, search);
-            pstmt.setString(4, search);
-            pstmt.setString(5, search);
-            pstmt.setString(6, rawSearch);
+            pstmt.setString(3, rawSearch);
+            pstmt.setString(4, searchPattern);
+            pstmt.setString(5, searchPattern);
+            pstmt.setString(6, searchPattern);
             pstmt.setInt(7, pageSize);
             pstmt.setInt(8, offset);
 
@@ -211,7 +211,12 @@ public class UserDAO implements IUserDAO {
                 // non-repairers
                 Object verified = rs.getObject("verification_status");
                 if (verified != null) {
-                    user.setVerified((Boolean) verified);
+                    if (verified instanceof Number) {
+                        user.setVerified(((Number) verified).intValue() == 1);
+                    } else {
+                        user.setVerified(
+                                "VERIFIED".equals(verified.toString()) || "APPROVED".equals(verified.toString()));
+                    }
                 }
                 users.add(user);
             }
@@ -222,22 +227,22 @@ public class UserDAO implements IUserDAO {
     @Override
     public int getTotalUsersCount(String keyword, String role) throws SQLException {
         String sql = "SELECT COUNT(*) as count FROM users " +
-                "WHERE (role = ? OR ? = '') " +
-                "AND (name LIKE ? OR email LIKE ? OR phone LIKE ? OR ? = '')";
+                "WHERE (? = '' OR role = ?) " +
+                "AND (? = '' OR (name LIKE ? OR email LIKE ? OR phone LIKE ?))";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             String r = (role != null) ? role : "";
-            String search = (keyword != null) ? "%" + keyword + "%" : "%%";
             String rawSearch = (keyword != null) ? keyword : "";
+            String searchPattern = (keyword != null && !keyword.isEmpty()) ? "%" + keyword + "%" : "";
 
             pstmt.setString(1, r);
             pstmt.setString(2, r);
-            pstmt.setString(3, search);
-            pstmt.setString(4, search);
-            pstmt.setString(5, search);
-            pstmt.setString(6, rawSearch);
+            pstmt.setString(3, rawSearch);
+            pstmt.setString(4, searchPattern);
+            pstmt.setString(5, searchPattern);
+            pstmt.setString(6, searchPattern);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
