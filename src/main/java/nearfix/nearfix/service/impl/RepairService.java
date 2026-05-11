@@ -121,6 +121,17 @@ public class RepairService implements IRepairService {
     }
 
     @Override
+    public boolean markRequestAsInProgress(int requestId) throws SQLException, ValidationException {
+        RepairRequest request = repairRequestDAO.getRequestById(requestId);
+        if (request == null)
+            throw new ValidationException("Request not found.");
+        if (!"ACCEPTED".equals(request.getStatus()))
+            throw new ValidationException("Only accepted requests can be marked as in progress.");
+
+        return repairRequestDAO.updateStatus(requestId, "IN_PROGRESS");
+    }
+
+    @Override
     public boolean markRequestAsCompleted(int requestId) throws SQLException, ValidationException {
         RepairRequest request = repairRequestDAO.getRequestById(requestId);
         if (request == null)
