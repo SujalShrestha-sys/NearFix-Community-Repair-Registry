@@ -66,9 +66,9 @@
                 <div class="absolute bottom-0 left-0 right-0 p-6">
                     <div class="bg-gray-900/60 backdrop-blur-2xl border border-white/10 p-6 rounded-[2rem] transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
                         <h3 class="text-2xl font-black text-white mb-1">Dipen Limbu</h3>
-                        <p class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-4">UI/UX Lead</p>
+                        <p class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-4">Database Expert</p>
                         <p class="text-xs text-gray-400 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                            Crafted the design system and developed the entire responsive frontend with Tailwind.
+                            Designed the database schema and managed data integrity across entities.
                         </p>
                     </div>
                 </div>
@@ -106,9 +106,9 @@
                 <div class="absolute bottom-0 left-0 right-0 p-6">
                     <div class="bg-gray-900/60 backdrop-blur-2xl border border-white/10 p-6 rounded-[2rem] transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
                         <h3 class="text-2xl font-black text-white mb-1">Rishikesh Prasai</h3>
-                        <p class="text-xs font-bold text-purple-500 uppercase tracking-widest mb-4">Database Expert</p>
+                        <p class="text-xs font-bold text-purple-500 uppercase tracking-widest mb-4">UI/UX Lead</p>
                         <p class="text-xs text-gray-400 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                            Designed the database schema and managed data integrity across entities.
+                            Crafted the design system and developed the entire responsive frontend with Tailwind.
                         </p>
                     </div>
                 </div>
