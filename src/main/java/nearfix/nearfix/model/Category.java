@@ -8,6 +8,8 @@ public class Category {
     private int categoryId;
     private String name;
     private String description;
+    private int repairerCount;
+    private int requestCount;
 
     /**
      * Default constructor.
@@ -78,5 +80,21 @@ public class Category {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getRepairerCount() {
+        return repairerCount;
+    }
+
+    public void setRepairerCount(int repairerCount) {
+        this.repairerCount = repairerCount;
+    }
+
+    public int getRequestCount() {
+        return requestCount;
+    }
+
+    public void setRequestCount(int requestCount) {
+        this.requestCount = requestCount;
     }
 }

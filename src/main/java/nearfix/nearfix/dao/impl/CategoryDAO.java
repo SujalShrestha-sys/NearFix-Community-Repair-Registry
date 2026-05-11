@@ -23,7 +23,10 @@ public class CategoryDAO implements ICategoryDAO {
     @Override
     public List<Category> getAllCategories() throws SQLException {
         List<Category> categories = new ArrayList<>();
-        String sql = "SELECT * FROM categories ORDER BY name ASC";
+        String sql = "SELECT c.*, " +
+                "(SELECT COUNT(*) FROM repairer_profiles WHERE skill_category = c.category_id) as repairer_count, " +
+                "(SELECT COUNT(*) FROM repair_requests WHERE category_id = c.category_id) as request_count " +
+                "FROM categories c ORDER BY c.name ASC";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -42,7 +45,10 @@ public class CategoryDAO implements ICategoryDAO {
      */
     @Override
     public Category getCategoryById(int categoryId) throws SQLException {
-        String sql = "SELECT * FROM categories WHERE category_id = ?";
+        String sql = "SELECT c.*, " +
+                "(SELECT COUNT(*) FROM repairer_profiles WHERE skill_category = c.category_id) as repairer_count, " +
+                "(SELECT COUNT(*) FROM repair_requests WHERE category_id = c.category_id) as request_count " +
+                "FROM categories c WHERE c.category_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -168,6 +174,15 @@ public class CategoryDAO implements ICategoryDAO {
         category.setCategoryId(rs.getInt("category_id"));
         category.setName(rs.getString("name"));
         category.setDescription(rs.getString("description"));
+
+        // Check if counts exist in result set (they will if called from
+        // getAllCategories)
+        try {
+            category.setRepairerCount(rs.getInt("repairer_count"));
+            category.setRequestCount(rs.getInt("request_count"));
+        } catch (SQLException e) {
+            // These columns might not exist if called from other methods
+        }
         return category;
     }
 }

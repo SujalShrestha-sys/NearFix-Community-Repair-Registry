@@ -70,13 +70,30 @@ public class CategoryService implements ICategoryService {
     @Override
     public boolean deleteCategory(int categoryId) throws ValidationException, SQLException {
 
-        // Check if category exists
+        // Check if category exists and fetch counts
         Category category = categoryDAO.getCategoryById(categoryId);
         if (category == null) {
             throw new ValidationException("Category not found.");
         }
 
-        return categoryDAO.deleteCategory(categoryId);
+        // Proactive check: Don't allow deletion if in use
+        if (category.getRepairerCount() > 0 || category.getRequestCount() > 0) {
+            throw new ValidationException("Cannot delete category: it is currently linked to " +
+                    category.getRepairerCount() + " repairers and " +
+                    category.getRequestCount() + " repair requests. Please reassign them first.");
+        }
+
+        try {
+            return categoryDAO.deleteCategory(categoryId);
+        } catch (SQLException e) {
+            // MySQL error code 1451: Cannot delete or update a parent row: a foreign key
+            // constraint fails
+            if (e.getErrorCode() == 1451 || "23000".equals(e.getSQLState())) {
+                throw new ValidationException(
+                        "Cannot delete category: it is currently being used by other records in the system.");
+            }
+            throw e;
+        }
     }
 
     @Override
