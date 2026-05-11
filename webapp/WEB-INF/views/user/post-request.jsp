@@ -50,9 +50,8 @@
 
         <main class="pt-[22px] px-4 md:px-9 pb-9">
             <div class="max-w-6xl mx-auto">
-                <div class="mb-8">
-                    <h1 class="text-[32px] font-extrabold text-dark tracking-[-1px]">Post a Repair Request</h1>
-                    <p class="text-sm text-muted-dark mt-1">Tell us what needs fixing and we'll find the right expert for you.</p>
+                <div class="mb-8 mt-2">
+                    <p class="text-sm text-muted-dark">Tell us what needs fixing and we'll find the right expert for you.</p>
                 </div>
 
                 <c:if test="${not empty errorMessage}">

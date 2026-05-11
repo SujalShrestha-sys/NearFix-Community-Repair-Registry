@@ -62,12 +62,11 @@
                 <% session.removeAttribute("errorMessage"); %>
             </c:if>
 
-            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 mt-2">
                 <div>
-                    <h1 class="text-2xl md:text-[32px] font-extrabold text-dark tracking-[-0.8px]">My Requests</h1>
-                    <p class="text-sm text-muted-dark mt-1">Track and manage all your repair requests</p>
+                    <p class="text-sm text-muted-dark">Track and manage all your repair requests from here</p>
                 </div>
-                <a href="${pageContext.request.contextPath}/user/post-request" class="inline-flex items-center gap-2 bg-primary text-white px-6 py-3.5 rounded-[14px] font-bold text-sm shadow-lg shadow-primary/20 hover:bg-opacity-90 transition-all no-underline">
+                <a href="${pageContext.request.contextPath}/user/post-request" class="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:bg-opacity-90 transition-all no-underline">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     New Request
                 </a>

@@ -8,10 +8,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import nearfix.nearfix.model.Category;
 import nearfix.nearfix.model.Repairer;
+import nearfix.nearfix.model.User;
 import nearfix.nearfix.service.impl.CategoryService;
 import nearfix.nearfix.service.impl.RepairerService;
+import nearfix.nearfix.service.impl.UserService;
 import nearfix.nearfix.service.iservice.ICategoryService;
 import nearfix.nearfix.service.iservice.IRepairerService;
+import nearfix.nearfix.service.iservice.IUserService;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -22,6 +25,7 @@ public class FindRepairerServlet extends HttpServlet {
 
     private IRepairerService repairerService = new RepairerService();
     private ICategoryService categoryService = new CategoryService();
+    private IUserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -32,6 +36,7 @@ public class FindRepairerServlet extends HttpServlet {
             return;
         }
 
+        int userId = (Integer) session.getAttribute("userId");
         String keyword = request.getParameter("keyword");
         String categoryIdStr = request.getParameter("categoryId");
         String area = request.getParameter("area");
@@ -46,6 +51,10 @@ public class FindRepairerServlet extends HttpServlet {
         }
 
         try {
+            // Fetch logged-in user for sidebar
+            User user = userService.getUserById(userId);
+            request.setAttribute("user", user);
+
             // Fetch filtered repairers
             List<Repairer> repairers = repairerService.searchRepairers(keyword, categoryId, area);
             request.setAttribute("repairers", repairers);

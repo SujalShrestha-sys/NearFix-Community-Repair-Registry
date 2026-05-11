@@ -282,4 +282,9 @@ public class UserService implements IUserService {
     public boolean verifyRepairer(int userId) throws SQLException {
         return repairerDAO.verifyRepairer(userId);
     }
+
+    @Override
+    public int getNewUsersCount(int days) throws SQLException {
+        return userDAO.getNewUsersCount(days);
+    }
 }
