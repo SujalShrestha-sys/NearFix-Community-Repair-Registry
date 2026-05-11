@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!-- SIDEBAR -->
 <aside class="w-[260px] min-w-[260px] bg-white flex flex-col p-0 border-r border-border fixed top-0 left-0 bottom-0 z-20 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
     <div class="flex items-center gap-[10px] pt-[26px] pr-6 pb-[22px] pl-6">
@@ -28,6 +29,9 @@
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
         </svg>
         Browse Jobs
+        <c:if test="${pendingRequestsCount > 0}">
+            <span class="ml-auto bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">${pendingRequestsCount}</span>
+        </c:if>
     </a>
 
     <a class="flex items-center gap-3 py-2.5 px-3.5 mx-2.5 my-px rounded-[12px] text-sm font-medium ${requestScope['jakarta.servlet.forward.path_info'] == '/my-requests' ? 'text-primary bg-primary-light' : 'text-nav hover:bg-primary-hover'} no-underline relative transition-colors" href="${pageContext.request.contextPath}/repairer/my-requests">
@@ -35,6 +39,9 @@
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
         </svg>
         Active Jobs
+        <c:if test="${activeJobsCount > 0}">
+            <span class="ml-auto bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">${activeJobsCount}</span>
+        </c:if>
     </a>
 
     <a class="flex items-center gap-3 py-2.5 px-3.5 mx-2.5 my-px rounded-[12px] text-sm font-medium text-nav no-underline relative transition-colors hover:bg-primary-hover" href="${pageContext.request.contextPath}/repairer/wishlist">

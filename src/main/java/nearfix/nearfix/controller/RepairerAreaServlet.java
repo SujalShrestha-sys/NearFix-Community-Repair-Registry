@@ -57,6 +57,13 @@ public class RepairerAreaServlet extends HttpServlet {
 
             request.setAttribute("repairer", repairer);
 
+            // Add counts for sidebar notifications
+            int pendingRequestsCount = repairService.getTotalRequestsCount(null, null, "PENDING");
+            request.setAttribute("pendingRequestsCount", pendingRequestsCount);
+            
+            int activeJobsCount = repairService.searchRepairerRequests(repairerId, null, "IN_PROGRESS").size();
+            request.setAttribute("activeJobsCount", activeJobsCount);
+
             switch (pathInfo) {
                 case "/dashboard":
                     request.setAttribute("pageTitle", "Dashboard");
