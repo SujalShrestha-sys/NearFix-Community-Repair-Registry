@@ -97,13 +97,22 @@
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <c:if test="${req.status == 'ACCEPTED' || req.status == 'IN_PROGRESS'}">
-                                                    <form action="${pageContext.request.contextPath}/repairer/my-requests" method="POST" class="inline">
-                                                        <input type="hidden" name="action" value="complete-request">
-                                                        <input type="hidden" name="requestId" value="${req.requestId}">
-                                                        <button type="submit" class="text-primary font-bold text-sm hover:underline">Mark Completed</button>
-                                                    </form>
-                                                </c:if>
+                                                <div class="flex items-center gap-2">
+                                                    <c:if test="${req.status == 'ACCEPTED'}">
+                                                        <form action="${pageContext.request.contextPath}/repairer/my-requests" method="POST" class="inline">
+                                                            <input type="hidden" name="action" value="start-request">
+                                                            <input type="hidden" name="requestId" value="${req.requestId}">
+                                                            <button type="submit" class="bg-yellow-light text-yellow-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-yellow-200 transition-colors">In Progress</button>
+                                                        </form>
+                                                    </c:if>
+                                                    <c:if test="${req.status == 'ACCEPTED' || req.status == 'IN_PROGRESS'}">
+                                                        <form action="${pageContext.request.contextPath}/repairer/my-requests" method="POST" class="inline">
+                                                            <input type="hidden" name="action" value="complete-request">
+                                                            <input type="hidden" name="requestId" value="${req.requestId}">
+                                                            <button type="submit" class="bg-primary-light text-primary px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-colors">Mark Completed</button>
+                                                        </form>
+                                                    </c:if>
+                                                </div>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -144,11 +153,20 @@
                                                 <span class="text-sm font-semibold text-dark">${req.userName}</span>
                                             </div>
                                             <c:if test="${req.status == 'ACCEPTED' || req.status == 'IN_PROGRESS'}">
-                                                <form action="${pageContext.request.contextPath}/repairer/my-requests" method="POST">
-                                                    <input type="hidden" name="action" value="complete-request">
-                                                    <input type="hidden" name="requestId" value="${req.requestId}">
-                                                    <button type="submit" class="bg-primary-light text-primary px-4 py-2 rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-colors">Complete</button>
-                                                </form>
+                                                <div class="flex gap-2">
+                                                    <c:if test="${req.status == 'ACCEPTED'}">
+                                                        <form action="${pageContext.request.contextPath}/repairer/my-requests" method="POST">
+                                                            <input type="hidden" name="action" value="start-request">
+                                                            <input type="hidden" name="requestId" value="${req.requestId}">
+                                                            <button type="submit" class="bg-yellow-light text-yellow-700 px-4 py-2 rounded-lg text-xs font-bold hover:bg-yellow-200 transition-colors">In Progress</button>
+                                                        </form>
+                                                    </c:if>
+                                                    <form action="${pageContext.request.contextPath}/repairer/my-requests" method="POST">
+                                                        <input type="hidden" name="action" value="complete-request">
+                                                        <input type="hidden" name="requestId" value="${req.requestId}">
+                                                        <button type="submit" class="bg-primary-light text-primary px-4 py-2 rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-colors">Complete</button>
+                                                    </form>
+                                                </div>
                                             </c:if>
                                         </div>
                                     </div>

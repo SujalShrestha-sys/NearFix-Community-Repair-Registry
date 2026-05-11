@@ -36,6 +36,8 @@ public interface IRepairService {
 
         boolean deleteRequest(int requestId) throws SQLException, ValidationException;
 
+        boolean markRequestAsInProgress(int requestId) throws SQLException, ValidationException;
+
         boolean markRequestAsCompleted(int requestId) throws SQLException, ValidationException;
 
         int getTotalRequests() throws SQLException;

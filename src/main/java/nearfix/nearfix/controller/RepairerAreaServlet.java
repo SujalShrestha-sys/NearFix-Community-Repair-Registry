@@ -168,6 +168,12 @@ public class RepairerAreaServlet extends HttpServlet {
                     message = "Request accepted!";
                     break;
 
+                case "start-request":
+                    int startId = Integer.parseInt(request.getParameter("requestId"));
+                    repairService.markRequestAsInProgress(startId);
+                    message = "Request marked as in progress!";
+                    break;
+
                 case "complete-request":
                     int completeId = Integer.parseInt(request.getParameter("requestId"));
                     repairService.markRequestAsCompleted(completeId);
@@ -197,6 +203,8 @@ public class RepairerAreaServlet extends HttpServlet {
         if ("update-profile".equals(action)) {
             redirectPath = "/repairer/profile";
         } else if ("accept-request".equals(action)) {
+            redirectPath = "/repairer/my-requests";
+        } else if ("start-request".equals(action)) {
             redirectPath = "/repairer/my-requests";
         } else if ("complete-request".equals(action)) {
             redirectPath = "/repairer/my-requests";
