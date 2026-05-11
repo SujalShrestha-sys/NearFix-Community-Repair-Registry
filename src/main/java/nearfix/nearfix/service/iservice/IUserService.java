@@ -39,5 +39,7 @@ public interface IUserService {
 
         int getTotalUsersCount(String keyword, String role) throws SQLException;
 
-        boolean verifyRepairer(int userId) throws SQLException;
+    boolean verifyRepairer(int userId) throws SQLException;
+
+    int getNewUsersCount(int days) throws SQLException;
 }

@@ -222,4 +222,19 @@ public class RepairService implements IRepairService {
     public Map<String, Integer> getJobsByCategoryCount() throws SQLException {
         return repairRequestDAO.getJobsByCategoryCount();
     }
+
+    @Override
+    public Map<String, Integer> getMonthlyRequestsTrend() throws SQLException {
+        return repairRequestDAO.getMonthlyRequestsTrend();
+    }
+
+    @Override
+    public double getAverageRepairTime() throws SQLException {
+        return repairRequestDAO.getAverageRepairTime();
+    }
+
+    @Override
+    public Map<String, Integer> getRequestsByStatusCount() throws SQLException {
+        return repairRequestDAO.getRequestsByStatusCount();
+    }
 }

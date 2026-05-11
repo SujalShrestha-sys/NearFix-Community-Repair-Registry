@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="currentPath" value="${requestScope['jakarta.servlet.forward.servlet_path']}" />
+
 <!-- HEADER -->
 <div class="flex items-center justify-between pt-7 px-4 md:px-9 pb-0">
   <div class="flex items-center gap-4">
@@ -20,10 +23,30 @@
         <line x1="3" y1="18" x2="21" y2="18"></line>
       </svg>
     </button>
+    <c:set var="displayName" value="${not empty user ? user.name : sessionScope.userName}" />
     <h1
-      class="text-xl md:text-[28px] font-extrabold text-dark tracking-[-0.5px]"
+      class="text-xl md:text-[26px] font-bold text-[#1A2E28] tracking-[-0.3px]"
     >
-      Dashboard
+      <c:choose>
+        <c:when test="${currentPath == '/user/dashboard'}">
+          Welcome, ${displayName}
+        </c:when>
+        <c:when test="${currentPath == '/repairers'}">
+          Find Repairers
+        </c:when>
+        <c:when test="${currentPath == '/user/my-requests'}">
+          My Requests
+        </c:when>
+        <c:when test="${currentPath == '/user/post-request'}">
+          Post Request
+        </c:when>
+        <c:when test="${currentPath == '/user/profile'}">
+          My Profile
+        </c:when>
+        <c:otherwise>
+          NearFix
+        </c:otherwise>
+      </c:choose>
     </h1>
   </div>
   <div class="flex items-center gap-3">

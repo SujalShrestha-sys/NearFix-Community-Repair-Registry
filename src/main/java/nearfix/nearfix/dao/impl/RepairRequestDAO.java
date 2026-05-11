@@ -491,4 +491,66 @@ public class RepairRequestDAO implements IRepairRequestDAO {
         }
         return counts;
     }
+
+    @Override
+    public Map<String, Integer> getMonthlyRequestsTrend() throws SQLException {
+        Map<String, Integer> trend = new LinkedHashMap<>();
+        
+        // This query gets the name of the month and count of requests
+        // We look at requests from the last 6 months
+        String sql = "SELECT DATE_FORMAT(created_at, '%M') as month_name, COUNT(*) as request_count " +
+                "FROM repair_requests " +
+                "WHERE created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH) " +
+                "GROUP BY month_name, MONTH(created_at) " +
+                "ORDER BY MONTH(created_at) ASC";
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String month = rs.getString("month_name");
+                int count = rs.getInt("request_count");
+                trend.put(month, count);
+            }
+        }
+        return trend;
+    }
+
+    @Override
+    public double getAverageRepairTime() throws SQLException {
+        // We calculate the difference in days between when a request was created and when it was finished
+        // DATEDIFF is an easy way to get the number of days between two dates
+        String sql = "SELECT AVG(DATEDIFF(updated_at, created_at)) as avg_days " +
+                "FROM repair_requests " +
+                "WHERE status = 'COMPLETED'";
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("avg_days");
+            }
+        }
+        return 0.0;
+    }
+
+    @Override
+    public Map<String, Integer> getRequestsByStatusCount() throws SQLException {
+        Map<String, Integer> counts = new LinkedHashMap<>();
+        
+        // Simple GROUP BY to see how many requests are in each status (PENDING, COMPLETED, etc.)
+        String sql = "SELECT status, COUNT(*) as status_count FROM repair_requests GROUP BY status";
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                counts.put(rs.getString("status"), rs.getInt("status_count"));
+            }
+        }
+        return counts;
+    }
 }

@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - NearFix</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -15,49 +15,32 @@
             colors: {
               primary: '#0B7A53',
               'primary-light': '#EAF5EF',
+              'primary-hover': '#F0F7F3',
               background: '#F3F8F5',
               dark: '#0D1F1A',
               border: '#E3ECE7',
+              'border-light': '#D0E4DA',
+              'border-extra-light': '#D8EAE1',
               muted: '#A0B4A8',
               'muted-dark': '#7D9087',
+              'muted-light': '#EAF2EE',
               nav: '#3D5A50',
               yellow: '#F4B63D',
-            },
-            animation: {
-                'float': 'float 6s ease-in-out infinite',
-                'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            },
-            keyframes: {
-                float: {
-                    '0%, 100%': { transform: 'translateY(0)' },
-                    '50%': { transform: 'translateY(-15px)' },
-                }
+              'yellow-light': '#FFF5DC',
             }
           }
         }
       }
     </script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-inter { font-family: 'Inter', sans-serif; }
         .mesh-gradient {
-            background-color: #0B7A53;
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(161, 84%, 48%, 0.2) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, hsla(158, 82%, 45%, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, hsla(165, 85%, 40%, 0.2) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, hsla(160, 80%, 30%, 0.15) 0px, transparent 50%);
+            background: linear-gradient(135deg, #0B7A53 0%, #1A2E28 100%);
         }
         .glass-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .card-shadow {
-            box-shadow: 0 20px 50px -12px rgba(11, 122, 83, 0.12);
-        }
-        .input-focus:focus {
-            box-shadow: 0 0 0 4px rgba(11, 122, 83, 0.08);
-            border-color: #0B7A53;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid #E3ECE7;
         }
         .sidebar-open { transform: translateX(0) !important; }
         
@@ -73,7 +56,7 @@
         }
     </style>
 </head>
-<body class="bg-background flex min-h-screen text-dark selection:bg-primary selection:text-white">
+<body class="font-inter bg-background flex min-h-screen text-dark selection:bg-primary selection:text-white">
     <!-- Role-based Sidebar Include -->
     <c:choose>
         <c:when test="${user.role == 'REPAIRER'}">
@@ -84,7 +67,7 @@
         </c:otherwise>
     </c:choose>
 
-    <div class="lg:ml-[280px] flex-1 flex flex-col min-h-screen w-full overflow-x-hidden">
+    <div class="lg:ml-[260px] flex-1 flex flex-col min-h-screen w-full overflow-x-hidden">
         <!-- Navbar Include -->
         <jsp:include page="layout/navbar.jsp" />
 
@@ -109,8 +92,8 @@
 
                     <div class="text-center md:text-left flex-1">
                         <div class="flex flex-col md:flex-row md:items-end gap-3 mb-4">
-                            <h2 class="text-4xl font-black text-white tracking-tighter">${user.name}</h2>
-                            <span class="px-4 py-1 bg-white/20 backdrop-blur-xl rounded-full text-[10px] font-black text-white uppercase tracking-[0.2em] border border-white/20 mb-1.5">
+                            <h2 class="text-3xl font-bold text-white tracking-tight">${user.name}</h2>
+                            <span class="px-4 py-1 bg-white/20 backdrop-blur-xl rounded-full text-[10px] font-bold text-white uppercase tracking-[0.2em] border border-white/20 mb-1.5">
                                 Verified Member
                             </span>
                         </div>
@@ -168,8 +151,8 @@
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                             </div>
                             <div>
-                                <h3 class="text-2xl font-black tracking-tighter">Identity Settings</h3>
-                                <p class="text-[9px] font-black text-muted-dark uppercase tracking-[0.2em] mt-1">Core account credentials</p>
+                                <h3 class="text-xl font-bold tracking-tight">Identity Settings</h3>
+                                <p class="text-[9px] font-bold text-muted-dark uppercase tracking-[0.2em] mt-1">Core account credentials</p>
                             </div>
                         </div>
 

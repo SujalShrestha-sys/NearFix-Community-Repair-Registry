@@ -110,5 +110,13 @@ public interface IUserDAO {
      * @throws SQLException if a database access error occurs.
      */
     int getTotalUsersCount(String keyword, String role) throws SQLException;
+
+    /**
+     * Gets the count of new users registered in the last N days.
+     * @param days Number of days to look back.
+     * @return Count of new users.
+     * @throws SQLException if a database access error occurs.
+     */
+    int getNewUsersCount(int days) throws SQLException;
 }
 

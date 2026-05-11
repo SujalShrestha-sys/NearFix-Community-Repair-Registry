@@ -5,7 +5,7 @@
     <!-- Total Requests -->
     <div class="bg-white rounded-2xl p-6 border border-border shadow-sm flex flex-col gap-1 relative min-h-[110px]">
         <span class="text-[10px] font-bold tracking-[0.08em] uppercase text-muted-dark">Total Requests</span>
-        <span class="text-[36px] font-extrabold text-dark leading-none tracking-[-1px] mt-1">${totalRequests}</span>
+        <span class="text-[36px] font-bold text-dark leading-none tracking-[-1px] mt-1">${totalRequests}</span>
         <span class="text-xs text-muted font-medium">All time</span>
         <div class="absolute top-5 right-5 w-10 h-10 rounded-xl flex items-center justify-center bg-primary-light">
             <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -20,7 +20,7 @@
     <!-- In Progress -->
     <div class="bg-white rounded-2xl p-6 border border-border shadow-sm flex flex-col gap-1 relative min-h-[110px]">
         <span class="text-[10px] font-bold tracking-[0.08em] uppercase text-muted-dark">In Progress</span>
-        <span class="text-[36px] font-extrabold text-dark leading-none tracking-[-1px] mt-1">${inProgressCount}</span>
+        <span class="text-[36px] font-bold text-dark leading-none tracking-[-1px] mt-1">${inProgressCount}</span>
         <span class="text-xs text-muted font-medium">Active now</span>
         <div class="absolute top-5 right-5 w-10 h-10 rounded-xl flex items-center justify-center bg-blue-50">
             <svg class="w-5 h-5 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -31,7 +31,7 @@
     <!-- Completed -->
     <div class="bg-white rounded-2xl p-6 border border-border shadow-sm flex flex-col gap-1 relative min-h-[110px]">
         <span class="text-[10px] font-bold tracking-[0.08em] uppercase text-muted-dark">Completed</span>
-        <span class="text-[36px] font-extrabold text-dark leading-none tracking-[-1px] mt-1">${completedCount}</span>
+        <span class="text-[36px] font-bold text-dark leading-none tracking-[-1px] mt-1">${completedCount}</span>
         <span class="text-xs text-muted font-medium">Items repaired</span>
         <div class="absolute top-5 right-5 w-10 h-10 rounded-xl flex items-center justify-center bg-green-50">
             <svg class="w-5 h-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -42,7 +42,7 @@
     <!-- Avg Rating -->
     <div class="bg-white rounded-2xl p-6 border border-border shadow-sm flex flex-col gap-1 relative min-h-[110px]">
         <span class="text-[10px] font-bold tracking-[0.08em] uppercase text-muted-dark">Avg Rating Given</span>
-        <span class="text-[36px] font-extrabold text-dark leading-none tracking-[-1px] mt-1">4.8</span>
+        <span class="text-[36px] font-bold text-dark leading-none tracking-[-1px] mt-1">4.8</span>
         <span class="text-xs text-muted font-medium">Stars</span>
         <div class="absolute top-5 right-5 w-10 h-10 rounded-xl flex items-center justify-center bg-yellow-50">
             <svg class="w-5 h-5 text-yellow" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

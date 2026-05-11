@@ -197,5 +197,26 @@ public interface IRepairRequestDAO {
      */
     int getUserTotalRequestsCount(int userId) throws SQLException;
     Map<String, Integer> getJobsByCategoryCount() throws SQLException;
+
+    /**
+     * Gets the count of requests per month for the last 6 months.
+     * @return Map with month names as keys and request counts as values.
+     * @throws SQLException if a database access error occurs.
+     */
+    Map<String, Integer> getMonthlyRequestsTrend() throws SQLException;
+
+    /**
+     * Gets the average time taken to complete a repair request in days.
+     * @return Average completion time in days.
+     * @throws SQLException if a database access error occurs.
+     */
+    double getAverageRepairTime() throws SQLException;
+
+    /**
+     * Gets a count of requests grouped by their status.
+     * @return Map with status names as keys and counts as values.
+     * @throws SQLException if a database access error occurs.
+     */
+    Map<String, Integer> getRequestsByStatusCount() throws SQLException;
 }
 
