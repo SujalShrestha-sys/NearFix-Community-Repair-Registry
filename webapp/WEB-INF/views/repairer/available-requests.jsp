@@ -66,14 +66,40 @@
                 <c:choose>
                     <c:when test="${not empty requests}">
                         <c:forEach var="req" items="${requests}">
-                            <div class="bg-white rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow">
+                            <c:set var="isSaved" value="${savedIds.contains(req.requestId)}" />
+                            <div class="bg-white rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col">
                                 <div class="flex justify-between items-start mb-4">
                                     <span class="bg-primary-light text-primary text-xs font-bold px-3 py-1 rounded-full uppercase">${req.categoryName}</span>
-                                    <span class="text-xs text-muted-dark font-medium">${req.urgency}</span>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs text-muted-dark font-medium">${req.urgency}</span>
+                                        <%-- Bookmark / Save Button --%>
+                                        <form action="${pageContext.request.contextPath}/repairer/available-requests" method="POST" class="inline">
+                                            <input type="hidden" name="action" value="toggle-save">
+                                            <input type="hidden" name="requestId" value="${req.requestId}">
+                                            <button type="submit"
+                                                title="${isSaved ? 'Remove from Wishlist' : 'Save to Wishlist'}"
+                                                class="w-8 h-8 flex items-center justify-center rounded-full transition-all ${isSaved ? 'bg-pink-100 text-pink-500 hover:bg-pink-200' : 'bg-gray-100 text-muted hover:bg-pink-100 hover:text-pink-500'}">
+                                                <c:choose>
+                                                    <c:when test="${isSaved}">
+                                                        <%-- Filled heart --%>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                                        </svg>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <%-- Outline heart --%>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                                        </svg>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                                 <h3 class="text-lg font-bold text-dark mb-2">${req.itemName}</h3>
                                 <p class="text-sm text-muted-dark mb-6 line-clamp-2">${req.description}</p>
-                                
+
                                 <div class="flex items-center justify-between mt-auto pt-4 border-t border-border">
                                     <div class="flex flex-col">
                                         <span class="text-xs text-muted">Customer</span>

@@ -60,7 +60,7 @@ public class RepairerAreaServlet extends HttpServlet {
             // Add counts for sidebar notifications
             int pendingRequestsCount = repairService.getTotalRequestsCount(null, null, "PENDING");
             request.setAttribute("pendingRequestsCount", pendingRequestsCount);
-            
+
             int activeJobsCount = repairService.searchRepairerRequests(repairerId, null, "IN_PROGRESS").size();
             request.setAttribute("activeJobsCount", activeJobsCount);
 
@@ -100,6 +100,13 @@ public class RepairerAreaServlet extends HttpServlet {
                     request.setAttribute("search", search);
                     request.setAttribute("selectedCategoryId", categoryId);
                     request.setAttribute("categories", categoryService.getAllCategories());
+
+                    // Build a set of saved request IDs for the bookmark toggle UI
+                    java.util.Set<Integer> savedIds = new java.util.HashSet<>();
+                    for (nearfix.nearfix.model.SavedJob sj : repairService.getSavedJobs(repairerId)) {
+                        savedIds.add(sj.getRequestId());
+                    }
+                    request.setAttribute("savedIds", savedIds);
 
                     request.getRequestDispatcher("/WEB-INF/views/repairer/available-requests.jsp").forward(request,
                             response);
@@ -214,6 +221,8 @@ public class RepairerAreaServlet extends HttpServlet {
             redirectPath = "/repairer/my-requests";
         } else if ("complete-request".equals(action)) {
             redirectPath = "/repairer/my-requests";
+        } else if ("toggle-save".equals(action)) {
+            redirectPath = "/repairer/available-requests";
         }
 
         response.sendRedirect(request.getContextPath() + redirectPath);
