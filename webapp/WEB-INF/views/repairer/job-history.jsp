@@ -15,7 +15,7 @@
 </head>
 <body class="bg-[#F9FAFB] flex min-h-screen">
 
-<jsp:include page="layout/sidebar.jsp" />
+<jsp:include page="../user/layout/sidebar.jsp" />
 
 <main class="flex-1 flex flex-col min-w-0">
     <jsp:include page="layout/header.jsp" />
