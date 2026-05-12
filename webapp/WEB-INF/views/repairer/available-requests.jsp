@@ -38,17 +38,17 @@
 </head>
 <body class="font-inter bg-background flex min-h-screen text-dark">
 
-    <jsp:include page="dashboard/sidebar.jsp" />
+    <jsp:include page="layout/sidebar.jsp" />
 
     <div class="lg:ml-[260px] flex-1 flex flex-col min-h-screen bg-background w-full overflow-x-hidden">
-        <jsp:include page="dashboard/navbar.jsp" />
+        <jsp:include page="layout/navbar.jsp" />
 
         <div class="pt-[22px] px-4 md:px-9 pb-9">
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
                 <h2 class="text-xl md:text-2xl font-bold text-dark">Available Repair Requests</h2>
                 <div class="w-full md:w-auto">
                     <form action="${pageContext.request.contextPath}/repairer/available-requests" method="GET" class="flex flex-col sm:flex-row gap-2">
-                        <select name="categoryId" class="bg-white border border-border rounded-lg px-4 py-2 text-sm outline-none w-full sm:w-auto">
+                        <select name="categoryId" onchange="this.form.submit()" class="bg-white border border-border rounded-lg px-4 py-2 text-sm outline-none w-full sm:w-auto">
                             <option value="">All Categories</option>
                             <c:forEach var="cat" items="${categories}">
                                 <option value="${cat.categoryId}" ${selectedCategoryId == cat.categoryId ? 'selected' : ''}>${cat.name}</option>
@@ -66,40 +66,25 @@
                 <c:choose>
                     <c:when test="${not empty requests}">
                         <c:forEach var="req" items="${requests}">
-                            <c:set var="isSaved" value="${savedIds.contains(req.requestId)}" />
-                            <div class="bg-white rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col">
+                            <div class="bg-white rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow">
                                 <div class="flex justify-between items-start mb-4">
                                     <span class="bg-primary-light text-primary text-xs font-bold px-3 py-1 rounded-full uppercase">${req.categoryName}</span>
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-xs text-muted-dark font-medium">${req.urgency}</span>
-                                        <%-- Bookmark / Save Button --%>
+                                    <div class="flex items-center gap-3">
                                         <form action="${pageContext.request.contextPath}/repairer/available-requests" method="POST" class="inline">
                                             <input type="hidden" name="action" value="toggle-save">
                                             <input type="hidden" name="requestId" value="${req.requestId}">
-                                            <button type="submit"
-                                                title="${isSaved ? 'Remove from Wishlist' : 'Save to Wishlist'}"
-                                                class="w-8 h-8 flex items-center justify-center rounded-full transition-all ${isSaved ? 'bg-pink-100 text-pink-500 hover:bg-pink-200' : 'bg-gray-100 text-muted hover:bg-pink-100 hover:text-pink-500'}">
-                                                <c:choose>
-                                                    <c:when test="${isSaved}">
-                                                        <%-- Filled heart --%>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                                                        </svg>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <%-- Outline heart --%>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                                                        </svg>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                            <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-full transition-colors ${savedJobIds.contains(req.requestId) ? 'bg-pink-light text-pink' : 'bg-gray-50 text-muted hover:text-pink hover:bg-pink-light'}">
+                                                <svg class="w-5 h-5" fill="${savedJobIds.contains(req.requestId) ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                                </svg>
                                             </button>
                                         </form>
+                                        <span class="text-xs text-muted-dark font-medium">${req.urgency}</span>
                                     </div>
                                 </div>
                                 <h3 class="text-lg font-bold text-dark mb-2">${req.itemName}</h3>
                                 <p class="text-sm text-muted-dark mb-6 line-clamp-2">${req.description}</p>
-
+                                
                                 <div class="flex items-center justify-between mt-auto pt-4 border-t border-border">
                                     <div class="flex flex-col">
                                         <span class="text-xs text-muted">Customer</span>

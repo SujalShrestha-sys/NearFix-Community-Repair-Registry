@@ -59,7 +59,7 @@ public class SavedJobDAO {
      */
     public List<SavedJob> getSavedJobsByRepairer(int repairerId) throws SQLException {
         List<SavedJob> savedJobs = new ArrayList<>();
-        String sql = "SELECT sj.*, rr.item_name, rr.urgency, c.name as category_name " +
+        String sql = "SELECT sj.*, rr.item_name, rr.urgency, rr.description, c.name as category_name " +
                  "FROM saved_jobs sj " +
                  "JOIN repair_requests rr ON sj.request_id = rr.request_id " +
                  "JOIN categories c ON rr.category_id = c.category_id " +
@@ -105,13 +105,25 @@ public class SavedJobDAO {
      */
     private SavedJob mapResultSetToSavedJob(ResultSet rs) throws SQLException {
         SavedJob sj = new SavedJob();
-        sj.setSaveId(rs.getInt("save_id"));
+        
+        // Try to get save_id, fallback to 'id' if 'save_id' isn't found
+        try {
+            sj.setSaveId(rs.getInt("save_id"));
+        } catch (SQLException e) {
+            try {
+                sj.setSaveId(rs.getInt("id"));
+            } catch (SQLException e2) {
+                // If neither exists, we'll just leave it as 0
+            }
+        }
+
         sj.setRepairerId(rs.getInt("repairer_id"));
         sj.setRequestId(rs.getInt("request_id"));
         sj.setSavedAt(rs.getTimestamp("saved_at"));
         sj.setItemName(rs.getString("item_name"));
         sj.setCategoryName(rs.getString("category_name"));
         sj.setUrgency(rs.getString("urgency"));
+        sj.setDescription(rs.getString("description"));
         return sj;
     }
 }

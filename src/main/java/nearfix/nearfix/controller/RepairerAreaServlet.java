@@ -64,18 +64,28 @@ public class RepairerAreaServlet extends HttpServlet {
             int activeJobsCount = repairService.searchRepairerRequests(repairerId, null, "IN_PROGRESS").size();
             request.setAttribute("activeJobsCount", activeJobsCount);
 
-            int completedJobsCount = repairService.searchRepairerRequests(repairerId, null, "COMPLETED").size();
-            request.setAttribute("completedJobsCount", completedJobsCount);
+            try {
+                int completedJobsCount = repairService.searchRepairerRequests(repairerId, null, "COMPLETED").size();
+                request.setAttribute("completedJobsCount", completedJobsCount);
+            } catch (Exception ignored) {
+                request.setAttribute("completedJobsCount", 0);
+            }
 
-            int savedJobsCount = repairService.getSavedJobs(repairerId).size();
-            request.setAttribute("savedJobsCount", savedJobsCount);
+            try {
+                int savedJobsCount = repairService.getSavedJobs(repairerId).size();
+                request.setAttribute("savedJobsCount", savedJobsCount);
+            } catch (Exception ignored) {
+                request.setAttribute("savedJobsCount", 0);
+            }
 
             switch (pathInfo) {
                 case "/dashboard":
                     request.setAttribute("pageTitle", "Dashboard");
                     // Add stats and active jobs to request
-                    List<RepairRequest> myActive = repairService.searchRepairerRequests(repairerId, null,
-                            "IN_PROGRESS");
+                    List<RepairRequest> acceptedJobs = repairService.searchRepairerRequests(repairerId, null, "ACCEPTED");
+                    List<RepairRequest> progressJobs = repairService.searchRepairerRequests(repairerId, null, "IN_PROGRESS");
+                    List<RepairRequest> myActive = new java.util.ArrayList<>(acceptedJobs);
+                    myActive.addAll(progressJobs);
                     request.setAttribute("activeJobs", myActive);
                     // For now, let's just forward to the main dashboard
                     request.getRequestDispatcher("/WEB-INF/views/repairer/dashboard/index.jsp").forward(request,
@@ -87,7 +97,7 @@ public class RepairerAreaServlet extends HttpServlet {
                     request.getRequestDispatcher("/WEB-INF/views/repairer/profile.jsp").forward(request, response);
                     break;
 
-                case "/available-requests":
+                case "/available-requests": {
                     request.setAttribute("pageTitle", "Browse Jobs");
                     String search = request.getParameter("search");
                     String categoryIdStr = request.getParameter("categoryId");
@@ -97,6 +107,7 @@ public class RepairerAreaServlet extends HttpServlet {
 
                     List<RepairRequest> pending = repairService.searchPendingRequests(search, categoryId, 1, 100);
                     request.setAttribute("requests", pending);
+                    request.setAttribute("savedJobIds", savedJobIds);
                     request.setAttribute("search", search);
                     request.setAttribute("selectedCategoryId", categoryId);
                     request.setAttribute("categories", categoryService.getAllCategories());
@@ -111,6 +122,7 @@ public class RepairerAreaServlet extends HttpServlet {
                     request.getRequestDispatcher("/WEB-INF/views/repairer/available-requests.jsp").forward(request,
                             response);
                     break;
+                }
 
                 case "/my-requests":
                     request.setAttribute("pageTitle", "My Jobs");
@@ -123,6 +135,30 @@ public class RepairerAreaServlet extends HttpServlet {
                     request.setAttribute("selectedStatus", myStatus);
 
                     request.getRequestDispatcher("/WEB-INF/views/repairer/my-requests.jsp").forward(request, response);
+                    break;
+
+                case "/wishlist": {
+                    request.setAttribute("pageTitle", "Wishlist");
+                    List<SavedJob> savedJobs = repairService.getSavedJobs(repairerId);
+                    request.setAttribute("savedJobs", savedJobs);
+                    request.getRequestDispatcher("/WEB-INF/views/repairer/wishlist.jsp").forward(request,
+                            response);
+                    break;
+                }
+
+                case "/history":
+                    request.setAttribute("pageTitle", "Job History");
+                    List<RepairRequest> completedJobs = repairService.searchRepairerRequests(repairerId, null,
+                            "COMPLETED");
+                    List<RepairRequest> cancelledJobs = repairService.searchRepairerRequests(repairerId, null,
+                            "CANCELLED");
+                    List<RepairRequest> jobHistory = new java.util.ArrayList<>();
+                    if (completedJobs != null)
+                        jobHistory.addAll(completedJobs);
+                    if (cancelledJobs != null)
+                        jobHistory.addAll(cancelledJobs);
+                    request.setAttribute("jobHistory", jobHistory);
+                    request.getRequestDispatcher("/WEB-INF/views/repairer/job-history.jsp").forward(request, response);
                     break;
 
                 default:

@@ -38,10 +38,10 @@
 </head>
 <body class="font-inter bg-background flex min-h-screen text-dark">
 
-    <jsp:include page="dashboard/sidebar.jsp" />
+    <jsp:include page="layout/sidebar.jsp" />
 
     <div class="lg:ml-[260px] flex-1 flex flex-col min-h-screen bg-background w-full overflow-x-hidden">
-        <jsp:include page="dashboard/navbar.jsp" />
+        <jsp:include page="layout/navbar.jsp" />
 
         <div class="pt-[22px] px-4 md:px-9 pb-9">
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">

@@ -231,7 +231,7 @@
                                 </div>
                                 <div class="space-y-1.5">
                                     <label class="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 ml-1">Phone</label>
-                                    <input type="text" name="repairerPhone" placeholder="98XXXXXXXX" maxlength="10" pattern="\d{10}" title="Please enter exactly 10 digits" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all input-glow" required>
+                                    <input type="text" name="repairerPhone" placeholder="98XXXXXXXX" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all input-glow">
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-4">
@@ -265,7 +265,7 @@
                             
                             <div id="user-phone-wrap" class="space-y-1.5">
                                 <label class="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 ml-1">Contact Number</label>
-                                <input type="text" name="userPhone" placeholder="98XXXXXXXX" maxlength="10" pattern="\d{10}" title="Please enter exactly 10 digits" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-nearfix-green/20 outline-none transition-all input-glow" required>
+                                <input type="text" name="userPhone" placeholder="98XXXXXXXX" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-nearfix-green/20 outline-none transition-all input-glow">
                             </div>
 
                             <div class="space-y-1.5 relative">
@@ -324,6 +324,9 @@
                 submitBtn.className = "w-full py-5 bg-blue-600 text-white font-black text-lg rounded-[2rem] shadow-2xl shadow-blue-500/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3";
             }
         }
+
+        // Initialize required fields on load
+        window.onload = () => selectRole('USER');
     </script>
 </body>
 </html>
