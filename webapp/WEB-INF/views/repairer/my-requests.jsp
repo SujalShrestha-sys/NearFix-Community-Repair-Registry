@@ -48,8 +48,8 @@
                 <h2 class="text-xl md:text-2xl font-bold text-dark">My Assigned Jobs</h2>
                 <div class="w-full md:w-auto">
                     <form action="${pageContext.request.contextPath}/repairer/my-requests" method="GET" class="flex flex-col sm:flex-row gap-2">
-                        <select name="status" class="bg-white border border-border rounded-lg px-4 py-2 text-sm outline-none w-full sm:w-auto">
-                            <option value="">All Statuses</option>
+                        <select name="status" onchange="this.form.submit()" class="bg-white border border-border rounded-lg px-4 py-2 text-sm outline-none w-full sm:w-auto">
+                            <option value="" ${empty selectedStatus ? 'selected' : ''}>All Statuses</option>
                             <option value="ACCEPTED" ${selectedStatus == 'ACCEPTED' ? 'selected' : ''}>Accepted</option>
                             <option value="IN_PROGRESS" ${selectedStatus == 'IN_PROGRESS' ? 'selected' : ''}>In Progress</option>
                             <option value="COMPLETED" ${selectedStatus == 'COMPLETED' ? 'selected' : ''}>Completed</option>
