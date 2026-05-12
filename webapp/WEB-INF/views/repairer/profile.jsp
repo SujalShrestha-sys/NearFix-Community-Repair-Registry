@@ -89,7 +89,7 @@
                         </div>
                         <div class="space-y-2.5">
                             <label class="text-[10px] font-black uppercase tracking-widest text-muted-dark ml-4">Direct Contact</label>
-                            <input type="tel" name="repairerPhone" value="${repairer.phone}" class="w-full bg-background/50 px-6 py-4 rounded-[16px] font-bold text-sm border-2 border-transparent input-focus outline-none transition-all" required>
+                            <input type="tel" name="repairerPhone" value="${repairer.phone}" maxlength="10" pattern="\d{10}" title="Please enter exactly 10 digits" class="w-full bg-background/50 px-6 py-4 rounded-[16px] font-bold text-sm border-2 border-transparent input-focus outline-none transition-all" required>
                         </div>
                         <div class="space-y-2.5">
                             <label class="text-[10px] font-black uppercase tracking-widest text-muted-dark ml-4">Years of Practice</label>
