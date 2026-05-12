@@ -107,7 +107,6 @@ public class RepairerAreaServlet extends HttpServlet {
 
                     List<RepairRequest> pending = repairService.searchPendingRequests(search, categoryId, 1, 100);
                     request.setAttribute("requests", pending);
-                    request.setAttribute("savedJobIds", savedJobIds);
                     request.setAttribute("search", search);
                     request.setAttribute("selectedCategoryId", categoryId);
                     request.setAttribute("categories", categoryService.getAllCategories());
