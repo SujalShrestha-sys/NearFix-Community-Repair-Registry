@@ -64,6 +64,12 @@ public class RepairerAreaServlet extends HttpServlet {
             int activeJobsCount = repairService.searchRepairerRequests(repairerId, null, "IN_PROGRESS").size();
             request.setAttribute("activeJobsCount", activeJobsCount);
 
+            int completedJobsCount = repairService.searchRepairerRequests(repairerId, null, "COMPLETED").size();
+            request.setAttribute("completedJobsCount", completedJobsCount);
+
+            int savedJobsCount = repairService.getSavedJobs(repairerId).size();
+            request.setAttribute("savedJobsCount", savedJobsCount);
+
             switch (pathInfo) {
                 case "/dashboard":
                     request.setAttribute("pageTitle", "Dashboard");

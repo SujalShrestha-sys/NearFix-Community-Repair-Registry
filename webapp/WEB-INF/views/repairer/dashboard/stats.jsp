@@ -4,7 +4,7 @@
     <!-- Total Jobs -->
     <div class="bg-white rounded-[20px] pt-[22px] pr-[22px] pb-5 pl-[22px] border border-border shadow-stat flex flex-col gap-1 relative min-h-[108px]">
         <span class="text-[10px] font-semibold tracking-[0.07em] uppercase text-muted">Total Jobs</span>
-        <span class="text-[42px] font-extrabold text-dark leading-[1.05] tracking-[-1.5px] mt-[2px]">0</span>
+        <span class="text-[42px] font-extrabold text-dark leading-[1.05] tracking-[-1.5px] mt-[2px]">${completedJobsCount}</span>
         <span class="text-xs text-muted font-normal mt-px">All time</span>
         <div class="absolute top-5 right-5 w-10 h-10 rounded-[12px] flex items-center justify-center bg-primary-light">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#0B7A53" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -37,7 +37,7 @@
     <!-- Wishlist -->
     <div class="bg-white rounded-[20px] pt-[22px] pr-[22px] pb-5 pl-[22px] border border-border shadow-stat flex flex-col gap-1 relative min-h-[108px]">
         <span class="text-[10px] font-semibold tracking-[0.07em] uppercase text-muted">Wishlist</span>
-        <span class="text-[42px] font-extrabold text-dark leading-[1.05] tracking-[-1.5px] mt-[2px]">0</span>
+        <span class="text-[42px] font-extrabold text-dark leading-[1.05] tracking-[-1.5px] mt-[2px]">${savedJobsCount}</span>
         <span class="text-xs text-muted font-normal mt-px">Saved jobs</span>
         <div class="absolute top-5 right-5 w-10 h-10 rounded-[12px] flex items-center justify-center bg-pink-light">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="#F87096" stroke="#F87096" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
