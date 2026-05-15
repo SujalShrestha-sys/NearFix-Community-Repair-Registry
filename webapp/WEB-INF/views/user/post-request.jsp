@@ -152,17 +152,6 @@
             }
         }
 
-        // Sidebar toggle
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const sidebar = document.querySelector('aside');
-        if (menuBtn && sidebar) {
-            menuBtn.addEventListener('click', () => sidebar.classList.toggle('sidebar-open'));
-            document.addEventListener('click', (e) => {
-                if (window.innerWidth < 1024 && !sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
-                    sidebar.classList.remove('sidebar-open');
-                }
-            });
-        }
     </script>
 </body>
 </html>

@@ -461,8 +461,8 @@ textarea.form-input{resize:vertical;min-height:90px}
   .impact-right p { max-width: 100%; }
 }
 
-@media(max-width:768px){
-  .sidebar { transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+@media(max-width:1024px){
+  .sidebar { transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: var(--shadow-xl); }
   .sidebar.mobile-open { transform: translateX(0); }
   .main { margin-left: 0; }
   .menu-toggle { display: flex; }
@@ -473,8 +473,10 @@ textarea.form-input{resize:vertical;min-height:90px}
   
   /* Sidebar Overlay when open */
   .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(13, 27, 21, 0.4); backdrop-filter: blur(4px); z-index: 90; }
-  .sidebar-overlay.active { display: block; }
+  .sidebar-overlay.active { display: block; animation: overlayFadeIn 0.3s ease; }
+  @keyframes overlayFadeIn { from { opacity: 0; } to { opacity: 1; } }
 }
+
 
 @media(max-width:480px){
   .metrics { grid-template-columns: 1fr; }
