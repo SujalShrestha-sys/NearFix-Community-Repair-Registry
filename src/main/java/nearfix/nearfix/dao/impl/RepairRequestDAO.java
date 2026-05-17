@@ -60,7 +60,12 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     @Override
     public List<RepairRequest> getRequestsByUserId(int userId) throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.user_id = ? ORDER BY rr.created_at DESC";
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
+                     "FROM repair_requests rr " +
+                     "JOIN categories c ON rr.category_id = c.category_id " +
+                     "JOIN users u ON rr.user_id = u.user_id " +
+                     "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
+                     "WHERE rr.user_id = ? ORDER BY rr.created_at DESC";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -79,7 +84,12 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public List<RepairRequest> getPendingRequests(int page, int pageSize) throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
         int offset = (page - 1) * pageSize;
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.status = 'PENDING' ORDER BY rr.urgency DESC, rr.created_at DESC LIMIT ? OFFSET ?";
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
+                     "FROM repair_requests rr " +
+                     "JOIN categories c ON rr.category_id = c.category_id " +
+                     "JOIN users u ON rr.user_id = u.user_id " +
+                     "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
+                     "WHERE rr.status = 'PENDING' ORDER BY rr.urgency DESC, rr.created_at DESC LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -100,7 +110,12 @@ public class RepairRequestDAO implements IRepairRequestDAO {
             throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
         int offset = (page - 1) * pageSize;
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.status = 'PENDING' AND rr.category_id = ? ORDER BY rr.urgency DESC, rr.created_at DESC LIMIT ? OFFSET ?";
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
+                     "FROM repair_requests rr " +
+                     "JOIN categories c ON rr.category_id = c.category_id " +
+                     "JOIN users u ON rr.user_id = u.user_id " +
+                     "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
+                     "WHERE rr.status = 'PENDING' AND rr.category_id = ? ORDER BY rr.urgency DESC, rr.created_at DESC LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -120,7 +135,12 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     @Override
     public List<RepairRequest> getRequestsByRepairerId(int repairerId) throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.repairer_id = ? ORDER BY rr.updated_at DESC";
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
+                     "FROM repair_requests rr " +
+                     "JOIN categories c ON rr.category_id = c.category_id " +
+                     "JOIN users u ON rr.user_id = u.user_id " +
+                     "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
+                     "WHERE rr.repairer_id = ? ORDER BY rr.updated_at DESC";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -139,7 +159,12 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public List<RepairRequest> getAllRequests(int page, int pageSize) throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
         int offset = (page - 1) * pageSize;
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id ORDER BY rr.created_at DESC LIMIT ? OFFSET ?";
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
+                     "FROM repair_requests rr " +
+                     "JOIN categories c ON rr.category_id = c.category_id " +
+                     "JOIN users u ON rr.user_id = u.user_id " +
+                     "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
+                     "ORDER BY rr.created_at DESC LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -257,10 +282,11 @@ public class RepairRequestDAO implements IRepairRequestDAO {
         // We use a single SQL string with OR logic to handle "All Categories" or "No
         // Search" cases.
         // This is easier for beginners to read than building the string dynamically.
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name " +
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
                 "FROM repair_requests rr " +
                 "JOIN categories c ON rr.category_id = c.category_id " +
                 "JOIN users u ON rr.user_id = u.user_id " +
+                "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
                 "WHERE rr.status = 'PENDING' " +
                 "AND (rr.category_id = ? OR ? = 0) " + // If categoryId is 0, this filter is ignored
                 "AND (rr.item_name LIKE ? OR rr.description LIKE ? OR ? = '') " + // If search is empty, this is ignored
@@ -296,10 +322,11 @@ public class RepairRequestDAO implements IRepairRequestDAO {
         List<RepairRequest> requests = new ArrayList<>();
         int offset = (page - 1) * pageSize;
 
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name " +
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
                 "FROM repair_requests rr " +
                 "JOIN categories c ON rr.category_id = c.category_id " +
                 "JOIN users u ON rr.user_id = u.user_id " +
+                "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
                 "WHERE (rr.category_id = ? OR ? = 0) " +
                 "AND (rr.status = ? OR ? = '') " +
                 "AND (rr.item_name LIKE ? OR rr.description LIKE ? OR ? = '') " +
@@ -366,10 +393,11 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public List<RepairRequest> searchRepairerRequests(int repairerId, String keyword, String status)
             throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name " +
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
                 "FROM repair_requests rr " +
                 "JOIN categories c ON rr.category_id = c.category_id " +
                 "JOIN users u ON rr.user_id = u.user_id " +
+                "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
                 "WHERE rr.repairer_id = ? " +
                 "AND (rr.status = ? OR ? = '') " +
                 "AND (rr.item_name LIKE ? OR rr.description LIKE ? OR ? = '') " +
