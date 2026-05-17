@@ -75,7 +75,12 @@ public class RegisterServlet extends HttpServlet {
             request.setAttribute("errorMessage", e.getMessage());
             request.getRequestDispatcher(SIGNUP_VIEW).forward(request, response);
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+            e.printStackTrace();
+            String errorMsg = "An error occurred: " + e.getClass().getSimpleName() + ": " + e.getMessage();
+            if (e.getCause() != null) {
+                errorMsg += " | Cause: " + e.getCause().getMessage();
+            }
+            request.setAttribute("errorMessage", errorMsg);
             request.getRequestDispatcher(SIGNUP_VIEW).forward(request, response);
         }
     }

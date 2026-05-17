@@ -60,7 +60,7 @@
     <!-- Role-based Sidebar Include -->
     <c:choose>
         <c:when test="${user.role == 'REPAIRER'}">
-            <jsp:include page="../repairer/dashboard/sidebar.jsp" />
+            <jsp:include page="../repairer/layout/sidebar.jsp" />
         </c:when>
         <c:otherwise>
             <jsp:include page="layout/sidebar.jsp" />

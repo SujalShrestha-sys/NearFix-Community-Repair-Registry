@@ -38,7 +38,12 @@ public class RepairRequestDAO implements IRepairRequestDAO {
 
     @Override
     public RepairRequest getRequestById(int requestId) throws SQLException {
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.request_id = ?";
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
+                "FROM repair_requests rr " +
+                "JOIN categories c ON rr.category_id = c.category_id " +
+                "JOIN users u ON rr.user_id = u.user_id " +
+                "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
+                "WHERE rr.request_id = ?";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -55,7 +60,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     @Override
     public List<RepairRequest> getRequestsByUserId(int userId) throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.user_id = ? ORDER BY rr.created_at DESC";
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id LEFT JOIN users ru ON rr.repairer_id = ru.user_id WHERE rr.user_id = ? ORDER BY rr.created_at DESC";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -74,7 +79,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public List<RepairRequest> getPendingRequests(int page, int pageSize) throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
         int offset = (page - 1) * pageSize;
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.status = 'PENDING' ORDER BY rr.urgency DESC, rr.created_at DESC LIMIT ? OFFSET ?";
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id LEFT JOIN users ru ON rr.repairer_id = ru.user_id WHERE rr.status = 'PENDING' ORDER BY rr.urgency DESC, rr.created_at DESC LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -95,7 +100,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
             throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
         int offset = (page - 1) * pageSize;
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.status = 'PENDING' AND rr.category_id = ? ORDER BY rr.urgency DESC, rr.created_at DESC LIMIT ? OFFSET ?";
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id LEFT JOIN users ru ON rr.repairer_id = ru.user_id WHERE rr.status = 'PENDING' AND rr.category_id = ? ORDER BY rr.urgency DESC, rr.created_at DESC LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -115,7 +120,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     @Override
     public List<RepairRequest> getRequestsByRepairerId(int repairerId) throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id WHERE rr.repairer_id = ? ORDER BY rr.updated_at DESC";
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id LEFT JOIN users ru ON rr.repairer_id = ru.user_id WHERE rr.repairer_id = ? ORDER BY rr.updated_at DESC";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -134,7 +139,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public List<RepairRequest> getAllRequests(int page, int pageSize) throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
         int offset = (page - 1) * pageSize;
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id ORDER BY rr.created_at DESC LIMIT ? OFFSET ?";
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name FROM repair_requests rr JOIN categories c ON rr.category_id = c.category_id JOIN users u ON rr.user_id = u.user_id LEFT JOIN users ru ON rr.repairer_id = ru.user_id ORDER BY rr.created_at DESC LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -252,10 +257,11 @@ public class RepairRequestDAO implements IRepairRequestDAO {
         // We use a single SQL string with OR logic to handle "All Categories" or "No
         // Search" cases.
         // This is easier for beginners to read than building the string dynamically.
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name " +
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
                 "FROM repair_requests rr " +
                 "JOIN categories c ON rr.category_id = c.category_id " +
                 "JOIN users u ON rr.user_id = u.user_id " +
+                "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
                 "WHERE rr.status = 'PENDING' " +
                 "AND (rr.category_id = ? OR ? = 0) " + // If categoryId is 0, this filter is ignored
                 "AND (rr.item_name LIKE ? OR rr.description LIKE ? OR ? = '') " + // If search is empty, this is ignored
@@ -291,10 +297,11 @@ public class RepairRequestDAO implements IRepairRequestDAO {
         List<RepairRequest> requests = new ArrayList<>();
         int offset = (page - 1) * pageSize;
 
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name " +
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
                 "FROM repair_requests rr " +
                 "JOIN categories c ON rr.category_id = c.category_id " +
                 "JOIN users u ON rr.user_id = u.user_id " +
+                "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
                 "WHERE (rr.category_id = ? OR ? = 0) " +
                 "AND (rr.status = ? OR ? = '') " +
                 "AND (rr.item_name LIKE ? OR rr.description LIKE ? OR ? = '') " +
@@ -361,10 +368,11 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     public List<RepairRequest> searchRepairerRequests(int repairerId, String keyword, String status)
             throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name " +
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
                 "FROM repair_requests rr " +
                 "JOIN categories c ON rr.category_id = c.category_id " +
                 "JOIN users u ON rr.user_id = u.user_id " +
+                "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
                 "WHERE rr.repairer_id = ? " +
                 "AND (rr.status = ? OR ? = '') " +
                 "AND (rr.item_name LIKE ? OR rr.description LIKE ? OR ? = '') " +
@@ -395,10 +403,11 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     @Override
     public List<RepairRequest> searchUserRequests(int userId, String keyword, String status) throws SQLException {
         List<RepairRequest> requests = new ArrayList<>();
-        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name " +
+        String sql = "SELECT rr.*, c.name as category_name, u.name as user_name, ru.name as repairer_name " +
                 "FROM repair_requests rr " +
                 "JOIN categories c ON rr.category_id = c.category_id " +
                 "JOIN users u ON rr.user_id = u.user_id " +
+                "LEFT JOIN users ru ON rr.repairer_id = ru.user_id " +
                 "WHERE rr.user_id = ? " +
                 "AND (rr.status = ? OR ? = '') " +
                 "AND (rr.item_name LIKE ? OR rr.description LIKE ? OR ? = '') " +
@@ -463,6 +472,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
         request.setCategoryName(rs.getString("category_name"));
         if (rs.getObject("repairer_id") != null) {
             request.setRepairerId(rs.getInt("repairer_id"));
+            request.setRepairerName(rs.getString("repairer_name"));
         }
         request.setItemName(rs.getString("item_name"));
         request.setDescription(rs.getString("description"));
@@ -495,7 +505,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     @Override
     public Map<String, Integer> getMonthlyRequestsTrend() throws SQLException {
         Map<String, Integer> trend = new LinkedHashMap<>();
-        
+
         // This query gets the name of the month and count of requests
         // We look at requests from the last 6 months
         String sql = "SELECT DATE_FORMAT(created_at, '%M') as month_name, COUNT(*) as request_count " +
@@ -506,7 +516,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 String month = rs.getString("month_name");
@@ -519,7 +529,8 @@ public class RepairRequestDAO implements IRepairRequestDAO {
 
     @Override
     public double getAverageRepairTime() throws SQLException {
-        // We calculate the difference in days between when a request was created and when it was finished
+        // We calculate the difference in days between when a request was created and
+        // when it was finished
         // DATEDIFF is an easy way to get the number of days between two dates
         String sql = "SELECT AVG(DATEDIFF(updated_at, created_at)) as avg_days " +
                 "FROM repair_requests " +
@@ -527,7 +538,7 @@ public class RepairRequestDAO implements IRepairRequestDAO {
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 return rs.getDouble("avg_days");
@@ -539,13 +550,14 @@ public class RepairRequestDAO implements IRepairRequestDAO {
     @Override
     public Map<String, Integer> getRequestsByStatusCount() throws SQLException {
         Map<String, Integer> counts = new LinkedHashMap<>();
-        
-        // Simple GROUP BY to see how many requests are in each status (PENDING, COMPLETED, etc.)
+
+        // Simple GROUP BY to see how many requests are in each status (PENDING,
+        // COMPLETED, etc.)
         String sql = "SELECT status, COUNT(*) as status_count FROM repair_requests GROUP BY status";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 counts.put(rs.getString("status"), rs.getInt("status_count"));

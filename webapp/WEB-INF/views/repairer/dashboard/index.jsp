@@ -51,13 +51,13 @@ pageEncoding="UTF-8" %>
   </head>
 
   <body class="font-inter bg-background flex min-h-screen text-dark">
-    <jsp:include page="sidebar.jsp" />
+    <jsp:include page="../layout/sidebar.jsp" />
 
     <!-- MAIN -->
     <div
       class="lg:ml-[260px] flex-1 flex flex-col min-h-screen bg-background w-full"
     >
-      <jsp:include page="navbar.jsp" />
+      <jsp:include page="../layout/navbar.jsp" />
 
       <!-- CONTENT -->
       <div class="pt-[22px] px-4 md:px-9 pb-9">

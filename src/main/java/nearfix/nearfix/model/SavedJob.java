@@ -13,11 +13,30 @@ public class SavedJob {
     private String itemName;
     private String categoryName;
     private String urgency;
+    private String description;
 
     /**
      * Default constructor.
      */
     public SavedJob() {
+    }
+
+    /**
+     * Gets the description of the saved job.
+     * 
+     * @return The description.
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the description of the saved job.
+     * 
+     * @param description The description to set.
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**

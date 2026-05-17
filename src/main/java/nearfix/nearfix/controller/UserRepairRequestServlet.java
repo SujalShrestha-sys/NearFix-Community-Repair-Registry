@@ -7,9 +7,11 @@ import nearfix.nearfix.model.RepairRequest;
 import nearfix.nearfix.model.User;
 import nearfix.nearfix.service.impl.CategoryService;
 import nearfix.nearfix.service.impl.RepairService;
+import nearfix.nearfix.service.impl.RepairerService;
 import nearfix.nearfix.service.impl.UserService;
 import nearfix.nearfix.service.iservice.ICategoryService;
 import nearfix.nearfix.service.iservice.IRepairService;
+import nearfix.nearfix.service.iservice.IRepairerService;
 import nearfix.nearfix.service.iservice.IUserService;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ public class UserRepairRequestServlet extends HttpServlet {
     private IRepairService repairService = new RepairService();
     private ICategoryService categoryService = new CategoryService();
     private IUserService userService = new UserService();
+    private IRepairerService repairerService = new RepairerService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -68,6 +71,11 @@ public class UserRepairRequestServlet extends HttpServlet {
                     int requestId = Integer.parseInt(request.getParameter("id"));
                     RepairRequest repairReq = repairService.getRepairRequest(requestId);
                     request.setAttribute("repairRequest", repairReq);
+                    
+                    if (repairReq.getRepairerId() != null && repairReq.getRepairerId() > 0) {
+                        request.setAttribute("repairer", repairerService.getRepairerProfile(repairReq.getRepairerId()));
+                    }
+                    
                     request.getRequestDispatcher("/WEB-INF/views/user/request-detail.jsp").forward(request, response);
                     break;
                 

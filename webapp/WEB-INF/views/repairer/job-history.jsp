@@ -15,10 +15,10 @@
 </head>
 <body class="bg-[#F9FAFB] flex min-h-screen">
 
-<jsp:include page="../user/layout/sidebar.jsp" />
+<jsp:include page="layout/sidebar.jsp" />
 
-<main class="flex-1 flex flex-col min-w-0">
-    <jsp:include page="layout/header.jsp" />
+<main class="lg:ml-[260px] flex-1 flex flex-col min-w-0">
+    <jsp:include page="layout/navbar.jsp" />
 
     <div class="px-8 py-10 max-w-7xl">
         <!-- Page Header -->

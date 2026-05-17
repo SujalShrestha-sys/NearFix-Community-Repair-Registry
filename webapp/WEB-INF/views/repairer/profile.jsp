@@ -47,10 +47,10 @@
 </head>
 <body class="bg-background flex min-h-screen text-dark">
 
-    <jsp:include page="dashboard/sidebar.jsp" />
+    <jsp:include page="layout/sidebar.jsp" />
 
     <div class="lg:ml-[260px] flex-1 flex flex-col min-h-screen w-full overflow-x-hidden">
-        <jsp:include page="dashboard/navbar.jsp" />
+        <jsp:include page="layout/navbar.jsp" />
 
         <main class="pt-8 px-6 md:px-12 pb-16 max-w-5xl">
             <!-- Header Section -->
