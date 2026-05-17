@@ -1,7 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!-- SIDEBAR -->
-<aside class="w-[260px] min-w-[260px] bg-white flex flex-col p-0 border-r border-border fixed top-0 left-0 bottom-0 z-20 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+<!-- Sidebar Overlay -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-dark/40 backdrop-blur-[2px] z-[15] hidden transition-opacity duration-300"></div>
+
+<aside id="app-sidebar" class="w-[260px] min-w-[260px] bg-white flex flex-col p-0 border-r border-border fixed top-0 left-0 bottom-0 z-20 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto">
     <div class="flex items-center gap-[10px] pt-[26px] pr-6 pb-[22px] pl-6">
         <div class="w-9 h-9 bg-primary rounded-[12px] flex items-center justify-center shadow-lg shadow-primary/20">
             <!-- wrench icon -->
@@ -92,3 +95,42 @@
         </div>
     </div>
 </aside>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('app-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+
+        if (sidebar && mobileMenuBtn && overlay) {
+            const toggleSidebar = () => {
+                const isOpen = sidebar.classList.contains('sidebar-open');
+                if (isOpen) {
+                    sidebar.classList.remove('sidebar-open');
+                    overlay.classList.add('hidden');
+                } else {
+                    sidebar.classList.add('sidebar-open');
+                    overlay.classList.remove('hidden');
+                }
+            };
+
+            mobileMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleSidebar();
+            });
+
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('sidebar-open');
+                overlay.classList.add('hidden');
+            });
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 1024) {
+                    sidebar.classList.remove('sidebar-open');
+                    overlay.classList.add('hidden');
+                }
+            });
+        }
+    });
+</script>
+

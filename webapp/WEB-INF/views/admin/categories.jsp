@@ -64,6 +64,20 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  /* Responsive Table */
+  @media (max-width: 1024px) {
+    .table-wrap { border: none; }
+    table, thead, tbody, th, td, tr { display: block; }
+    thead tr { position: absolute; top: -9999px; left: -9999px; }
+    tr { background: #fff; border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 16px; padding: 12px; box-shadow: var(--shadow); }
+    td { border: none; padding: 10px 8px; position: relative; display: flex; align-items: center; justify-content: space-between; font-size: 14px; border-bottom: 1px solid var(--surface2); }
+    td:last-child { border-bottom: none; }
+    td::before { content: attr(data-label); font-weight: 700; color: var(--ink3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+    
+    .page-head { align-items: stretch; }
+    .page-head .btn { width: 100%; }
+  }
 </style>
 
 <div class="page active" id="admin-categories">
@@ -110,7 +124,7 @@
         <c:forEach var="cat" items="${categories}">
           <c:set var="lowName" value="${fn:toLowerCase(cat.name)}" />
           <tr>
-            <td>
+            <td data-label="Category">
               <div style="display: flex; align-items: center; gap: 10px">
                 <span
                   style="
@@ -136,10 +150,10 @@
                 <div style="font-weight: 700">${cat.name}</div>
               </div>
             </td>
-            <td style="color: var(--ink2); font-size: 13px; max-width: 250px">${cat.description}</td>
-            <td style="font-weight: 700; color: var(--g)">${cat.repairerCount}</td>
-            <td>${cat.requestCount}</td>
-            <td>
+            <td data-label="Description" style="color: var(--ink2); font-size: 13px; max-width: 250px">${cat.description}</td>
+            <td data-label="Active Repairers" style="font-weight: 700; color: var(--g)">${cat.repairerCount}</td>
+            <td data-label="Total Requests">${cat.requestCount}</td>
+            <td data-label="Actions">
               <div style="display: flex; gap: 6px">
                 <button
                   class="btn btn-ghost btn-sm"

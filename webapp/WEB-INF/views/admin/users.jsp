@@ -166,7 +166,7 @@
     .pagination-wrap { margin: 30px 0; display: flex; justify-content: center; gap: 8px; }
     .page-btn { padding: 8px 16px !important; border-radius: 10px !important; text-decoration: none; }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         .responsive-header { flex-direction: column; align-items: flex-start; }
         .search-input-group { width: 100%; }
         .filter-controls { width: 100%; }

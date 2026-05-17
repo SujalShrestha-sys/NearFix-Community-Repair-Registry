@@ -73,19 +73,31 @@
             </div>
 
             <!-- Filters -->
-            <div class="flex items-center gap-2 mb-8 overflow-x-auto pb-2 no-scrollbar">
-                <a href="${pageContext.request.contextPath}/user/my-requests" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${empty selectedStatus ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
-                    All (${requests.size()})
-                </a>
-                <a href="${pageContext.request.contextPath}/user/my-requests?status=PENDING" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedStatus == 'PENDING' ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
-                    Pending
-                </a>
-                <a href="${pageContext.request.contextPath}/user/my-requests?status=IN_PROGRESS" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedStatus == 'IN_PROGRESS' ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
-                    In Progress
-                </a>
-                <a href="${pageContext.request.contextPath}/user/my-requests?status=COMPLETED" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedStatus == 'COMPLETED' ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
-                    Completed
-                </a>
+            <div class="relative mb-8 group">
+                <div class="flex items-center gap-3">
+                    <button id="filter-scroll-left" class="hidden absolute left-0 z-10 w-9 h-9 bg-white border border-border rounded-full items-center justify-center shadow-md text-dark hover:text-primary transition-all -ml-4 group-hover:flex">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+
+                    <div id="filter-scroll" class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar scroll-smooth flex-1">
+                        <a href="${pageContext.request.contextPath}/user/my-requests" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${empty selectedStatus ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
+                            All (${requests.size()})
+                        </a>
+                        <a href="${pageContext.request.contextPath}/user/my-requests?status=PENDING" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedStatus == 'PENDING' ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
+                            Pending
+                        </a>
+                        <a href="${pageContext.request.contextPath}/user/my-requests?status=IN_PROGRESS" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedStatus == 'IN_PROGRESS' ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
+                            In Progress
+                        </a>
+                        <a href="${pageContext.request.contextPath}/user/my-requests?status=COMPLETED" class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${selectedStatus == 'COMPLETED' ? 'bg-dark text-white shadow-md' : 'bg-white text-muted-dark border border-border hover:bg-muted-light'} no-underline">
+                            Completed
+                        </a>
+                    </div>
+
+                    <button id="filter-scroll-right" class="absolute right-0 z-10 w-9 h-9 bg-white border border-border rounded-full flex items-center justify-center shadow-md text-dark hover:text-primary transition-all -mr-4">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                </div>
             </div>
 
             <!-- Requests List -->
@@ -208,16 +220,28 @@
     </div>
 
     <script>
-      const menuBtn = document.getElementById('mobile-menu-btn');
-      const sidebar = document.querySelector('aside');
-      if (menuBtn && sidebar) {
-        menuBtn.addEventListener('click', () => sidebar.classList.toggle('sidebar-open'));
-        document.addEventListener('click', (e) => {
-          if (window.innerWidth < 1024 && !sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
-            sidebar.classList.remove('sidebar-open');
-          }
-        });
+      // Filter Scroll Logic
+      const filterScroll = document.getElementById('filter-scroll');
+      const filterLeftBtn = document.getElementById('filter-scroll-left');
+      const filterRightBtn = document.getElementById('filter-scroll-right');
+
+      if (filterScroll && filterLeftBtn && filterRightBtn) {
+          const updateFilterButtons = () => {
+              const isScrollable = filterScroll.scrollWidth > filterScroll.clientWidth;
+              const scrollLeft = filterScroll.scrollLeft;
+              const maxScrollLeft = filterScroll.scrollWidth - filterScroll.clientWidth;
+
+              filterLeftBtn.style.display = (isScrollable && scrollLeft > 10) ? 'flex' : 'none';
+              filterRightBtn.style.display = (isScrollable && scrollLeft < maxScrollLeft - 10) ? 'flex' : 'none';
+          };
+
+          filterLeftBtn.addEventListener('click', () => filterScroll.scrollBy({ left: -200, behavior: 'smooth' }));
+          filterRightBtn.addEventListener('click', () => filterScroll.scrollBy({ left: 200, behavior: 'smooth' }));
+          filterScroll.addEventListener('scroll', updateFilterButtons);
+          window.addEventListener('resize', updateFilterButtons);
+          setTimeout(updateFilterButtons, 100);
       }
-    </script>
+     </script>
 </body>
 </html>
+
