@@ -40,7 +40,7 @@
         <c:when test="${currentPath == '/user/post-request'}">
           Post Request
         </c:when>
-        <c:when test="${currentPath == '/user/profile'}">
+        <c:when test="${currentPath == '/user/profile' || currentPath == '/repairer/profile' || currentPath == '/profile'}">
           My Profile
         </c:when>
         <c:otherwise>
