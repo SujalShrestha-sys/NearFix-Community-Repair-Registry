@@ -1,155 +1,166 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="nearfix.nearfix.model.RepairRequest, java.util.*" %>
+<%@ page import="nearfix.nearfix.model.RepairRequest, nearfix.nearfix.model.Rating, nearfix.nearfix.service.impl.RepairService, java.util.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job History | NearFix</title>
+    <title>Job History - NearFix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#0B7A53',
+              'primary-light': '#EAF5EF',
+              'primary-hover': '#F0F7F3',
+              background: '#F3F8F5',
+              dark: '#0D1F1A',
+              border: '#E3ECE7',
+              'border-light': '#D0E4DA',
+              'border-extra-light': '#D8EAE1',
+              muted: '#A0B4A8',
+              'muted-dark': '#7D9087',
+              'muted-light': '#EAF2EE',
+              nav: '#3D5A50',
+              yellow: '#F4B63D',
+              'yellow-light': '#FFF5DC',
+            }
+          }
+        }
+      }
+    </script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .serif { font-family: 'Playfair Display', serif; }
+      .sidebar-open { transform: translateX(0) !important; }
     </style>
 </head>
-<body class="bg-[#F9FAFB] flex min-h-screen">
+<body class="font-inter bg-background flex min-h-screen text-dark">
 
-<jsp:include page="layout/sidebar.jsp" />
+    <jsp:include page="layout/sidebar.jsp" />
 
-<main class="lg:ml-[260px] flex-1 flex flex-col min-w-0">
-    <jsp:include page="layout/navbar.jsp" />
+    <div class="lg:ml-[260px] flex-1 flex flex-col min-h-screen bg-background w-full overflow-x-hidden">
+        <jsp:include page="layout/navbar.jsp" />
 
-    <div class="px-8 py-10 max-w-7xl">
-        <!-- Page Header -->
-        <header class="mb-10 flex items-end justify-between">
-            <div>
-                <h2 class="serif text-4xl text-gray-900 mb-2">Job History</h2>
-                <p class="text-gray-500 font-medium">Review your past completed and cancelled repair jobs.</p>
+        <div class="pt-[22px] px-4 md:px-9 pb-9">
+            <div class="mb-6">
+                <h2 class="text-xl md:text-2xl font-bold text-dark">Job History</h2>
+                <p class="text-xs md:text-sm text-muted-dark mt-1">All completed and past jobs</p>
             </div>
-        </header>
 
-        <!-- Stats/Summary Bar -->
-        <%
-            List<RepairRequest> jobHistory = (List<RepairRequest>) request.getAttribute("jobHistory");
-            int totalHistory = (jobHistory != null) ? jobHistory.size() : 0;
-            long completedCount = (jobHistory != null) ? jobHistory.stream().filter(r -> "COMPLETED".equals(r.getStatus())).count() : 0;
-            long cancelledCount = (jobHistory != null) ? jobHistory.stream().filter(r -> "CANCELLED".equals(r.getStatus())).count() : 0;
-        %>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white border border-gray-100 p-6 rounded-2xl flex items-center justify-between shadow-sm">
-                <div>
-                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Total History</span>
-                    <span class="text-2xl font-bold text-gray-900 leading-none"><%= totalHistory %></span>
-                </div>
-                <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-            </div>
-            <div class="bg-emerald-50/50 border border-emerald-100/50 p-6 rounded-2xl flex items-center justify-between shadow-sm">
-                <div>
-                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Successfully Fixed</span>
-                    <span class="text-2xl font-bold text-emerald-600 leading-none"><%= completedCount %></span>
-                </div>
-                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-emerald-500 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-                    </svg>
-                </div>
-            </div>
-            <div class="bg-gray-50/50 border border-gray-100/50 p-6 rounded-2xl flex items-center justify-between shadow-sm">
-                <div>
-                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Cancelled</span>
-                    <span class="text-2xl font-bold text-gray-600 leading-none"><%= cancelledCount %></span>
-                </div>
-                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-gray-500 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
+            <%
+                List<RepairRequest> jobHistory = (List<RepairRequest>) request.getAttribute("jobHistory");
+                RepairService repairService = new RepairService();
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMM d, yyyy", java.util.Locale.ENGLISH);
+            %>
 
-        <!-- Content Area -->
-        <div class="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm">
-            <% if (jobHistory == null || jobHistory.isEmpty()) { %>
-            <div class="px-8 py-32 flex flex-col items-center justify-center text-center">
-                <div class="w-24 h-24 bg-gray-50 rounded-3xl flex items-center justify-center text-gray-300 mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <h4 class="font-bold text-2xl text-gray-900 mb-3">No job history yet</h4>
-                <p class="text-gray-500 mb-10 max-w-sm">Completed and cancelled requests will appear here.</p>
-                <a href="<%= request.getContextPath() %>/repair-request?action=myRequests"
-                   class="bg-[#449E80] hover:bg-[#3d8b70] text-white px-10 py-4 rounded-2xl font-bold transition-all flex items-center gap-2 shadow-lg shadow-[#449E80]/20 active:scale-95">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
-                    </svg>
-                    <span>Back to My Requests</span>
-                </a>
+            <div class="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+                <% if (jobHistory == null || jobHistory.isEmpty()) { %>
+                    <div class="px-8 py-32 flex flex-col items-center justify-center text-center">
+                        <div class="w-20 h-20 bg-muted-light rounded-2xl flex items-center justify-center text-muted mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h4 class="font-bold text-xl text-dark mb-2">No job history yet</h4>
+                        <p class="text-sm text-muted-dark mb-8 max-w-sm">Your completed and past repair jobs will appear here once they are completed.</p>
+                    </div>
+                <% } else { %>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/50">
+                                    <th class="text-[11px] font-bold text-muted uppercase tracking-wider px-6 py-4 border-b border-border">Request</th>
+                                    <th class="text-[11px] font-bold text-muted uppercase tracking-wider px-6 py-4 border-b border-border">Customer</th>
+                                    <th class="text-[11px] font-bold text-muted uppercase tracking-wider px-6 py-4 border-b border-border">Category</th>
+                                    <th class="text-[11px] font-bold text-muted uppercase tracking-wider px-6 py-4 border-b border-border">Completed</th>
+                                    <th class="text-[11px] font-bold text-muted uppercase tracking-wider px-6 py-4 border-b border-border">Rating</th>
+                                    <th class="text-[11px] font-bold text-muted uppercase tracking-wider px-6 py-4 border-b border-border">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-border/40">
+                                <% for (RepairRequest r : jobHistory) { %>
+                                    <tr class="hover:bg-gray-50/30 transition-colors">
+                                        <td class="px-6 py-5 align-middle">
+                                            <div class="flex flex-col">
+                                                <span class="text-sm font-bold text-dark hover:text-primary transition-colors"><%= r.getItemName() %></span>
+                                                <span class="text-xs text-muted mt-0.5">#<%= r.getRequestId() %></span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-5 align-middle">
+                                            <span class="text-sm font-semibold text-dark"><%= r.getUserName() != null ? r.getUserName() : "Unknown User" %></span>
+                                        </td>
+                                        <td class="px-6 py-5 align-middle">
+                                            <%
+                                                String cat = r.getCategoryName();
+                                                String catClass = "bg-primary-light text-primary";
+                                                if ("Furniture".equalsIgnoreCase(cat)) {
+                                                    catClass = "bg-gray-100 text-gray-500";
+                                                } else if ("Electronics".equalsIgnoreCase(cat)) {
+                                                    catClass = "bg-blue-50 text-blue-600 border border-blue-100/50";
+                                                } else if ("Clothing".equalsIgnoreCase(cat)) {
+                                                    catClass = "bg-gray-100 text-gray-500";
+                                                }
+                                            %>
+                                            <span class="<%= catClass %> text-xs font-semibold px-3 py-1 rounded-full"><%= cat %></span>
+                                        </td>
+                                        <td class="px-6 py-5 align-middle">
+                                            <span class="text-sm font-medium text-muted-dark">
+                                                <%= r.getCreatedAt() != null ? sdf.format(r.getCreatedAt()) : "" %>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-5 align-middle">
+                                            <%
+                                                Rating rtg = null;
+                                                try {
+                                                    rtg = repairService.getRatingByRequest(r.getRequestId());
+                                                } catch(Exception ignored) {}
+                                                int score = (rtg != null) ? rtg.getRatingScore() : 5;
+                                            %>
+                                            <div class="flex items-center gap-0.5 text-yellow">
+                                                <% for (int i = 1; i <= 5; i++) { %>
+                                                    <% if (i <= score) { %>
+                                                        <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                        </svg>
+                                                    <% } else { %>
+                                                        <svg class="w-4 h-4 text-gray-200 fill-current" viewBox="0 0 20 20">
+                                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                        </svg>
+                                                    <% } %>
+                                                <% } %>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-5 align-middle">
+                                            <%
+                                                boolean isCompleted = "COMPLETED".equals(r.getStatus());
+                                                String statusText = isCompleted ? "Done" : "Cancelled";
+                                                String statusClass = isCompleted ? "bg-primary-light text-primary" : "bg-gray-100 text-gray-500";
+                                            %>
+                                            <span class="<%= statusClass %> px-3 py-1 rounded-lg text-xs font-bold"><%= statusText %></span>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } %>
             </div>
-            <% } else { %>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead class="bg-gray-50 text-[10px] uppercase tracking-widest font-bold text-gray-400">
-                    <tr>
-                        <th class="px-8 py-5">Item Name</th>
-                        <th class="px-8 py-5">Category</th>
-                        <th class="px-8 py-5">Status</th>
-                        <th class="px-8 py-5">Completed On</th>
-                        <th class="px-8 py-5 text-right">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-50">
-                    <% for (RepairRequest r : jobHistory) { %>
-                    <tr class="hover:bg-gray-50/50 transition-colors group">
-                        <td class="px-8 py-6">
-                            <div class="flex flex-col">
-                                <span class="font-bold text-gray-900 group-hover:text-[#449E80] transition-colors"><%= r.getItemName() %></span>
-                                <span class="text-xs text-gray-400 line-clamp-1"><%= r.getDescription() %></span>
-                            </div>
-                        </td>
-                        <td class="px-8 py-6">
-                            <span class="text-sm font-semibold text-gray-600"><%= r.getCategoryName() %></span>
-                        </td>
-                        <td class="px-8 py-6">
-                            <%
-                                String statusClass = "";
-                                if ("COMPLETED".equals(r.getStatus())) {
-                                    statusClass = "text-emerald-500 bg-emerald-50";
-                                } else if ("CANCELLED".equals(r.getStatus())) {
-                                    statusClass = "text-gray-500 bg-gray-50";
-                                } else {
-                                    statusClass = "text-orange-500 bg-orange-50";
-                                }
-                            %>
-                            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl <%= statusClass %>">
-                                <div class="w-1.5 h-1.5 rounded-full fill-current"></div>
-                                <span class="text-xs font-bold uppercase tracking-wide"><%= r.getStatus() %></span>
-                            </div>
-                        </td>
-                        <td class="px-8 py-6">
-                            <span class="text-xs font-medium text-gray-500"><%= r.getCreatedAt() %></span>
-                        </td>
-                        <td class="px-8 py-6 text-right">
-                            <a href="<%= request.getContextPath() %>/repair-request?action=view&id=<%= r.getRequestId() %>"
-                               class="text-gray-400 hover:text-[#449E80] transition-colors p-2 hover:bg-[#449E80]/5 rounded-lg inline-block"
-                               title="View Details">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                            </a>
-                        </td>
-                    </tr>
-                    <% } %>
-                    </tbody>
-                </table>
-            </div>
-            <% } %>
         </div>
     </div>
-</main>
-
+    <script>
+      const menuBtn = document.getElementById('mobile-menu-btn');
+      const sidebar = document.querySelector('aside');
+      if (menuBtn && sidebar) {
+        menuBtn.addEventListener('click', () => sidebar.classList.toggle('sidebar-open'));
+        document.addEventListener('click', (e) => {
+          if (window.innerWidth < 1024 && !sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+            sidebar.classList.remove('sidebar-open');
+          }
+        });
+      }
+    </script>
 </body>
 </html>

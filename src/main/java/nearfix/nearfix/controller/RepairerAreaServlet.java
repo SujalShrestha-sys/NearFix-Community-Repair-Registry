@@ -80,7 +80,7 @@ public class RepairerAreaServlet extends HttpServlet {
 
             switch (pathInfo) {
                 case "/dashboard":
-                    request.setAttribute("pageTitle", "Dashboard");
+                    request.setAttribute("pageTitle", repairer != null ? repairer.getName() : "Dashboard");
                     // Add stats and active jobs to request
                     List<RepairRequest> acceptedJobs = repairService.searchRepairerRequests(repairerId, null, "ACCEPTED");
                     List<RepairRequest> progressJobs = repairService.searchRepairerRequests(repairerId, null, "IN_PROGRESS");

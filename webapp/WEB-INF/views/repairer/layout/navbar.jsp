@@ -31,10 +31,10 @@
 
 <%-- Alert Messages --%>
 <div class="px-4 md:px-9 pt-4">
-    <c:if test="${not empty errorMessage}">
+    <c:if test="${not empty requestScope.errorMessage}">
         <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl relative mb-4 flex items-center gap-3">
             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span class="text-sm font-medium">${errorMessage}</span>
+            <span class="text-sm font-medium">${requestScope.errorMessage}</span>
         </div>
     </c:if>
     <c:if test="${not empty sessionScope.errorMessage}">
@@ -44,10 +44,10 @@
         </div>
         <c:remove var="errorMessage" scope="session" />
     </c:if>
-    <c:if test="${not empty successMessage}">
+    <c:if test="${not empty requestScope.successMessage}">
         <div class="bg-primary-light border border-primary/20 text-primary px-4 py-3 rounded-xl relative mb-4 flex items-center gap-3">
             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span class="text-sm font-medium">${successMessage}</span>
+            <span class="text-sm font-medium">${requestScope.successMessage}</span>
         </div>
     </c:if>
     <c:if test="${not empty sessionScope.successMessage}">
