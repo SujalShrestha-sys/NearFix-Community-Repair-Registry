@@ -33,7 +33,7 @@ public class AdminSeeder {
             } else {
                 // 2. Create new Admin user
                 System.out.println("Creating Admin account...");
-                
+
                 User admin = new User();
                 admin.setName("System Administrator");
                 admin.setEmail(adminEmail);
