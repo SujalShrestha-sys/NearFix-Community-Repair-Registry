@@ -91,7 +91,7 @@
                         <!-- Impact Card -->
                         <div class="mt-10">
                             <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6 inline-block border border-white/20 shadow-xl">
-                                <h3 class="text-3xl font-bold mb-1">8,240</h3>
+                                <h3 class="text-3xl font-bold mb-1">${itemsSaved}</h3>
                                 <p class="text-emerald-50 text-base opacity-80">items saved from landfill 🌿</p>
                             </div>
                         </div>
@@ -134,7 +134,7 @@
                         <form action="${pageContext.request.contextPath}/login" method="POST" class="space-y-6">
                             <div>
                                 <label for="email" class="block text-sm font-bold text-gray-700 mb-2">Email address</label>
-                                <input type="email" id="email" name="email" value="${prefillEmail}" placeholder="you@email.com" 
+                                <input type="email" id="email" name="email" value="${not empty param.email ? param.email : prefillEmail}" placeholder="you@email.com" 
                                     class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50/30 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-[#059669] transition-all" required>
                             </div>
 

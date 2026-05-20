@@ -50,27 +50,7 @@
     </h1>
   </div>
   <div class="flex items-center gap-3">
-    <div
-      class="hidden md:flex items-center gap-2 bg-white border border-border rounded-[24px] py-[9px] px-[18px] w-[260px] shadow-sm"
-    >
-      <svg
-        class="w-[15px] h-[15px] text-muted shrink-0"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <circle cx="11" cy="11" r="8" />
-        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-      </svg>
-      <input
-        class="border-none bg-transparent outline-none text-[13.5px] text-muted-dark font-inter w-full placeholder:text-muted"
-        type="text"
-        placeholder="Search requests..."
-      />
-    </div>
+
     <div
       class="w-[42px] h-[42px] bg-white border border-border rounded-xl flex items-center justify-center cursor-pointer shadow-sm relative"
     >

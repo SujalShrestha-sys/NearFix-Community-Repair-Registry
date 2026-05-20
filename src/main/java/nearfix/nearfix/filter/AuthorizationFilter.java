@@ -55,7 +55,4 @@ public class AuthorizationFilter implements Filter {
         chain.doFilter(request, response);
     }
 
-    @Override
-    public void destroy() {
-    }
 }

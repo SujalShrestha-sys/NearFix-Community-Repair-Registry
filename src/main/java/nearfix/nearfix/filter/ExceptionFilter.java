@@ -33,10 +33,6 @@ public class ExceptionFilter implements Filter {
         }
     }
 
-    @Override
-    public void destroy() {
-    }
-
     private String escapeHtml(String value) {
         if (value == null) {
             return "";

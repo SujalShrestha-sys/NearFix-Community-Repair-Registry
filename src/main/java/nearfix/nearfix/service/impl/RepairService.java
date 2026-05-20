@@ -121,6 +121,11 @@ public class RepairService implements IRepairService {
     }
 
     @Override
+    public int getPlatformTotalSaved() throws SQLException {
+        return getTotalCompletedRepairs() + LANDFILL_BASE_SEED;
+    }
+
+    @Override
     public boolean markRequestAsInProgress(int requestId) throws SQLException, ValidationException {
         RepairRequest request = repairRequestDAO.getRequestById(requestId);
         if (request == null)
@@ -137,9 +142,7 @@ public class RepairService implements IRepairService {
         if (request == null)
             throw new ValidationException("Request not found.");
 
-        boolean success = repairRequestDAO.updateStatus(requestId, "COMPLETED");
-
-        return success;
+        return repairRequestDAO.updateStatus(requestId, "COMPLETED");
     }
 
     @Override

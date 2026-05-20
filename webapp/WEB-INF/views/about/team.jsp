@@ -48,7 +48,8 @@
                         <h3 class="text-2xl font-black text-white mb-1">Sujal Shrestha</h3>
                         <p class="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-4">Lead Architect</p>
                         <p class="text-xs text-gray-400 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                            Designed the core system architecture and managed overall project synchronization.
+                            Designed the core system architecture and managed overall project synchronization. <br>
+                            Scrum Master and Project Lead for Testing and System integration.
                         </p>
                     </div>
                 </div>
@@ -128,7 +129,7 @@
                         <h3 class="text-2xl font-black text-white mb-1">Ganga Bajgain</h3>
                         <p class="text-xs font-bold text-yellow-600 uppercase tracking-widest mb-4">QA Specialist</p>
                         <p class="text-xs text-gray-400 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                            Performed rigorous testing and managed JSP-Servlet data mapping.
+                            Testing assistance and Admin UI Architect.
                         </p>
                     </div>
                 </div>
@@ -146,9 +147,9 @@
                 <div class="absolute bottom-0 left-0 right-0 p-6">
                     <div class="bg-gray-900/60 backdrop-blur-2xl border border-white/10 p-6 rounded-[2rem] transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
                         <h3 class="text-2xl font-black text-white mb-1">Pranisha Gautam</h3>
-                        <p class="text-xs font-bold text-pink-500 uppercase tracking-widest mb-4">PM & Docs</p>
+                        <p class="text-xs font-bold text-pink-500 uppercase tracking-widest mb-4">PM & Docs Organizer</p>
                         <p class="text-xs text-gray-400 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                            Managed timelines, documentation, and repairer interaction strategy.
+                          System Testing, Repairer UI/UX designer and Document Organizer.
                         </p>
                     </div>
                 </div>

@@ -24,6 +24,10 @@ public interface IRepairService {
 
         int getTotalCompletedRepairs() throws SQLException;
 
+        int LANDFILL_BASE_SEED = 8235;
+
+        int getPlatformTotalSaved() throws SQLException;
+
         List<RepairRequest> getPendingRequests(int page, int pageSize) throws SQLException;
 
         List<RepairRequest> getRepairRequestsByCategoryId(int categoryId, int page, int pageSize) throws SQLException;

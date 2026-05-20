@@ -9,7 +9,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import nearfix.nearfix.exception.ValidationException;
 import nearfix.nearfix.model.User;
+import nearfix.nearfix.service.impl.RepairService;
 import nearfix.nearfix.service.impl.UserService;
+import nearfix.nearfix.service.iservice.IRepairService;
 import nearfix.nearfix.service.iservice.IUserService;
 
 import java.io.IOException;
@@ -18,6 +20,7 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
 
     private IUserService userService = new UserService();
+    private final IRepairService repairService = new RepairService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -35,6 +38,7 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("successMessage", "You have been logged out successfully.");
         }
 
+        loadStats(request);
         request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
     }
 
@@ -89,10 +93,20 @@ public class LoginServlet extends HttpServlet {
 
         } catch (ValidationException e) {
             request.setAttribute("errorMessage", e.getMessage());
+            loadStats(request);
             request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
         } catch (Exception e) {
             request.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
+            loadStats(request);
             request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+        }
+    }
+
+    private void loadStats(HttpServletRequest request) {
+        try {
+            request.setAttribute("itemsSaved", String.format("%,d", repairService.getPlatformTotalSaved()));
+        } catch (Exception e) {
+            request.setAttribute("itemsSaved", String.format("%,d", IRepairService.LANDFILL_BASE_SEED));
         }
     }
 }
