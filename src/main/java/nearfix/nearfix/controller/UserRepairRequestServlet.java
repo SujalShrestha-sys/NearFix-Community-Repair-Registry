@@ -71,14 +71,14 @@ public class UserRepairRequestServlet extends HttpServlet {
                     int requestId = Integer.parseInt(request.getParameter("id"));
                     RepairRequest repairReq = repairService.getRepairRequest(requestId);
                     request.setAttribute("repairRequest", repairReq);
-                    
+
                     if (repairReq.getRepairerId() != null && repairReq.getRepairerId() > 0) {
                         request.setAttribute("repairer", repairerService.getRepairerProfile(repairReq.getRepairerId()));
                     }
-                    
+
                     request.getRequestDispatcher("/WEB-INF/views/user/request-detail.jsp").forward(request, response);
                     break;
-                
+
                 case "edit":
                     int editId = Integer.parseInt(request.getParameter("id"));
                     RepairRequest editReq = repairService.getRepairRequest(editId);
@@ -123,7 +123,8 @@ public class UserRepairRequestServlet extends HttpServlet {
             int currentUserId = (Integer) session.getAttribute("userId");
             User user = userService.getUserById(currentUserId);
             request.setAttribute("user", user);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         String action = request.getParameter("action");
         String message = "";

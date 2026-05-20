@@ -46,7 +46,7 @@ public class UserDashboardServlet extends HttpServlet {
             long completedCount = requests.stream().filter(r -> "COMPLETED".equals(r.getStatus())).count();
             
             // Platform wide stat for the impact card
-            int platformTotalSaved = repairService.getTotalCompletedRepairs() + 8000; // 8000 as base seed
+            int platformTotalSaved = repairService.getPlatformTotalSaved();
 
             // Get last completed job that might need rating
             RepairRequest lastCompleted = requests.stream()
@@ -60,7 +60,7 @@ public class UserDashboardServlet extends HttpServlet {
             request.setAttribute("inProgressCount", inProgressCount);
             request.setAttribute("completedCount", completedCount);
             request.setAttribute("totalRequests", requests.size());
-            request.setAttribute("platformTotalSaved", platformTotalSaved);
+            request.setAttribute("platformTotalSaved", String.format("%,d", platformTotalSaved));
             request.setAttribute("lastCompleted", lastCompleted);
 
             request.getRequestDispatcher("/WEB-INF/views/user/dashboard/index.jsp").forward(request, response);

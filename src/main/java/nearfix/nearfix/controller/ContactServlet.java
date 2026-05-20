@@ -57,10 +57,10 @@ public class ContactServlet extends HttpServlet {
 
     private void loadStats(HttpServletRequest request) {
         try {
-            int itemsSaved = repairService.getTotalCompletedRepairs();
-            request.setAttribute("itemsSaved", itemsSaved);
+            int itemsSaved = repairService.getPlatformTotalSaved();
+            request.setAttribute("itemsSaved", String.format("%,d", itemsSaved));
         } catch (Exception e) {
-            request.setAttribute("itemsSaved", 0);
+            request.setAttribute("itemsSaved", String.format("%,d", IRepairService.LANDFILL_BASE_SEED));
         }
     }
 }

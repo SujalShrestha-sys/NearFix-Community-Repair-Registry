@@ -214,11 +214,11 @@
                         <div id="user-fields" class="grid grid-cols-2 gap-4">
                             <div class="space-y-1.5">
                                 <label class="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 ml-1">First Name</label>
-                                <input type="text" name="firstName" placeholder="Anita" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-nearfix-green/20 outline-none transition-all input-glow">
+                                <input type="text" name="firstName" value="${param.firstName}" placeholder="Anita" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-nearfix-green/20 outline-none transition-all input-glow">
                             </div>
                             <div class="space-y-1.5">
                                 <label class="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 ml-1">Last Name</label>
-                                <input type="text" name="lastName" placeholder="Sharma" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-nearfix-green/20 outline-none transition-all input-glow">
+                                <input type="text" name="lastName" value="${param.lastName}" placeholder="Sharma" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-nearfix-green/20 outline-none transition-all input-glow">
                             </div>
                         </div>
 
@@ -227,11 +227,11 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="space-y-1.5">
                                     <label class="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 ml-1">Full Name</label>
-                                    <input type="text" name="fullName" placeholder="Ram Karki" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all input-glow">
+                                    <input type="text" name="fullName" value="${param.fullName}" placeholder="Ram Karki" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all input-glow">
                                 </div>
                                 <div class="space-y-1.5">
                                     <label class="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 ml-1">Phone</label>
-                                    <input type="text" name="repairerPhone" placeholder="98XXXXXXXX" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all input-glow">
+                                    <input type="text" name="repairerPhone" value="${param.repairerPhone}" placeholder="98XXXXXXXX" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all input-glow">
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-4">
@@ -239,19 +239,19 @@
                                     <label class="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 ml-1">Category</label>
                                     <select name="category" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all">
                                         <c:forEach var="cat" items="${categories}">
-                                            <option value="${cat.name}">${cat.name}</option>
+                                            <option value="${cat.name}" ${param.category == cat.name ? 'selected' : ''}>${cat.name}</option>
                                         </c:forEach>
                                         <c:if test="${empty categories}">
-                                            <option value="ELECTRONICS">Electronics</option>
-                                            <option value="FURNITURE">Furniture</option>
-                                            <option value="PLUMBING">Plumbing</option>
-                                            <option value="CARPENTER">Carpenter</option>
+                                            <option value="ELECTRONICS" ${param.category == 'ELECTRONICS' ? 'selected' : ''}>Electronics</option>
+                                            <option value="FURNITURE" ${param.category == 'FURNITURE' ? 'selected' : ''}>Furniture</option>
+                                            <option value="PLUMBING" ${param.category == 'PLUMBING' ? 'selected' : ''}>Plumbing</option>
+                                            <option value="CARPENTER" ${param.category == 'CARPENTER' ? 'selected' : ''}>Carpenter</option>
                                         </c:if>
                                     </select>
                                 </div>
                                 <div class="space-y-1.5">
                                     <label class="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 ml-1">Service Area</label>
-                                    <input type="text" name="serviceArea" placeholder="Thamel, Ktm" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all input-glow">
+                                    <input type="text" name="serviceArea" value="${param.serviceArea}" placeholder="Thamel, Ktm" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all input-glow">
                                 </div>
                             </div>
                         </div>
@@ -260,12 +260,12 @@
                         <div class="space-y-5">
                             <div class="space-y-1.5">
                                 <label class="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 ml-1">Email Address</label>
-                                <input type="email" name="email" placeholder="you@example.com" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-nearfix-green/20 outline-none transition-all input-glow">
+                                <input type="email" name="email" value="${param.email}" placeholder="you@example.com" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-nearfix-green/20 outline-none transition-all input-glow">
                             </div>
                             
                             <div id="user-phone-wrap" class="space-y-1.5">
                                 <label class="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 ml-1">Contact Number</label>
-                                <input type="text" name="userPhone" placeholder="98XXXXXXXX" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-nearfix-green/20 outline-none transition-all input-glow">
+                                <input type="text" name="userPhone" value="${param.userPhone}" placeholder="98XXXXXXXX" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-nearfix-green/20 outline-none transition-all input-glow">
                             </div>
 
                             <div class="space-y-1.5 relative">
@@ -326,7 +326,7 @@
         }
 
         // Initialize required fields on load
-        window.onload = () => selectRole('USER');
+        window.onload = () => selectRole('${not empty param.role ? param.role : "USER"}');
     </script>
 </body>
 </html>

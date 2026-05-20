@@ -9,7 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * AdminSeeder - A utility class to initialize the database with a default Admin account.
+ * AdminSeeder - A utility class to initialize the database with a default Admin
+ * account.
  * Run this class to ensure at least one Admin exists in the system.
  */
 public class AdminSeeder {

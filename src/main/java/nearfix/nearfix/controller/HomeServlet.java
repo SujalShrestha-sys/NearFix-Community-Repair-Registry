@@ -51,16 +51,16 @@ public class HomeServlet extends HttpServlet {
 
         try {
             // Fetch live statistics from the database
-            int itemsSaved = repairService.getTotalCompletedRepairs();
+            int itemsSaved = repairService.getPlatformTotalSaved();
             int totalFixers = userService.getTotalUsersCount("", "REPAIRER");
 
             // Pass stats to the JSP view via request attributes
-            request.setAttribute("itemsSaved", itemsSaved);
+            request.setAttribute("itemsSaved", String.format("%,d", itemsSaved));
             request.setAttribute("totalFixers", totalFixers);
 
         } catch (Exception e) {
-            // If the DB is unavailable, show 0 so the page still loads cleanly
-            request.setAttribute("itemsSaved", 0);
+            // If the DB is unavailable, show fallback dynamic seed so the page still loads cleanly
+            request.setAttribute("itemsSaved", String.format("%,d", IRepairService.LANDFILL_BASE_SEED));
             request.setAttribute("totalFixers", 0);
         }
 

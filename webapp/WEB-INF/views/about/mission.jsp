@@ -33,7 +33,7 @@
                 
                 <%-- Card 1 --%>
                 <div class="bg-gray-50 border border-gray-100 p-8 rounded-3xl group hover:border-green-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-green-500/5">
-                    <p class="text-4xl font-black text-gray-900 mb-1">8,240<span class="text-green-600">+</span></p>
+                    <p class="text-4xl font-black text-gray-900 mb-1">${itemsSaved}<span class="text-green-600">+</span></p>
                     <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">Items saved from landfills</p>
                     <p class="text-xs text-gray-400 mt-2">Every item fixed stays out of the landfill.</p>
                 </div>
